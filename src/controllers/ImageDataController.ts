@@ -1,10 +1,10 @@
 import * as express from "express";
-import IImageData from "../models/ImageData";
+import IImageData from "../models/IImageData";
 
 import Controller from "./Controller";
 import ImageDataDao from "../repository/ImageDataDao";
 
-class ImageDataController extends Controller {
+export default class ImageDataController extends Controller {
   constructor(private imageDataDao: ImageDataDao) {
     super();
   }
@@ -18,5 +18,3 @@ class ImageDataController extends Controller {
     return this.router;
   }
 }
-
-export default ImageDataController;

@@ -1,20 +1,48 @@
 require("dotenv").config();
 
 import * as express from "express";
+import * as Knex from "knex";
+import * as morgan from "morgan";
 import ImageController from "./controllers/ImageController";
 import ImageDataController from "./controllers/ImageDataController";
+import UserController from "./controllers/UserController";
 import * as Database from "./Database";
 import ImageDao from "./repository/ImageDao";
 import ImageDataDao from "./repository/ImageDataDao";
+import UserDao from "./repository/UserDao";
 
+// Express instance
 const app: express.Application = express();
 
-const knex = Database.connect();
+// Knex instance
+const knex: Knex = Database.connect();
 
+// API version
+const API_VERSION: string = "v1";
+
+// Generates an API url. API version defaults to API_VERSION constant.
+const apiUrl = (path: string, apiVersion: string = API_VERSION) =>
+  "/api/" + apiVersion + "/" + path;
+
+// JSON parser
 app.use(express.json());
 
-app.use("/api/images", new ImageController(new ImageDao(knex)).routes());
-app.use("/api/imageData", new ImageDataController(new ImageDataDao(knex)).routes());
+// Morgan
+app.use(morgan("tiny"));
+
+// Images route
+app.use(apiUrl("images"), new ImageController(new ImageDao(knex)).routes());
+
+// ImageData route
+app.use(
+  apiUrl("imageData"),
+  new ImageDataController(new ImageDataDao(knex)).routes()
+);
+
+// Users route
+app.use(apiUrl("users"), new UserController(new UserDao(knex)).routes());
+
+// Listen
 app.listen(process.env.SERVER_PORT, () => {
   console.log("Server running at ::%d", process.env.SERVER_PORT);
 });

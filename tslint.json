@@ -6,7 +6,8 @@
     "no-var-requires": false,
     "ordered-imports": false,
     "no-console": false,
-    "no-magic-numbers": true
+    "no-magic-numbers": true,
+    "trailing-comma": false
   },
   "rulesDirectory": []
 }

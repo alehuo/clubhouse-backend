@@ -1,6 +1,6 @@
 
 import IDao from "./Dao";
-import IImageData from "../models/ImageData";
+import IImageData from "../models/IImageData";
 import * as Promise from "bluebird";
 import * as Knex from "knex";
 
