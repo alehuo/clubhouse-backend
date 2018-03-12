@@ -23,7 +23,9 @@ Back-end for Full-stack software development project course
 
 _Returns:_ **A list of users registered in the service.**
 
-_Status code:_ **HTTP 200**
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (failure)
+
+_Content-type:_ **application/json**
 
 _Response body:_
 
@@ -49,8 +51,51 @@ _Response body:_
 
 #### GET /api/v1/users/:userId
 
+_Returns:_ **A single user registered in the service, by its id**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Request parameters:_ ```userId``` (URL parameter, integer)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **/api/v1/users/1**
+
+```
+  {
+    "userId": 1,
+    "username": "user1",
+    "email": "user1@email.com"
+  }
+```
+
 #### POST /api/v1/users
 
+_Returns:_ **A single user registered in the service, by its id**
+
+_Response status code:_ **HTTP 201** (success on user creation), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Request body:_ Required: ```username```, ```email``` and ```password```
+
+```
+  {
+    "username": "user1",
+    "email": "user1@email.com",
+    "password": "password1"
+  }
+```
+
+_Response body:_ Created user
+
+```
+  {
+    "userId": 1,
+    "username": "user1",
+    "email": "user1@email.com"
+  }
+```
 ## /api/v1/images
 
 #### GET /api/v1/images

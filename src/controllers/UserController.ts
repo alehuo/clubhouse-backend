@@ -11,8 +11,12 @@ export default class UserController extends Controller {
 
   public routes(): express.Router {
     this.router.get("", async (req: express.Request, res: express.Response) => {
-      const result: IUser[] = await this.userDao.findAll();
-      return res.json(result.map(userFilter));
+      try {
+        const result: IUser[] = await this.userDao.findAll();
+        return res.json(result.map(userFilter));
+      } catch (err) {
+        return res.status(500).json({ error: "Internal server error" });
+      }
     });
 
     return this.router;

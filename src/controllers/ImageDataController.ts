@@ -11,8 +11,12 @@ export default class ImageDataController extends Controller {
 
   public routes(): express.Router {
     this.router.get("", async (req: express.Request, res: express.Response) => {
-      const result: IImageData[] = await this.imageDataDao.findAll();
-      return res.json(result);
+      try {
+        const result: IImageData[] = await this.imageDataDao.findAll();
+        return res.json(result);
+      } catch (err) {
+        return res.status(500).json({ error: "Internal server error" });
+      }
     });
 
     return this.router;
