@@ -16,5 +16,8 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
+  if (process.env.NODE_ENV == "production") {
+    throw new Error("Do not drop tables in a production environment.");
+  }
   return knex.schema.dropTableIfExists("imageData");
 };
