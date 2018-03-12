@@ -2,3 +2,4 @@ node_modules/
 storage/**/*
 **/*.sqlite3
 .env
+.DS_Store
