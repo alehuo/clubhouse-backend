@@ -23,7 +23,7 @@ Back-end for Full-stack software development project course
 
 _Returns:_ **A list of users registered in the service.**
 
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (failure)
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
 
 _Content-type:_ **application/json**
 
@@ -51,7 +51,7 @@ _Response body:_
 
 #### GET /api/v1/users/:userId
 
-_Returns:_ **A single user registered in the service, by its id**
+_Returns:_ **Registered user if the request completes successfully**
 
 _Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
 
@@ -73,9 +73,7 @@ _Response body:_ **/api/v1/users/1**
 
 _Returns:_ **A single user registered in the service, by its id**
 
-_Response status code:_ **HTTP 201** (success on user creation), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
-
-_Response content-type:_ **application/json**
+_Request content-type:_ **application/json**
 
 _Request body:_ Required: ```username```, ```email``` and ```password```
 
@@ -86,6 +84,10 @@ _Request body:_ Required: ```username```, ```email``` and ```password```
     "password": "password1"
   }
 ```
+
+_Response status code:_ **HTTP 201** (success on user creation), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
 
 _Response body:_ Created user
 
