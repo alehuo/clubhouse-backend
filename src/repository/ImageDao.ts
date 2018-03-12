@@ -1,25 +1,22 @@
-import connect from "./../Database";
-import Dao from "./Dao";
+import IDao from "./Dao";
 import IImage from "../models/Image";
 import * as Promise from "bluebird";
+import * as Knex from "knex";
 
-class ImageDao implements Dao<IImage> {
+export default class ImageDao implements IDao<IImage> {
+  constructor(private readonly knex: Knex) {}
+
   public findAll(): Promise<IImage[]> {
-    return connect()
-      .select()
-      .table("images");
+    return this.knex("images").select();
   }
   public findOne(id: number): Promise<IImage> {
-    return connect()
+    return this.knex("images")
       .select()
-      .table("images")
       .where({ imageId: id });
   }
   public remove(id: number): Promise<void> {
-    return connect()
-      .delete("images")
+    return this.knex("images")
+      .delete()
       .where({ imageId: id });
   }
 }
-
-export default ImageDao;

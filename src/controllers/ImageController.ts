@@ -1,7 +1,6 @@
 import * as express from "express";
 import IImage from "../models/Image";
 
-import connect from "./../Database";
 import Controller from "./Controller";
 import ImageDao from "../repository/ImageDao";
 
@@ -20,4 +19,4 @@ class ImageController extends Controller {
   }
 }
 
-export default new ImageController(new ImageDao()).routes();
+export default ImageController;

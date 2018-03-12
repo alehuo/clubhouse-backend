@@ -1,18 +1,20 @@
 require("dotenv").config();
 
 import * as express from "express";
-import FolderController from "./controllers/FolderController";
 import ImageController from "./controllers/ImageController";
 import ImageDataController from "./controllers/ImageDataController";
+import * as Database from "./Database";
+import ImageDao from "./repository/ImageDao";
+import ImageDataDao from "./repository/ImageDataDao";
 
 const app: express.Application = express();
 
+const knex = Database.connect();
+
 app.use(express.json());
 
-app.use("/api/folders", FolderController);
-app.use("/api/images", ImageController);
-app.use("/api/imageData", ImageDataController);
-
-app.listen(8081, () => {
-  console.log("jee");
+app.use("/api/images", new ImageController(new ImageDao(knex)).routes());
+app.use("/api/imageData", new ImageDataController(new ImageDataDao(knex)).routes());
+app.listen(process.env.SERVER_PORT, () => {
+  console.log("Server running at ::%d", process.env.SERVER_PORT);
 });
