@@ -1,5 +1,5 @@
 import * as express from "express";
-import IUser from "../models/IUser";
+import IUser, { userFilter } from "../models/IUser";
 
 import Controller from "./Controller";
 import UserDao from "../repository/UserDao";
@@ -12,7 +12,7 @@ export default class UserController extends Controller {
   public routes(): express.Router {
     this.router.get("", async (req: express.Request, res: express.Response) => {
       const result: IUser[] = await this.userDao.findAll();
-      return res.json(result);
+      return res.json(result.map(userFilter));
     });
 
     return this.router;

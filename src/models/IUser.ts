@@ -5,3 +5,15 @@ export default interface IUser {
   password: string;
   hidden: boolean;
 }
+
+/**
+ * Filters an user object and removes its "hidden" & "password" fields.
+ * @param user User object
+ */
+export const userFilter = (user: IUser) => {
+  return {
+    userId: user.userId,
+    username: user.username,
+    email: user.email
+  };
+};
