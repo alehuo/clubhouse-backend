@@ -25,7 +25,7 @@ _Returns:_ **A list of users registered in the service.**
 
 _Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
 
-_Content-type:_ **application/json**
+_Response content-type:_ **application/json**
 
 _Response body:_
 
