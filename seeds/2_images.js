@@ -5,11 +5,11 @@ exports.seed = function(knex, Promise) {
     .then(function() {
       // Inserts seed entries
       return knex("images").insert([
-        { folderId: 1, imageName: "Image 1" },
-        { folderId: 1, imageName: "Image 2" },
-        { folderId: 1, imageName: "Image 3" },
-        { folderId: 1, imageName: "Image 4" },
-        { folderId: 1, imageName: "Image 5" }
+        { imageName: "Image 1", userId: 1 },
+        { imageName: "Image 2", userId: 1 },
+        { imageName: "Image 3", userId: 1 },
+        { imageName: "Image 4", userId: 2 },
+        { imageName: "Image 5", userId: 2 }
       ]);
     });
 };
