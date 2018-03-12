@@ -3,6 +3,8 @@ require("dotenv").config();
 import * as express from "express";
 import * as Knex from "knex";
 import * as morgan from "morgan";
+import * as compression from "compression";
+// const apicache = require("apicache");
 import ImageController from "./controllers/ImageController";
 import ImageDataController from "./controllers/ImageDataController";
 import UserController from "./controllers/UserController";
@@ -28,7 +30,14 @@ const apiUrl = (path: string, apiVersion: string = API_VERSION) =>
 app.use(express.json());
 
 // Morgan
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
+
+// Compression
+app.use(compression());
+
+// API cache
+/*const cache = apicache.middleware;
+app.use(cache("5 minutes"));*/
 
 // Images route
 app.use(apiUrl("images"), new ImageController(new ImageDao(knex)).routes());
