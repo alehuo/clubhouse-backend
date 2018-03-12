@@ -53,9 +53,9 @@ _Response body:_
 
 _Returns:_ **Registered user if the request completes successfully**
 
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
-
 _Request parameters:_ ```userId``` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
