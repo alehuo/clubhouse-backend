@@ -71,7 +71,7 @@ _Response body:_ **GET /api/v1/users/1**
 
 #### POST /api/v1/users
 
-_Returns:_ **A single user registered in the service, by its id**
+_Returns:_ **Created user if the request succeeds**
 
 _Request content-type:_ **application/json**
 
