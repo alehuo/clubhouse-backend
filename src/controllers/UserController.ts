@@ -1,4 +1,5 @@
 import * as express from "express";
+import * as bcrypt from "bcrypt";
 import IUser, { userFilter } from "../models/IUser";
 
 import Controller from "./Controller";
@@ -18,6 +19,24 @@ export default class UserController extends Controller {
         return res.status(500).json({ error: "Internal server error" });
       }
     });
+
+    this.router.post(
+      "",
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const userData = req.body;
+          if (!userData.username || !userData.email || !userData.password) {
+            return res
+              .status(500)
+              .json({ error: "Missing request body parameters" });
+          } else {
+            // TODO: Save user
+          }
+        } catch (err) {
+          return res.status(500).json({ error: "Internal server error" });
+        }
+      }
+    );
 
     return this.router;
   }
