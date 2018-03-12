@@ -59,7 +59,7 @@ _Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
-_Response body:_ **/api/v1/users/1**
+_Response body:_ **GET /api/v1/users/1**
 
 ```
   {
@@ -75,7 +75,9 @@ _Returns:_ **A single user registered in the service, by its id**
 
 _Request content-type:_ **application/json**
 
-_Request body:_ Required: ```username```, ```email``` and ```password```
+_Request body:_ 
+
+Required: ```username```, ```email``` and ```password```
 
 ```
   {
