@@ -24,15 +24,38 @@ export default class UserController extends Controller {
       "",
       async (req: express.Request, res: express.Response) => {
         try {
-          const userData = req.body;
-          if (!userData.username || !userData.email || !userData.password) {
+          const userData: {
+            username: string;
+            email: string;
+            password: string;
+          } =
+            req.body;
+          if (!(userData.username && userData.email && userData.password)) {
             return res
               .status(500)
               .json({ error: "Missing request body parameters" });
           } else {
             // TODO: Save user
+            const user: IUser[] | undefined = await this.userDao.findByUsername(
+              userData.username
+            );
+
+            if (user && user.length > 0) {
+              return res.status(400).json({ error: "User exists" });
+            } else {
+              const savedUser = await this.userDao.save({
+                username: userData.username,
+                email: userData.email,
+                password: userData.password
+              });
+
+              return res
+                .status(201)
+                .json(Object.assign({}, userData, { id: savedUser[0] }));
+            }
           }
         } catch (err) {
+          console.error(err);
           return res.status(500).json({ error: "Internal server error" });
         }
       }

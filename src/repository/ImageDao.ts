@@ -9,7 +9,7 @@ export default class ImageDao implements IDao<IImage> {
   public findAll(): Promise<IImage[]> {
     return this.knex("images").select();
   }
-  public findOne(id: number): Promise<IImage> {
+  public findOne(id: number): Promise<IImage[]> {
     return this.knex("images")
       .select()
       .where({ imageId: id });
