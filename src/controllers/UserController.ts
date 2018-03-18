@@ -41,8 +41,12 @@ export default class UserController extends Controller {
             );
 
             if (user && user.length > 0) {
-              return res.status(400).json({ error: "User exists" });
+              return res.status(400).json({ error: "User already exists" });
             } else {
+              if (userData.password.length < 8) {
+                return res.status(400).json({ error: "Password is too short" });
+              }
+
               const savedUser = await this.userDao.save({
                 username: userData.username,
                 email: userData.email,
@@ -51,7 +55,7 @@ export default class UserController extends Controller {
 
               return res
                 .status(201)
-                .json(Object.assign({}, userData, { id: savedUser[0] }));
+                .json(Object.assign({}, userData, { userId: savedUser[0] }));
             }
           }
         } catch (err) {

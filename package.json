@@ -1,9 +1,9 @@
 {
-  "name": "picfs-backend",
+  "name": "clubhouse-backend",
   "version": "1.0.0",
   "description": "Node.js back-end for for Full-stack software development project course",
   "main": "src/app.js",
-  "repository": "https://github.com/alehuo/picfs-backend.git",
+  "repository": "https://github.com/alehuo/clubhouse-backend.git",
   "author": "alehuo",
   "license": "MIT",
   "private": true,

@@ -5,13 +5,9 @@ import * as Knex from "knex";
 import * as morgan from "morgan";
 import * as compression from "compression";
 // const apicache = require("apicache");
-import ImageController from "./controllers/ImageController";
-import ImageDataController from "./controllers/ImageDataController";
 import UserController from "./controllers/UserController";
 import * as Database from "./Database";
-import ImageDao from "./repository/ImageDao";
-import ImageDataDao from "./repository/ImageDataDao";
-import UserDao from "./repository/UserDao";
+import UserDao from "./dao/UserDao";
 
 // Express instance
 const app: express.Application = express();
@@ -38,15 +34,6 @@ app.use(compression());
 // API cache
 /*const cache = apicache.middleware;
 app.use(cache("5 minutes"));*/
-
-// Images route
-app.use(apiUrl("images"), new ImageController(new ImageDao(knex)).routes());
-
-// ImageData route
-app.use(
-  apiUrl("imageData"),
-  new ImageDataController(new ImageDataDao(knex)).routes()
-);
 
 // Users route
 app.use(apiUrl("users"), new UserController(new UserDao(knex)).routes());
