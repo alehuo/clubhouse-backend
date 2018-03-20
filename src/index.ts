@@ -3,13 +3,12 @@ require("dotenv").config();
 import * as express from "express";
 import * as Knex from "knex";
 import * as morgan from "morgan";
-import ImageController from "./controllers/ImageController";
-import ImageDataController from "./controllers/ImageDataController";
+import * as compression from "compression";
+// const apicache = require("apicache");
 import UserController from "./controllers/UserController";
 import * as Database from "./Database";
-import ImageDao from "./repository/ImageDao";
-import ImageDataDao from "./repository/ImageDataDao";
-import UserDao from "./repository/UserDao";
+import UserDao from "./dao/UserDao";
+import PermissionDao from "./dao/PermissionDao";
 
 // Express instance
 const app: express.Application = express();
@@ -28,19 +27,17 @@ const apiUrl = (path: string, apiVersion: string = API_VERSION) =>
 app.use(express.json());
 
 // Morgan
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
 
-// Images route
-app.use(apiUrl("images"), new ImageController(new ImageDao(knex)).routes());
+// Compression
+app.use(compression());
 
-// ImageData route
-app.use(
-  apiUrl("imageData"),
-  new ImageDataController(new ImageDataDao(knex)).routes()
-);
+// API cache
+/*const cache = apicache.middleware;
+app.use(cache("5 minutes"));*/
 
 // Users route
-app.use(apiUrl("users"), new UserController(new UserDao(knex)).routes());
+app.use(apiUrl("users"), new UserController(new UserDao(knex), new PermissionDao(knex)).routes());
 
 // Listen
 app.listen(process.env.SERVER_PORT, () => {

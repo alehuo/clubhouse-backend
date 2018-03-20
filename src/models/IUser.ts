@@ -1,9 +1,12 @@
 export default interface IUser {
   userId: number;
-  username: string;
-  email: string;
-  password: string;
-  hidden: boolean;
+  username?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  unionId?: number;
+  password?: string;
+  hidden?: boolean;
 }
 
 /**
@@ -14,6 +17,9 @@ export const userFilter = (user: IUser) => {
   return {
     userId: user.userId,
     username: user.username,
-    email: user.email
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    unionId: user.unionId
   };
 };

@@ -4,6 +4,18 @@ exports.up = function(knex, Promise) {
     table.string("username", 255).notNullable();
     table.string("email", 255).notNullable();
     table.string("password", 255).notNullable();
+    table.string("firstName", 255).notNullable();
+    table.string("lastName", 255).notNullable();
+    table.integer("unionId");
+    table
+      .foreign("unionId")
+      .references("unionId")
+      .inTable("studentUnions");
+    table.integer("roleId").notNullable().defaultTo(2);
+    table
+      .foreign("roleId")
+      .references("roleId")
+      .inTable("roles");
   });
 };
 

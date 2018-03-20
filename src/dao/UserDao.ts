@@ -9,11 +9,28 @@ export default class UserDao implements IDao<IUser> {
   public findAll(): Promise<IUser[]> {
     return this.knex("users").select();
   }
-  public findOne(id: number): Promise<IUser> {
+  public findOne(id: number): Promise<IUser[]> {
     return this.knex("users")
       .select()
       .where({ imageId: id });
   }
+  public findByUsername(username: string): Promise<IUser[]> {
+    return this.knex("users")
+      .select()
+      .where({ username });
+  }
+
+  public save(user: {
+    username: string;
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    unionId: number;
+  }): Promise<IUser> {
+    return this.knex("users").insert(user);
+  }
+
   public remove(id: number): Promise<void> {
     return this.knex("users")
       .delete()
