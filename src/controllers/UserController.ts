@@ -3,10 +3,10 @@ import * as bcrypt from "bcrypt";
 import IUser, { userFilter } from "../models/IUser";
 
 import Controller from "./Controller";
-import UserDao from "../repository/UserDao";
+import UserDao from "../dao/UserDao";
 
 export default class UserController extends Controller {
-  constructor(private userDao: UserDao) {
+  constructor(private userDao: UserDao, private roleDao?: any) {
     super();
   }
 
@@ -19,6 +19,13 @@ export default class UserController extends Controller {
         return res.status(500).json({ error: "Internal server error" });
       }
     });
+
+    this.router.get(
+      ":userId/roles",
+      async (req: express.Request, res: express.Response) => {
+        return res.status(200).json({ error: "Not yet implemented" });
+      }
+    );
 
     this.router.post(
       "",

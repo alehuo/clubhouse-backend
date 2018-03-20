@@ -24,6 +24,9 @@ export default class UserDao implements IDao<IUser> {
     username: string;
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
+    unionId: number;
   }): Promise<IUser> {
     return this.knex("users").insert(user);
   }
