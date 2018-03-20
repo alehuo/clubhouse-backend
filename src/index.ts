@@ -8,6 +8,7 @@ import * as compression from "compression";
 import UserController from "./controllers/UserController";
 import * as Database from "./Database";
 import UserDao from "./dao/UserDao";
+import PermissionDao from "./dao/PermissionDao";
 
 // Express instance
 const app: express.Application = express();
@@ -36,7 +37,7 @@ app.use(compression());
 app.use(cache("5 minutes"));*/
 
 // Users route
-app.use(apiUrl("users"), new UserController(new UserDao(knex)).routes());
+app.use(apiUrl("users"), new UserController(new UserDao(knex), new PermissionDao(knex)).routes());
 
 // Listen
 app.listen(process.env.SERVER_PORT, () => {

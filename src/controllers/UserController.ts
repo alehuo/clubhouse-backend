@@ -4,9 +4,11 @@ import IUser, { userFilter } from "../models/IUser";
 
 import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
+import PermissionDao from "../dao/PermissionDao";
+import IPermission, { userPermissionFilter } from "../models/IPermission";
 
 export default class UserController extends Controller {
-  constructor(private userDao: UserDao, private roleDao?: any) {
+  constructor(private userDao: UserDao, private permissionDao: PermissionDao) {
     super();
   }
 
@@ -21,9 +23,12 @@ export default class UserController extends Controller {
     });
 
     this.router.get(
-      ":userId/roles",
+      "/:userId/permissions",
       async (req: express.Request, res: express.Response) => {
-        return res.status(200).json({ error: "Not yet implemented" });
+        const permissions = await this.permissionDao.findPermissionsByUserId(
+          req.params.userId
+        );
+        return res.status(200).json(userPermissionFilter(permissions[0]));
       }
     );
 

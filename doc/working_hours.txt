@@ -1,3 +1,5 @@
+# Working hours
+
 5.3.2018: 3h - Initialize project structure, create basic migrations
 12.3.2018: 3h - Created User migration, seed, model and controller + started API documentation
 21.3.2018: 4h - Modify user migration, create migration files for student unions, roles, rolePermissions and calendar events. Modify user controller and API documentation to suit changes made in user registration.
