@@ -1,12 +1,12 @@
 export default interface IUser {
   userId: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  unionId: number;
-  password: string;
-  hidden: boolean;
+  username?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  unionId?: number;
+  password?: string;
+  hidden?: boolean;
 }
 
 /**

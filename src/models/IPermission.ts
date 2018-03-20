@@ -1,3 +1,5 @@
+import IUser from "./IUser";
+
 export default interface IPermission {
   // User management
   banUser: boolean;
@@ -36,7 +38,7 @@ export default interface IPermission {
   sendMails: boolean;
 }
 
-export const userPermissionFilter = (p: any) => {
+export const userPermissionFilter = (p: IUser & IPermission) => {
   return {
     // User Id
     userId: p.userId,

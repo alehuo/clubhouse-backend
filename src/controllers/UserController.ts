@@ -25,7 +25,7 @@ export default class UserController extends Controller {
     this.router.get(
       "/:userId/permissions",
       async (req: express.Request, res: express.Response) => {
-        const permissions = await this.permissionDao.findPermissionsByUserId(
+        const permissions: any = await this.permissionDao.findPermissionsByUserId(
           req.params.userId
         );
         return res.status(200).json(userPermissionFilter(permissions[0]));
