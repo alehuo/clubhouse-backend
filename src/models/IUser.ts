@@ -7,7 +7,7 @@ export default interface IUser {
   unionId: number;
   password: string;
   hidden: boolean;
-};
+}
 
 /**
  * Filters an user object and removes its "hidden" & "password" fields.

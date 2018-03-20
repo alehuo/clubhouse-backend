@@ -27,10 +27,23 @@ export default class UserController extends Controller {
           const userData: {
             username: string;
             email: string;
+            firstName: string;
+            lastName: string;
+            unionId: number;
             password: string;
           } =
             req.body;
-          if (!(userData.username && userData.email && userData.password)) {
+          console.log(req.body);
+          if (
+            !(
+              userData.username &&
+              userData.email &&
+              userData.firstName &&
+              userData.lastName &&
+              userData.unionId &&
+              userData.password
+            )
+          ) {
             return res
               .status(500)
               .json({ error: "Missing request body parameters" });
@@ -50,6 +63,9 @@ export default class UserController extends Controller {
               const savedUser = await this.userDao.save({
                 username: userData.username,
                 email: userData.email,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                unionId: userData.unionId,
                 password: userData.password
               });
 
