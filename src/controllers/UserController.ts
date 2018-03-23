@@ -6,6 +6,7 @@ import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
 import PermissionDao from "../dao/PermissionDao";
 import IPermission, { userPermissionFilter } from "../models/IPermission";
+import { JwtMiddleware } from "../JwtUtils";
 
 export default class UserController extends Controller {
   constructor(private userDao: UserDao, private permissionDao: PermissionDao) {
@@ -24,6 +25,7 @@ export default class UserController extends Controller {
 
     this.router.get(
       "/:userId/permissions",
+      JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         const permissions: any = await this.permissionDao.findPermissionsByUserId(
           req.params.userId
