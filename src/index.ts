@@ -55,10 +55,13 @@ app.use(
   expressWinston.logger({
     transports: [
       new winston.transports.Console({
-        json: true,
         colorize: true
       }),
-      new winston.transports.File({ json: false, filename: "app.log" })
+      new winston.transports.File({
+        json: true,
+        filename: "app.log",
+        maxsize: 100000
+      })
     ],
     msg:
       "HTTP {{req.method}} {{res.statusCode}} {{res.responseTime}}ms {{req.url}}",
