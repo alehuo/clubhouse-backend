@@ -7,19 +7,19 @@ Back-end for Full-stack software development project course
 
 ## Installation instructions
 
-1.  Clone the repo
-2.  Install yarn if not yet installed
-3.  Run `yarn` to install dependencies
-4.  Create `.env` file and define environment variables. See `.env.example` file.
-5.  `knex migrate:latest` to run migrations
-6.  `knex seed:run` to seed the database
-7.  `yarn start` to start the server
+1. Clone the repo
+2. Install yarn if not yet installed
+3. Run `yarn` to install dependencies
+4. Create `.env` file and define environment variables. See `.env.example` file.
+5. `knex migrate:latest` to run migrations
+6. `knex seed:run` to seed the database
+7. `yarn start` to start the server or `yarn watch` to watch for code changes
 
 ## API documentation
 
 ## /api/v1/users
 
-#### GET /api/v1/users
+### GET /api/v1/users
 
 _Returns:_ **A list of users registered in the service.**
 
@@ -58,7 +58,7 @@ _Response body:_
 ]
 ```
 
-#### GET /api/v1/users/:userId
+### GET /api/v1/users/:userId
 
 _Returns:_ **Registered user if the request completes successfully**
 
@@ -81,7 +81,7 @@ _Response body:_ **GET /api/v1/users/1**
   }
 ```
 
-#### POST /api/v1/users
+### POST /api/v1/users
 
 _Returns:_ **Created user if the request succeeds**
 
@@ -118,7 +118,8 @@ _Response body:_ Created user
     "unionId": 1
   }
 ```
-## /api/v1/users/:userId/permissions
+
+### GET /api/v1/users/:userId/permissions
 
 _Returns:_ **Permissions of the user if the request completes successfully**
 

@@ -9,6 +9,9 @@ import UserController from "./controllers/UserController";
 import * as Database from "./Database";
 import UserDao from "./dao/UserDao";
 import PermissionDao from "./dao/PermissionDao";
+import AuthController from "./controllers/AuthController";
+import * as winston from "winston";
+import * as expressWinston from "express-winston";
 
 // Express instance
 const app: express.Application = express();
@@ -27,7 +30,7 @@ const apiUrl = (path: string, apiVersion: string = API_VERSION) =>
 app.use(express.json());
 
 // Morgan
-// app.use(morgan("tiny"));
+app.use(morgan("tiny"));
 
 // Compression
 app.use(compression());
@@ -37,7 +40,36 @@ app.use(compression());
 app.use(cache("5 minutes"));*/
 
 // Users route
-app.use(apiUrl("users"), new UserController(new UserDao(knex), new PermissionDao(knex)).routes());
+app.use(
+  apiUrl("users"),
+  new UserController(new UserDao(knex), new PermissionDao(knex)).routes()
+);
+
+// Auth route
+app.use(
+  apiUrl("authenticate"),
+  new AuthController(new UserDao(knex), new PermissionDao(knex)).routes()
+);
+
+app.use(
+  expressWinston.logger({
+    transports: [
+      new winston.transports.Console({
+        colorize: true
+      }),
+      new winston.transports.File({
+        json: true,
+        filename: "app.log",
+        maxsize: 100000
+      })
+    ],
+    msg:
+      "HTTP {{req.method}} {{res.statusCode}} {{res.responseTime}}ms {{req.url}}",
+    expressFormat: true,
+    colorize: true,
+    ignoreRoute: (req, res) => false
+  })
+);
 
 // Listen
 app.listen(process.env.SERVER_PORT, () => {
