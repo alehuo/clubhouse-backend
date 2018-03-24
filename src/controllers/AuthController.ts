@@ -4,10 +4,12 @@ import IUser from "../models/IUser";
 
 import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
-import { JwtMiddleware } from "../JwtUtils";
+import { JwtMiddleware, SignToken } from "../JwtUtils";
+import PermissionDao from "../dao/PermissionDao";
+import IPermission, { userPermissionFilter } from "../models/IPermission";
 
 export default class AuthController extends Controller {
-  constructor(private userDao: UserDao) {
+  constructor(private userDao: UserDao, private permissionDao: PermissionDao) {
     super();
   }
 
@@ -21,7 +23,6 @@ export default class AuthController extends Controller {
             password: string;
           } =
             req.body;
-          console.log(req.body);
           if (!(authData.username && authData.password)) {
             return res
               .status(500)
@@ -43,19 +44,33 @@ export default class AuthController extends Controller {
               try {
                 const match: boolean = await bcrypt.compare(inputPwd, dbPwd);
                 if (match) {
-                  return res.status(200).json({ token: "abcd" });
+                  const permissions: IPermission[] = await this.permissionDao.findPermissionsByUserId(
+                    user[0].userId
+                  );
+                  const token = SignToken(
+                    Object.assign(
+                      {},
+                      {
+                        username: user[0].username,
+                        userId: user[0].userId,
+                        unionId: user[0].unionId,
+                        email: user[0].email,
+                        firstName: user[0].firstName,
+                        lastName: user[0].lastName
+                      },
+                      permissions.map(userPermissionFilter)[0]
+                    )
+                  );
+                  return res.status(200).json(Object.assign({}, { token }));
                 } else {
                   return res
                     .status(400)
                     .json({ error: "Invalid username or password" });
                 }
               } catch (ex) {
-                return res
-                  .status(400)
-                  .json({ error: "Invalid username or password" });
+                console.error(ex);
+                return res.status(500).json({ error: "Internal server error" });
               }
-
-              return res.status(201).json(Object.assign({}, authData));
             }
           }
         } catch (err) {

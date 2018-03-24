@@ -41,7 +41,7 @@ export const JwtMiddleware = async (
  * @param data Data.
  */
 export const SignToken = (data: string | object | Buffer): string =>
-  jwt.sign({ exp: process.env.JWT_EXPIRE, data }, process.env.JWT_SECRET, {
+  jwt.sign({ exp: Number(process.env.JWT_EXPIRE), data }, process.env.JWT_SECRET, {
     algorithm: "HS256"
   });
 

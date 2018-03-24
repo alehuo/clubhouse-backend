@@ -29,7 +29,7 @@ export default class UserDao implements IDao<IPermission> {
       .where("users.username", username);
   }
 
-  public findPermissionsByUserId(userId: string): Promise<IPermission[]> {
+  public findPermissionsByUserId(userId: number): Promise<IPermission[]> {
     return this.knex("rolePermissions")
       .select()
       .innerJoin("users", "users.roleId", "rolePermissions.roleId")
