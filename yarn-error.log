@@ -1,17 +1,17 @@
 Arguments: 
-  /usr/local/Cellar/node/9.3.0_1/bin/node /Users/ahuotala/.yarn/bin/yarn.js start
+  /usr/local/bin/node /opt/yarn-v1.5.1/bin/yarn.js start
 
 PATH: 
-  /Users/ahuotala/.yarn/bin:/Users/ahuotala/.config/yarn/global/node_modules/.bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Users/ahuotala/.rbenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/usr/local/share/dotnet:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/Applications/Xamarin Workbooks.app/Contents/SharedSupport/path-bin:/Users/ahuotala/.yarn/bin:/Users/ahuotala/.config/yarn/global/node_modules/.bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Users/ahuotala/.rbenv/shims:/Users/ahuotala/Library/Android/sdk/tools:/Users/ahuotala/Library/Android/sdk/platform-tools:/Users/ahuotala/.local/bin:/Users/ahuotala/Library/Android/sdk/tools:/Users/ahuotala/Library/Android/sdk/platform-tools:/Users/ahuotala/.local/bin
+  /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 Yarn version: 
   1.5.1
 
 Node version: 
-  9.3.0
+  8.10.0
 
 Platform: 
-  darwin x64
+  linux x64
 
 npm manifest: 
   {
@@ -3837,15 +3837,16 @@ Lockfile:
 
 Trace: 
   Error: Command failed.
-  Exit code: 1
+  Exit code: 127
   Command: sh
   Arguments: -c ts-node src/index.ts
-  Directory: /Users/ahuotala/Documents/Kurssit/FullStack-Harkka/ClubhouseBackend
+  Directory: /src
   Output:
   
-      at ProcessTermError.MessageError (/Users/ahuotala/.yarn/lib/cli.js:186:110)
-      at new ProcessTermError (/Users/ahuotala/.yarn/lib/cli.js:226:113)
-      at ChildProcess.<anonymous> (/Users/ahuotala/.yarn/lib/cli.js:30281:17)
-      at ChildProcess.emit (events.js:159:13)
-      at maybeClose (internal/child_process.js:943:16)
-      at Process.ChildProcess._handle.onexit (internal/child_process.js:220:5)
+      at ProcessTermError.MessageError (/opt/yarn-v1.5.1/lib/cli.js:186:110)
+      at new ProcessTermError (/opt/yarn-v1.5.1/lib/cli.js:226:113)
+      at ChildProcess.<anonymous> (/opt/yarn-v1.5.1/lib/cli.js:30281:17)
+      at emitTwo (events.js:126:13)
+      at ChildProcess.emit (events.js:214:7)
+      at maybeClose (internal/child_process.js:925:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
