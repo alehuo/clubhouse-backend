@@ -1,5 +1,7 @@
 # clubhouse-backend
 
+[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/) [Code coverage] [Travis CI build status] [MIt license]
+
 Back-end for Full-stack software development project course.
 
 The back-end has been coded with TypeScript. A Dockerfile is also provided if you wish to deploy the app easily. Knex is used to handle DB migrations and seeding.
