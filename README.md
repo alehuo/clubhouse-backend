@@ -29,7 +29,7 @@ _Response content-type:_ **application/json**
 
 _Response body:_
 
-```
+```json
 [
   {
     "userId": 1,
@@ -70,15 +70,15 @@ _Response content-type:_ **application/json**
 
 _Response body:_ **GET /api/v1/users/1**
 
-```
-  {
-    "userId": 1,
-    "username": "user1",
-    "email": "user1@email.com",
-    "firstName": "firstname",
-    "lastName": "lastname",
-    "unionId": 1
-  }
+```json
+{
+  "userId": 1,
+  "username": "user1",
+  "email": "user1@email.com",
+  "firstName": "firstname",
+  "lastName": "lastname",
+  "unionId": 1
+}
 ```
 
 ### POST /api/v1/users
@@ -91,15 +91,15 @@ _Request body:_
 
 Required: ```username```, ```email``` and ```password```
 
-```
-  {
-    "username": "user1",
-    "email": "user1@email.com",
-    "password": "password1",
-    "firstName": "firstname",
-    "lastName": "lastname",
-    "unionId": 1
-  }
+```json
+{
+  "username": "user1",
+  "email": "user1@email.com",
+  "password": "password1",
+  "firstName": "firstname",
+  "lastName": "lastname",
+  "unionId": 1
+}
 ```
 
 _Response status code:_ **HTTP 201** (success on user creation), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
@@ -108,15 +108,15 @@ _Response content-type:_ **application/json**
 
 _Response body:_ Created user
 
-```
-  {
-    "userId": 1,
-    "username": "user1",
-    "email": "user1@email.com",
-    "firstName": "firstname",
-    "lastName": "lastname",
-    "unionId": 1
-  }
+```json
+{
+  "userId": 1,
+  "username": "user1",
+  "email": "user1@email.com",
+  "firstName": "firstname",
+  "lastName": "lastname",
+  "unionId": 1
+}
 ```
 
 ### GET /api/v1/users/:userId/permissions
@@ -133,37 +133,89 @@ _Response content-type:_ **application/json**
 
 _Response body:_ **GET /api/v1/users/1/permissions**
 
+```json
+{
+  "userId": 1,
+  "permissions": {
+    "banUser": 0,
+    "editUserRole": 0,
+    "makeUserAdmin": 0,
+    "allowUserLogin": 1,
+    "addKeyToUser": 0,
+    "removeKeyFromUser": 0,
+    "changeKeyTypeOfUser": 0,
+    "allowViewKeys": 1,
+    "addUserToUnion": 0,
+    "removeUserFromUnion": 0,
+    "addStudentUnion": 0,
+    "removeStudentUnion": 0,
+    "editStudentUnion": 0,
+    "allowViewStudentUnions": 1,
+    "addEvent": 0,
+    "editEvent": 0,
+    "removeEvent": 0,
+    "allowViewEvents": 1,
+    "editRules": 0,
+    "allowViewRules": 1,
+    "addOwnPost": 0,
+    "editOwnPost": 0,
+    "removeOwnPost": 0,
+    "allowViewNews": 1,
+    "editOthersPosts": 0,
+    "removeOthersPosts": 0,
+    "sendMails": 0
+  }
+}
 ```
-{  
-   "userId": 1,
-   "permissions": {
-      "banUser": false,
-      "editUserRole": false,
-      "makeUserAdmin": false,
-      "allowUserLogin": true,
-      "addKeyToUser": false,
-      "removeKeyFromUser": false,
-      "changeKeyTypeOfUser": false,
-      "allowViewKeys": true,
-      "addUserToUnion": false,
-      "removeUserFromUnion": false,
-      "addStudentUnion": false,
-      "removeStudentUnion": false,
-      "editStudentUnion": false,
-      "allowViewStudentUnions": true,
-      "addEvent": false,
-      "editEvent": false,
-      "removeEvent": false,
-      "allowViewEvents": true,
-      "editRules": false,
-      "allowViewRules": true,
-      "addOwnPost": false,
-      "editOwnPost": false,
-      "removeOwnPost": false,
-      "allowViewNews": true,
-      "editOthersPosts": false,
-      "removeOthersPosts": false,
-      "sendMails": false
-   }
+
+## /api/v1/studentunion
+
+### GET /api/v1/studentunion
+
+_Returns:_ **A list of student unions in the service.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "unionId": 1,
+    "name": "Union 1",
+    "description": "Union 1 description"
+  },
+  {
+    "unionId": 2,
+    "name": "Union 2",
+    "description": "Union 2 description"
+  },
+  {
+    "unionId": 3,
+    "name": "Union 3",
+    "description": "Union 3 description"
+  }
+]
+```
+
+### GET /api/v1/studentunion/:unionId
+
+_Returns:_ **A single student unions in the service by its id.**
+
+_Request parameters:_ ```unionId``` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/studentunion/1**
+
+```json
+{
+  "unionId": 1,
+  "name": "Union 1",
+  "description": "Union 1 description"
 }
 ```

@@ -12,6 +12,8 @@ import PermissionDao from "./dao/PermissionDao";
 import AuthController from "./controllers/AuthController";
 import * as winston from "winston";
 import * as expressWinston from "express-winston";
+import StudentUnionDao from "./dao/StudentUnionDao";
+import StudentUnionController from "./controllers/StudentUnionController";
 
 // Express instance
 const app: express.Application = express();
@@ -49,6 +51,14 @@ app.use(
 app.use(
   apiUrl("authenticate"),
   new AuthController(new UserDao(knex), new PermissionDao(knex)).routes()
+);
+
+// Student unions route
+app.use(
+  apiUrl("studentunion"),
+  new StudentUnionController(
+    new StudentUnionDao(knex)
+  ).routes()
 );
 
 app.use(
