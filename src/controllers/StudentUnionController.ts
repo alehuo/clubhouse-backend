@@ -1,9 +1,9 @@
 import * as express from "express";
 
 import Controller from "./Controller";
-import { JwtMiddleware } from "../JwtUtils";
 import IStudentUnion, { studentUnionFilter } from "../models/IStudentUnion";
 import StudentUnionDao from "../dao/StudentUnionDao";
+import { JwtMiddleware } from "../JwtUtils";
 
 /**
  * Student union controller.
