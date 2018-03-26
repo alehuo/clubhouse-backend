@@ -2,7 +2,7 @@ export default interface IStudentUnion {
   unionId?: number;
   name: string;
   description: string;
-}
+};
 
 /**
  * Filters a student union object and removes its "hidden" & "password" fields.

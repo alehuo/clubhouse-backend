@@ -11,7 +11,10 @@ exports.up = function(knex, Promise) {
       .foreign("unionId")
       .references("unionId")
       .inTable("studentUnions");
-    table.integer("roleId").notNullable().defaultTo(2);
+    table
+      .integer("roleId")
+      .notNullable()
+      .defaultTo(2);
     table
       .foreign("roleId")
       .references("roleId")

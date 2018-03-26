@@ -36,7 +36,7 @@ export default interface IPermission {
   removeOthersPosts: boolean;
   // Mailing
   sendMails: boolean;
-}
+};
 
 export const userPermissionFilter = (p: IUser & IPermission) => {
   return {
