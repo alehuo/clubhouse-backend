@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/Cellar/node/9.3.0_1/bin/node /Users/ahuotala/.yarn/bin/yarn.js start
+  /usr/local/Cellar/node/9.3.0_1/bin/node /Users/ahuotala/.yarn/bin/yarn.js watch
 
 PATH: 
   /Users/ahuotala/.yarn/bin:/Users/ahuotala/.config/yarn/global/node_modules/.bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Users/ahuotala/.rbenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/usr/local/share/dotnet:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/Applications/Xamarin Workbooks.app/Contents/SharedSupport/path-bin:/Users/ahuotala/.yarn/bin:/Users/ahuotala/.config/yarn/global/node_modules/.bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Users/ahuotala/.rbenv/shims:/Users/ahuotala/Library/Android/sdk/tools:/Users/ahuotala/Library/Android/sdk/platform-tools:/Users/ahuotala/.local/bin:/Users/ahuotala/Library/Android/sdk/tools:/Users/ahuotala/Library/Android/sdk/platform-tools:/Users/ahuotala/.local/bin
@@ -3837,9 +3837,9 @@ Lockfile:
 
 Trace: 
   Error: Command failed.
-  Exit code: 1
+  Exit code: 127
   Command: sh
-  Arguments: -c ts-node src/index.ts
+  Arguments: -c nodemon start
   Directory: /Users/ahuotala/Documents/Kurssit/FullStack-Harkka/ClubhouseBackend
   Output:
   
