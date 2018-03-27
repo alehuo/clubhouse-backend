@@ -246,7 +246,99 @@ _Response body:_ **GET /api/v1/studentunion/1**
 
 ## /api/v1/calendar
 
-Todo
+### GET /api/v1/calendar
+
+_Returns:_ **All calendar events in the service, past and present.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "eventId": 1,
+    "name": "Friday hangouts",
+    "description": "Friday hangouts at our clubhouse",
+    "restricted": 0,
+    "startTime": 1524495600000,
+    "endTime": 1524524400000,
+    "addedBy": 1,
+    "unionId": 1,
+    "locationId": 2
+  },
+  {
+    "eventId": 2,
+    "name": "Board meeting",
+    "description": "Board meeting 5/2018",
+    "restricted": 1,
+    "startTime": 1524495600000,
+    "endTime": 1524524400000,
+    "addedBy": 1,
+    "unionId": 1,
+    "locationId": 1
+  }
+]
+```
+
+### GET /api/v1/calendar/:eventId
+
+_Returns:_ **A single calendar event in the service by its id.**
+
+_Request parameters:_ ```eventId``` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/calendar/1**
+
+```json
+{
+  "eventId": 1,
+  "name": "Friday hangouts",
+  "description": "Friday hangouts at our clubhouse",
+  "restricted": 0,
+  "startTime": 1524495600000,
+  "endTime": 1524524400000,
+  "addedBy": 1,
+  "unionId": 1,
+  "locationId": 2
+}
+```
+
+### GET /api/v1/calendar/:eventId/ical
+
+_Returns:_ **An iCal file of the event in the service by its id. Triggers a file download in the browser.**
+
+_Request parameters:_ ```eventId``` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **text/calendar**
+
+_Response body:_ **GET /api/v1/calendar/1/ical**
+
+```text
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:clubhouse
+BEGIN:VEVENT
+CATEGORIES:MEETING
+STATUS:TENTATIVE
+DTSTAMP:20180327T113010
+DTSTART:20180423T180000
+UID:20180327T113010@clubhouse.com
+DTSTART:20180423T180000
+DTEND:20180424T020000
+SUMMARY: Friday hangouts
+DESCRIPTION: Friday hangouts at our clubhouse
+CLASS:PRIVATE
+END:VEVENT
+END:VCALENDAR
+```
 
 ## /api/v1/location
 
