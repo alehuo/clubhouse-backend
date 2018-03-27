@@ -15,7 +15,7 @@ exports.seed = function(knex, Promise) {
           firstName: "Hello",
           lastName: "World 1",
           unionId: 1,
-          roleId: 2,
+          permissions: 67108863,
           password: bcrypt.hashSync("user1", salt)
         },
         {
@@ -25,7 +25,7 @@ exports.seed = function(knex, Promise) {
           firstName: "Hello",
           lastName: "World 2",
           unionId: 1,
-          roleId: 1,
+          permissions: 8,
           password: bcrypt.hashSync("user2", salt)
         },
         {
@@ -35,7 +35,7 @@ exports.seed = function(knex, Promise) {
           firstName: "Hello",
           lastName: "World 3",
           unionId: 2,
-          roleId: 1,
+          permissions: 8,
           password: bcrypt.hashSync("user3", salt)
         }
       ]);

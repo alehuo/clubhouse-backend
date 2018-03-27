@@ -12,13 +12,9 @@ exports.up = function(knex, Promise) {
       .references("unionId")
       .inTable("studentUnions");
     table
-      .integer("roleId")
+      .integer("permissions")
       .notNullable()
-      .defaultTo(2);
-    table
-      .foreign("roleId")
-      .references("roleId")
-      .inTable("roles");
+      .defaultTo(8);
   });
 };
 
