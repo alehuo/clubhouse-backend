@@ -13,21 +13,21 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
 
 ## Introduction
 
-Many student unions across Finland use so called "clubhouses" where they can organize events and have fun with other students. 
+Many student unions across Finland use so called "clubhouses" where they can organize events and have fun with other students.
 
 It is not always clear what events are kept there, who has the permission to use such places and how to keep a good track of who is in response of other people, and when has such a person been there.
 
 This project is meant to solve this problem by providing:
 
-- List of student unions
-- List of students that have access to clubhouses (night / day keys etc..)
-- An Event calendar to look for events (Available also as iCal / RSS)
-- Rules of the clubhouse easily available
-- Cleaning schedules of the clubhouse
-- A "newsboard" system for posting announcements
-- Management interface for easy responsibility taking of other people
-- Comprehensive admin interface for administrators to be constantly up to date of whats happening.
-- Very flexible permissions system. You can add roles and customize their permissions as you wish.
+* List of student unions
+* List of students that have access to clubhouses (night / day keys etc..)
+* An Event calendar to look for events (Available also as iCal / RSS)
+* Rules of the clubhouse easily available
+* Cleaning schedules of the clubhouse
+* A "newsboard" system for posting announcements
+* Management interface for easy responsibility taking of other people
+* Comprehensive admin interface for administrators to be constantly up to date of whats happening.
+* Very flexible permissions system. You can add roles and customize their permissions as you wish.
 
 ## Installation instructions
 
