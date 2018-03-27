@@ -243,3 +243,15 @@ _Response body:_ **GET /api/v1/studentunion/1**
   "description": "Union 1 description"
 }
 ```
+
+## /api/v1/calendar
+
+Todo
+
+## /api/v1/location
+
+Todo
+
+## /api/v1/roles
+
+Todo
