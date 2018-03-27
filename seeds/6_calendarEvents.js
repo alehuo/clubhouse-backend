@@ -13,7 +13,7 @@ exports.seed = function(knex, Promise) {
           endTime: new Date(2018, 3, 24, 2, 0, 0),
           addedBy: 1,
           unionId: 1,
-          location: null
+          locationId: 2
         },
         {
           name: "Board meeting",
@@ -23,7 +23,7 @@ exports.seed = function(knex, Promise) {
           endTime: new Date(2018, 3, 24, 2, 0, 0),
           addedBy: 1,
           unionId: 1,
-          location: "Clubhouse meeting room"
+          locationId: 1
         }
       ]);
     });

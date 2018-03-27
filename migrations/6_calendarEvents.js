@@ -15,7 +15,13 @@ exports.up = function(knex, Promise) {
     // Union id
     table.integer("unionId").notNullable();
     // Location
-    table.string("location").defaultTo(null);
+    table.integer("locationId").notNullable();
+
+    table
+      .foreign("locationId")
+      .references("locationId")
+      .inTable("locations");
+
     table
       .foreign("addedBy")
       .references("userId")

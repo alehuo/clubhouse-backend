@@ -2,7 +2,7 @@ export default interface ICalendarEvent {
   eventId?: number;
   name: string;
   description: string;
-  location: string | null;
+  locationId: number | null;
   restricted: boolean;
   startTime: Date;
   endTime: Date;

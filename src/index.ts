@@ -16,6 +16,8 @@ import StudentUnionDao from "./dao/StudentUnionDao";
 import StudentUnionController from "./controllers/StudentUnionController";
 import CalendarEventController from "./controllers/CalendarEventController";
 import CalendarEventDao from "./dao/CalendarEventDao";
+import LocationDao from "./dao/LocationDao";
+import LocationController from "./controllers/LocationController";
 
 // Express instance
 const app: express.Application = express();
@@ -65,6 +67,12 @@ app.use(
 app.use(
   apiUrl("calendar"),
   new CalendarEventController(new CalendarEventDao(knex)).routes()
+);
+
+// Location route
+app.use(
+  apiUrl("location"),
+  new LocationController(new LocationDao(knex)).routes()
 );
 
 app.use(

@@ -3,7 +3,7 @@ import * as Promise from "bluebird";
 import * as Knex from "knex";
 import ICalendarEvent from "../models/ICalendarEvent";
 
-export default class UserDao implements IDao<ICalendarEvent> {
+export default class CalendarEventDao implements IDao<ICalendarEvent> {
   constructor(private readonly knex: Knex) {}
 
   public findAll(): Promise<ICalendarEvent[]> {
