@@ -1,4 +1,6 @@
-const permissions: IPerm[] = [
+import IPermission from "./models/IPermission";
+
+const permissions: IPermission[] = [
   {
     name: "BAN_USER",
     value: 0x00000001
@@ -105,17 +107,20 @@ const permissions: IPerm[] = [
   }
 ];
 
-interface IPerm {
-  name: string;
-  value: number;
-}
-
-const calculatePermissions = (perms: IPerm[]) =>
+/**
+ * Calculates user's permissions using bitwise operations.
+ * @param perms User permissions.
+ */
+const calculatePermissions = (perms: IPermission[]) =>
   perms.reduce((prev, curr) => prev | curr.value, perms[0].value);
 
+/**
+ * Returns the user's permissions.
+ * @param userPerms User permission number.
+ */
 const getPermissions = (userPerms: number) => {
   const allowed = [];
-  permissions.map((k: IPerm) => {
+  permissions.map((k: IPermission) => {
     const permissionName: string = k.name;
     const permissionValue: number = k.value;
     if ((userPerms & permissionValue) === permissionValue) {
@@ -125,9 +130,14 @@ const getPermissions = (userPerms: number) => {
   return allowed;
 };
 
+/**
+ * Returns if the user has the required permissions or not.
+ * @param userPerms User permissions
+ * @param requiredPermissions Required permissions
+ */
 const hasPermissions = (
-  userPerms: number | IPerm[],
-  requiredPermissions: number | IPerm[]
+  userPerms: number | IPermission[],
+  requiredPermissions: number | IPermission[]
 ) => {
   if (typeof userPerms === "number") {
     if (typeof requiredPermissions === "number") {
@@ -150,5 +160,3 @@ const hasPermissions = (
     }
   }
 };
-
-console.log(calculatePermissions(permissions));
