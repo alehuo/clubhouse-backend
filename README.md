@@ -61,7 +61,8 @@ _Response body:_
     "email": "user1@email.com",
     "firstName": "firstname",
     "lastName": "lastname",
-    "unionId": 1
+    "unionId": 1,
+    "permissions": 8
   },
   {
     "userId": 2,
@@ -69,7 +70,8 @@ _Response body:_
     "email": "user2@email.com",
     "firstName": "firstname",
     "lastName": "lastname",
-    "unionId": 1
+    "unionId": 1,
+    "permissions": 8
   },
   {
     "userId": 3,
@@ -77,7 +79,8 @@ _Response body:_
     "email": "user3@email.com",
     "firstName": "firstname",
     "lastName": "lastname",
-    "unionId": 1
+    "unionId": 1,
+    "permissions": 8
   }
 ]
 ```
@@ -101,7 +104,8 @@ _Response body:_ **GET /api/v1/users/1**
   "email": "user1@email.com",
   "firstName": "firstname",
   "lastName": "lastname",
-  "unionId": 1
+  "unionId": 1,
+  "permissions": 8
 }
 ```
 
@@ -111,7 +115,7 @@ _Returns:_ **Created user if the request succeeds**
 
 _Request content-type:_ **application/json**
 
-_Request body:_ 
+_Request body:_
 
 Required: ```username```, ```email``` and ```password```
 
@@ -139,56 +143,8 @@ _Response body:_ Created user
   "email": "user1@email.com",
   "firstName": "firstname",
   "lastName": "lastname",
-  "unionId": 1
-}
-```
-
-### GET /api/v1/users/:userId/permissions
-
-_Returns:_ **Permissions of the user if the request completes successfully**
-
-_Request parameters:_ ```userId``` (URL parameter, integer)
-
-_Request headers:_ ```Authorization: Bearer {TOKEN}``` (Requires user to be authenticated)
-
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
-
-_Response content-type:_ **application/json**
-
-_Response body:_ **GET /api/v1/users/1/permissions**
-
-```json
-{
-  "userId": 1,
-  "permissions": {
-    "banUser": 0,
-    "editUserRole": 0,
-    "makeUserAdmin": 0,
-    "allowUserLogin": 1,
-    "addKeyToUser": 0,
-    "removeKeyFromUser": 0,
-    "changeKeyTypeOfUser": 0,
-    "allowViewKeys": 1,
-    "addUserToUnion": 0,
-    "removeUserFromUnion": 0,
-    "addStudentUnion": 0,
-    "removeStudentUnion": 0,
-    "editStudentUnion": 0,
-    "allowViewStudentUnions": 1,
-    "addEvent": 0,
-    "editEvent": 0,
-    "removeEvent": 0,
-    "allowViewEvents": 1,
-    "editRules": 0,
-    "allowViewRules": 1,
-    "addOwnPost": 0,
-    "editOwnPost": 0,
-    "removeOwnPost": 0,
-    "allowViewNews": 1,
-    "editOthersPosts": 0,
-    "removeOthersPosts": 0,
-    "sendMails": 0
-  }
+  "unionId": 1,
+  "permissions": 8
 }
 ```
 
