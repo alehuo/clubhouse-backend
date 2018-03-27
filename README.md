@@ -342,7 +342,50 @@ END:VCALENDAR
 
 ## /api/v1/location
 
-Todo
+### GET /api/v1/location
+
+_Returns:_ **All locations in the service.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "locationId": 1,
+    "name": "Meeting room",
+    "address": "Street Addr 1"
+  },
+  {
+    "locationId": 2,
+    "name": "Club",
+    "address": "Street Addr 1"
+  }
+]
+```
+
+### GET /api/v1/location/:locationId
+
+_Returns:_ **A single location in the service by its id.**
+
+_Request parameters:_ ```locationId``` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/location/1**
+
+```json
+{
+  "locationId": 1,
+  "name": "Meeting room",
+  "address": "Street Addr 1"
+}
+```
 
 ## /api/v1/roles
 
