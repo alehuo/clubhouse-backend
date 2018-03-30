@@ -4,3 +4,4 @@ storage/**/*
 .env
 .DS_Store
 app.log
+yarn-error.log

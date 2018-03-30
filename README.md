@@ -13,21 +13,21 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
 
 ## Introduction
 
-Many student unions across Finland use so called "clubhouses" where they can organize events and have fun with other students. 
+Many student unions across Finland use so called "clubhouses" where they can organize events and have fun with other students.
 
 It is not always clear what events are kept there, who has the permission to use such places and how to keep a good track of who is in response of other people, and when has such a person been there.
 
 This project is meant to solve this problem by providing:
 
-- List of student unions
-- List of students that have access to clubhouses (night / day keys etc..)
-- An Event calendar to look for events (Available also as iCal / RSS)
-- Rules of the clubhouse easily available
-- Cleaning schedules of the clubhouse
-- A "newsboard" system for posting announcements
-- Management interface for easy responsibility taking of other people
-- Comprehensive admin interface for administrators to be constantly up to date of whats happening.
-- Very flexible permissions system. You can add roles and customize their permissions as you wish.
+* List of student unions
+* List of students that have access to clubhouses (night / day keys etc..)
+* An Event calendar to look for events (Available also as iCal / RSS)
+* Rules of the clubhouse easily available
+* Cleaning schedules of the clubhouse
+* A "newsboard" system for posting announcements
+* Management interface for easy responsibility taking of other people
+* Comprehensive admin interface for administrators to be constantly up to date of whats happening.
+* Very flexible permissions system. You can add roles and customize their permissions as you wish.
 
 ## Installation instructions
 
@@ -61,7 +61,8 @@ _Response body:_
     "email": "user1@email.com",
     "firstName": "firstname",
     "lastName": "lastname",
-    "unionId": 1
+    "unionId": 1,
+    "permissions": 8
   },
   {
     "userId": 2,
@@ -69,7 +70,8 @@ _Response body:_
     "email": "user2@email.com",
     "firstName": "firstname",
     "lastName": "lastname",
-    "unionId": 1
+    "unionId": 1,
+    "permissions": 8
   },
   {
     "userId": 3,
@@ -77,7 +79,8 @@ _Response body:_
     "email": "user3@email.com",
     "firstName": "firstname",
     "lastName": "lastname",
-    "unionId": 1
+    "unionId": 1,
+    "permissions": 8
   }
 ]
 ```
@@ -101,7 +104,8 @@ _Response body:_ **GET /api/v1/users/1**
   "email": "user1@email.com",
   "firstName": "firstname",
   "lastName": "lastname",
-  "unionId": 1
+  "unionId": 1,
+  "permissions": 8
 }
 ```
 
@@ -111,7 +115,7 @@ _Returns:_ **Created user if the request succeeds**
 
 _Request content-type:_ **application/json**
 
-_Request body:_ 
+_Request body:_
 
 Required: ```username```, ```email``` and ```password```
 
@@ -139,56 +143,8 @@ _Response body:_ Created user
   "email": "user1@email.com",
   "firstName": "firstname",
   "lastName": "lastname",
-  "unionId": 1
-}
-```
-
-### GET /api/v1/users/:userId/permissions
-
-_Returns:_ **Permissions of the user if the request completes successfully**
-
-_Request parameters:_ ```userId``` (URL parameter, integer)
-
-_Request headers:_ ```Authorization: Bearer {TOKEN}``` (Requires user to be authenticated)
-
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
-
-_Response content-type:_ **application/json**
-
-_Response body:_ **GET /api/v1/users/1/permissions**
-
-```json
-{
-  "userId": 1,
-  "permissions": {
-    "banUser": 0,
-    "editUserRole": 0,
-    "makeUserAdmin": 0,
-    "allowUserLogin": 1,
-    "addKeyToUser": 0,
-    "removeKeyFromUser": 0,
-    "changeKeyTypeOfUser": 0,
-    "allowViewKeys": 1,
-    "addUserToUnion": 0,
-    "removeUserFromUnion": 0,
-    "addStudentUnion": 0,
-    "removeStudentUnion": 0,
-    "editStudentUnion": 0,
-    "allowViewStudentUnions": 1,
-    "addEvent": 0,
-    "editEvent": 0,
-    "removeEvent": 0,
-    "allowViewEvents": 1,
-    "editRules": 0,
-    "allowViewRules": 1,
-    "addOwnPost": 0,
-    "editOwnPost": 0,
-    "removeOwnPost": 0,
-    "allowViewNews": 1,
-    "editOthersPosts": 0,
-    "removeOthersPosts": 0,
-    "sendMails": 0
-  }
+  "unionId": 1,
+  "permissions": 8
 }
 ```
 
@@ -243,3 +199,150 @@ _Response body:_ **GET /api/v1/studentunion/1**
   "description": "Union 1 description"
 }
 ```
+
+## /api/v1/calendar
+
+### GET /api/v1/calendar
+
+_Returns:_ **All calendar events in the service, past and present.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "eventId": 1,
+    "name": "Friday hangouts",
+    "description": "Friday hangouts at our clubhouse",
+    "restricted": 0,
+    "startTime": 1524495600000,
+    "endTime": 1524524400000,
+    "addedBy": 1,
+    "unionId": 1,
+    "locationId": 2
+  },
+  {
+    "eventId": 2,
+    "name": "Board meeting",
+    "description": "Board meeting 5/2018",
+    "restricted": 1,
+    "startTime": 1524495600000,
+    "endTime": 1524524400000,
+    "addedBy": 1,
+    "unionId": 1,
+    "locationId": 1
+  }
+]
+```
+
+### GET /api/v1/calendar/:eventId
+
+_Returns:_ **A single calendar event in the service by its id.**
+
+_Request parameters:_ ```eventId``` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/calendar/1**
+
+```json
+{
+  "eventId": 1,
+  "name": "Friday hangouts",
+  "description": "Friday hangouts at our clubhouse",
+  "restricted": 0,
+  "startTime": 1524495600000,
+  "endTime": 1524524400000,
+  "addedBy": 1,
+  "unionId": 1,
+  "locationId": 2
+}
+```
+
+### GET /api/v1/calendar/:eventId/ical
+
+_Returns:_ **An iCal file of the event in the service by its id. Triggers a file download in the browser.**
+
+_Request parameters:_ ```eventId``` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **text/calendar**
+
+_Response body:_ **GET /api/v1/calendar/1/ical**
+
+```text
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:clubhouse
+BEGIN:VEVENT
+CATEGORIES:MEETING
+STATUS:TENTATIVE
+DTSTAMP:20180327T113010
+DTSTART:20180423T180000
+UID:20180327T113010@clubhouse.com
+DTSTART:20180423T180000
+DTEND:20180424T020000
+SUMMARY: Friday hangouts
+DESCRIPTION: Friday hangouts at our clubhouse
+CLASS:PRIVATE
+END:VEVENT
+END:VCALENDAR
+```
+
+## /api/v1/location
+
+### GET /api/v1/location
+
+_Returns:_ **All locations in the service.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "locationId": 1,
+    "name": "Meeting room",
+    "address": "Street Addr 1"
+  },
+  {
+    "locationId": 2,
+    "name": "Club",
+    "address": "Street Addr 1"
+  }
+]
+```
+
+### GET /api/v1/location/:locationId
+
+_Returns:_ **A single location in the service by its id.**
+
+_Request parameters:_ ```locationId``` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/location/1**
+
+```json
+{
+  "locationId": 1,
+  "name": "Meeting room",
+  "address": "Street Addr 1"
+}
+```
+
+## /api/v1/roles
+
+Todo

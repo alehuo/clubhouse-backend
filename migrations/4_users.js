@@ -11,11 +11,10 @@ exports.up = function(knex, Promise) {
       .foreign("unionId")
       .references("unionId")
       .inTable("studentUnions");
-    table.integer("roleId").notNullable().defaultTo(2);
     table
-      .foreign("roleId")
-      .references("roleId")
-      .inTable("roles");
+      .integer("permissions")
+      .notNullable()
+      .defaultTo(8);
   });
 };
 

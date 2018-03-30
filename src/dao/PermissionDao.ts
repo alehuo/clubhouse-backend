@@ -3,7 +3,7 @@ import IPermission from "../models/IPermission";
 import * as Promise from "bluebird";
 import * as Knex from "knex";
 
-export default class UserDao implements IDao<IPermission> {
+export default class PermissionDao implements IDao<IPermission> {
   constructor(private readonly knex: Knex) {}
 
   public findAll(): Promise<IPermission[]> {

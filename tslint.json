@@ -7,7 +7,9 @@
     "ordered-imports": false,
     "no-console": false,
     "trailing-comma": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "semicolon": false,
+    "no-bitwise": false
   },
   "rulesDirectory": []
 }

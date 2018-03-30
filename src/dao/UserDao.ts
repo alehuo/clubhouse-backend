@@ -1,5 +1,5 @@
 import IDao from "./Dao";
-import IUser from "../models/IUser";
+import IUser, {userFilter} from "../models/IUser";
 import * as Promise from "bluebird";
 import * as Knex from "knex";
 
@@ -9,10 +9,10 @@ export default class UserDao implements IDao<IUser> {
   public findAll(): Promise<IUser[]> {
     return this.knex("users").select();
   }
-  public findOne(id: number): Promise<IUser[]> {
+  public findOne(userId: number): Promise<IUser[]> {
     return this.knex("users")
       .select()
-      .where({ imageId: id });
+      .where({ userId });
   }
   public findByUsername(username: string): Promise<IUser[]> {
     return this.knex("users")
@@ -20,14 +20,7 @@ export default class UserDao implements IDao<IUser> {
       .where({ username });
   }
 
-  public save(user: {
-    username: string;
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    unionId: number;
-  }): Promise<IUser> {
+  public save(user: IUser): Promise<IUser> {
     return this.knex("users").insert(user);
   }
 

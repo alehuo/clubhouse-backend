@@ -14,6 +14,10 @@ import * as winston from "winston";
 import * as expressWinston from "express-winston";
 import StudentUnionDao from "./dao/StudentUnionDao";
 import StudentUnionController from "./controllers/StudentUnionController";
+import CalendarEventController from "./controllers/CalendarEventController";
+import CalendarEventDao from "./dao/CalendarEventDao";
+import LocationDao from "./dao/LocationDao";
+import LocationController from "./controllers/LocationController";
 
 // Express instance
 const app: express.Application = express();
@@ -56,9 +60,19 @@ app.use(
 // Student unions route
 app.use(
   apiUrl("studentunion"),
-  new StudentUnionController(
-    new StudentUnionDao(knex)
-  ).routes()
+  new StudentUnionController(new StudentUnionDao(knex)).routes()
+);
+
+// Calendar route
+app.use(
+  apiUrl("calendar"),
+  new CalendarEventController(new CalendarEventDao(knex)).routes()
+);
+
+// Location route
+app.use(
+  apiUrl("location"),
+  new LocationController(new LocationDao(knex)).routes()
 );
 
 app.use(

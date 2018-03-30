@@ -6,7 +6,7 @@ import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
 import { JwtMiddleware, SignToken } from "../JwtUtils";
 import PermissionDao from "../dao/PermissionDao";
-import IPermission, { userPermissionFilter } from "../models/IPermission";
+import IPermission from "../models/IPermission";
 
 export default class AuthController extends Controller {
   constructor(private userDao: UserDao, private permissionDao: PermissionDao) {
@@ -47,20 +47,15 @@ export default class AuthController extends Controller {
                   const permissions: IPermission[] = await this.permissionDao.findPermissionsByUserId(
                     user[0].userId
                   );
-                  const token = SignToken(
-                    Object.assign(
-                      {},
-                      {
-                        username: user[0].username,
-                        userId: user[0].userId,
-                        unionId: user[0].unionId,
-                        email: user[0].email,
-                        firstName: user[0].firstName,
-                        lastName: user[0].lastName
-                      },
-                      permissions.map(userPermissionFilter)[0]
-                    )
-                  );
+                  const token = SignToken({
+                    username: user[0].username,
+                    userId: user[0].userId,
+                    unionId: user[0].unionId,
+                    email: user[0].email,
+                    firstName: user[0].firstName,
+                    lastName: user[0].lastName,
+                    permissions: user[0].permissions
+                  });
                   return res.status(200).json(Object.assign({}, { token }));
                 } else {
                   return res
