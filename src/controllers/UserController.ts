@@ -22,6 +22,23 @@ export default class UserController extends Controller {
       }
     });
 
+    this.router.get(
+      "/:userId",
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const users: IUser[] = await this.userDao.findOne(req.params.userId);
+          if (!(users && users.length === 1)) {
+            return res.status(404).json({ error: "User not found" });
+          } else {
+            return res.status(200).json(users.map(userFilter)[0]);
+          }
+        } catch (ex) {
+          console.error(ex);
+          return res.status(500).json({ error: "Internal server error" });
+        }
+      }
+    );
+
     this.router.post(
       "",
       async (req: express.Request, res: express.Response) => {
@@ -68,7 +85,8 @@ export default class UserController extends Controller {
                 firstName: userData.firstName,
                 lastName: userData.lastName,
                 unionId: userData.unionId,
-                password: userData.password
+                password: userData.password,
+                permissions: 8
               });
 
               return res

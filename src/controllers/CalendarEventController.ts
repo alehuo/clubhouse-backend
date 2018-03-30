@@ -57,8 +57,8 @@ export default class CalendarEventController extends Controller {
           const events: ICalendarEvent[] = await this.calendarEventDao.findOne(
             req.params.eventId
           );
-          if (!(events && events.length > 0)) {
-            return res.status(404).json({ error: "Event not found" });
+          if (!(events && events.length === 1)) {
+            return res.status(404).json({ error: "Calendar event not found" });
           } else {
             return res.status(200).json(events[0]);
           }

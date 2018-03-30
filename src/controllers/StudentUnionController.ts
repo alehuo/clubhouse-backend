@@ -9,9 +9,7 @@ import { JwtMiddleware } from "../JwtUtils";
  * Student union controller.
  */
 export default class StudentUnionController extends Controller {
-  constructor(
-    private studentUnionDao: StudentUnionDao
-  ) {
+  constructor(private studentUnionDao: StudentUnionDao) {
     super();
   }
 
@@ -33,7 +31,11 @@ export default class StudentUnionController extends Controller {
         const studentUnions: IStudentUnion[] = await this.studentUnionDao.findOne(
           req.params.studentUnionId
         );
-        return res.status(200).json(studentUnionFilter(studentUnions[0]));
+        if (studentUnions && studentUnions.length === 1) {
+          return res.status(200).json(studentUnionFilter(studentUnions[0]));
+        } else {
+          return res.status(404).json({ error: "Student union not found" });
+        }
       }
     );
 

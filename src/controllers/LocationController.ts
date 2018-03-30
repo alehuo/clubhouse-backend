@@ -27,7 +27,11 @@ export default class LocationController extends Controller {
         const locations: any = await this.locationDao.findOne(
           req.params.locationId
         );
-        return res.status(200).json(locationFilter(locations[0]));
+        if (locations && locations.length === 1) {
+          return res.status(200).json(locationFilter(locations[0]));
+        } else {
+          return res.status(404).json({ error: "Location union not found" });
+        }
       }
     );
 
