@@ -9,3 +9,4 @@
 |24.3.2018|2h|Create StudentUnion model, dao and controller. A|dded API documentation for student union route and created some REST files for testing the StudentUnion endpoint.|
 |26.3.2018|5h|Create CalendarEvent model, DAO and controller. Implemented support for downloading single evens as iCal files.|
 |27.3.2018|3h|Improve API documentation. Revamp permissions system to use bitwise operations in user permissions.|
+|30.3.2018|1h|Created route to get a single user and REST files for it|
