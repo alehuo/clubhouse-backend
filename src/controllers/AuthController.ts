@@ -5,11 +5,10 @@ import IUser from "../models/IUser";
 import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
 import { JwtMiddleware, SignToken } from "../JwtUtils";
-import PermissionDao from "../dao/PermissionDao";
 import IPermission from "../models/IPermission";
 
 export default class AuthController extends Controller {
-  constructor(private userDao: UserDao, private permissionDao: PermissionDao) {
+  constructor(private userDao: UserDao) {
     super();
   }
 
@@ -44,9 +43,6 @@ export default class AuthController extends Controller {
               try {
                 const match: boolean = await bcrypt.compare(inputPwd, dbPwd);
                 if (match) {
-                  const permissions: IPermission[] = await this.permissionDao.findPermissionsByUserId(
-                    user[0].userId
-                  );
                   const token = SignToken({
                     username: user[0].username,
                     userId: user[0].userId,

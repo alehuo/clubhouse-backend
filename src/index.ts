@@ -8,7 +8,6 @@ import * as compression from "compression";
 import UserController from "./controllers/UserController";
 import * as Database from "./Database";
 import UserDao from "./dao/UserDao";
-import PermissionDao from "./dao/PermissionDao";
 import AuthController from "./controllers/AuthController";
 import * as winston from "winston";
 import * as expressWinston from "express-winston";
@@ -48,13 +47,13 @@ app.use(cache("5 minutes"));*/
 // Users route
 app.use(
   apiUrl("users"),
-  new UserController(new UserDao(knex), new PermissionDao(knex)).routes()
+  new UserController(new UserDao(knex)).routes()
 );
 
 // Auth route
 app.use(
   apiUrl("authenticate"),
-  new AuthController(new UserDao(knex), new PermissionDao(knex)).routes()
+  new AuthController(new UserDao(knex)).routes()
 );
 
 // Student unions route

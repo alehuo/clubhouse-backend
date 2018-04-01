@@ -5,6 +5,8 @@ import ILocation, { locationFilter } from "../models/ILocation";
 import Controller from "./Controller";
 import { JwtMiddleware } from "../JwtUtils";
 import LocationDao from "../dao/LocationDao";
+import { PermissionMiddleware } from "../PermissionMiddleware";
+import { getPermission, permissionNames } from "../PermissionUtils";
 
 export default class LocationController extends Controller {
   constructor(private locationDao: LocationDao) {
@@ -37,6 +39,9 @@ export default class LocationController extends Controller {
 
     this.router.post(
       "",
+
+      JwtMiddleware,
+      PermissionMiddleware([getPermission(permissionNames.ADD_LOCATION)]),
       async (req: express.Request, res: express.Response) => {
         try {
           const locationData: ILocation = req.body;
