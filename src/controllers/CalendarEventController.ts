@@ -7,6 +7,9 @@ import CalendarEventDao from "../dao/CalendarEventDao";
 import ICalendarEvent from "../models/ICalendarEvent";
 import { createICal } from "./../iCalService";
 import fs from "fs";
+import { PermissionMiddleware } from "./../PermissionMiddleware";
+import { JwtMiddleware } from "../JwtUtils";
+import { getPermission, permissionNames } from "../PermissionUtils";
 
 export default class CalendarEventController extends Controller {
   constructor(private calendarEventDao: CalendarEventDao) {
@@ -16,6 +19,8 @@ export default class CalendarEventController extends Controller {
   public routes(): express.Router {
     this.router.post(
       "",
+      JwtMiddleware,
+      PermissionMiddleware([getPermission(permissionNames.ADD_EVENT)]),
       async (req: express.Request, res: express.Response) => {
         const calendarEventData: ICalendarEvent = req.body;
         if (!calendarEventData) {
