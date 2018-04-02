@@ -17,6 +17,8 @@ import CalendarEventController from "./controllers/CalendarEventController";
 import CalendarEventDao from "./dao/CalendarEventDao";
 import LocationDao from "./dao/LocationDao";
 import LocationController from "./controllers/LocationController";
+import PermissionDao from "./dao/PermissionDao";
+import PermissionController from "./controllers/PermissionController";
 
 // Express instance
 const app: express.Application = express();
@@ -45,16 +47,10 @@ app.use(compression());
 app.use(cache("5 minutes"));*/
 
 // Users route
-app.use(
-  apiUrl("users"),
-  new UserController(new UserDao(knex)).routes()
-);
+app.use(apiUrl("users"), new UserController(new UserDao(knex)).routes());
 
 // Auth route
-app.use(
-  apiUrl("authenticate"),
-  new AuthController(new UserDao(knex)).routes()
-);
+app.use(apiUrl("authenticate"), new AuthController(new UserDao(knex)).routes());
 
 // Student unions route
 app.use(
@@ -72,6 +68,12 @@ app.use(
 app.use(
   apiUrl("location"),
   new LocationController(new LocationDao(knex)).routes()
+);
+
+// Permission route
+app.use(
+  apiUrl("permission"),
+  new PermissionController(new PermissionDao(knex)).routes()
 );
 
 app.use(

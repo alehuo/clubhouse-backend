@@ -1,4 +1,12 @@
 import IPermission from "./models/IPermission";
+import PermissionDao from "./dao/PermissionDao";
+import * as Knex from "knex";
+import * as Database from "./Database";
+
+// Knex instance
+const knex: Knex = Database.connect();
+
+const permissionDao: PermissionDao = new PermissionDao(knex);
 
 export const permissionNames = {
   BAN_USER: "BAN_USER",
@@ -30,119 +38,16 @@ export const permissionNames = {
   ADD_LOCATION: "ADD_LOCATION"
 };
 
-const permissions: IPermission[] = [
-  {
-    name: permissionNames.BAN_USER,
-    value: 0x00000001
-  },
-  {
-    name: permissionNames.EDIT_USER_ROLE,
-    value: 0x00000002
-  },
-  {
-    name: permissionNames.MAKE_USER_ADMIN,
-    value: 0x00000004
-  },
-  {
-    name: permissionNames.ALLOW_USER_LOGIN,
-    value: 0x00000008
-  },
-  {
-    name: permissionNames.ADD_KEY_TO_USER,
-    value: 0x00000010
-  },
-  {
-    name: permissionNames.REMOVE_KEY_FROM_USER,
-    value: 0x00000020
-  },
-  {
-    name: permissionNames.CHANGE_KEY_TYPE_OF_USER,
-    value: 0x00000040
-  },
-  {
-    name: permissionNames.ALLOW_VIEW_KEYS,
-    value: 0x00000080
-  },
-  {
-    name: permissionNames.ADD_USER_TO_UNION,
-    value: 0x00000100
-  },
-  {
-    name: permissionNames.REMOVE_USER_FROM_UNION,
-    value: 0x00000200
-  },
-  {
-    name: permissionNames.ADD_STUDENT_UNION,
-    value: 0x00000400
-  },
-  {
-    name: permissionNames.REMOVE_STUDENT_UNION,
-    value: 0x00000800
-  },
-  {
-    name: permissionNames.EDIT_STUDENT_UNION,
-    value: 0x00001000
-  },
-  {
-    name: permissionNames.ALLOW_VIEW_STUDENT_UNIONS,
-    value: 0x00002000
-  },
-  {
-    name: permissionNames.ADD_EVENT,
-    value: 0x00004000
-  },
-  {
-    name: permissionNames.EDIT_EVENT,
-    value: 0x00008000
-  },
-  {
-    name: permissionNames.REMOVE_EVENT,
-    value: 0x00010000
-  },
-  {
-    name: permissionNames.ALLOW_VIEW_EVENTS,
-    value: 0x00020000
-  },
-  {
-    name: permissionNames.EDIT_RULES,
-    value: 0x00040000
-  },
-  {
-    name: permissionNames.ALLOW_VIEW_RULES,
-    value: 0x00080000
-  },
-  {
-    name: permissionNames.ADD_POSTS,
-    value: 0x00100000
-  },
-  {
-    name: permissionNames.EDIT_AND_REMOVE_OWN_POSTS,
-    value: 0x00200000
-  },
-  {
-    name: permissionNames.REMOVE_POSTS,
-    value: 0x00400000
-  },
-  {
-    name: permissionNames.ALLOW_VIEW_POSTS,
-    value: 0x00800000
-  },
-  {
-    name: permissionNames.EDIT_OTHERS_POSTS,
-    value: 0x01000000
-  },
-  {
-    name: permissionNames.SEND_MAILS,
-    value: 0x02000000
-  },
-  {
-    name: permissionNames.ADD_LOCATION,
-    value: 0x04000000
+export const getPermission = async (
+  permissionName: string
+): Promise<IPermission> => {
+  const perm: IPermission[] = await permissionDao.findByName(permissionName);
+  if (perm && perm.length > 0) {
+    return perm[0];
+  } else {
+    return null;
   }
-];
-
-export const getPermission = (permissionName: string): IPermission =>
-  permissions.find(permission => permission.name === permissionName);
+};
 
 /**
  * Calculates user's permissions using bitwise operations.
@@ -151,15 +56,14 @@ export const getPermission = (permissionName: string): IPermission =>
 export const calculatePermissions = (perms: IPermission[]): number =>
   perms.reduce((prev, curr) => prev | curr.value, perms[0].value);
 
-export const adminPermissions: number = calculatePermissions(permissions);
-
 /**
  * Returns the user's permissions.
  * @param userPerms User permission number.
  */
-export const getPermissions = (userPerms: number): string[] => {
+export const getPermissions = async (userPerms: number): Promise<string[]> => {
   const allowed = [];
-  permissions.map((k: IPermission) => {
+  const allPerms: IPermission[] = await permissionDao.findAll();
+  allPerms.map((k: IPermission) => {
     const permissionName: string = k.name;
     const permissionValue: number = k.value;
     if ((userPerms & permissionValue) === permissionValue) {

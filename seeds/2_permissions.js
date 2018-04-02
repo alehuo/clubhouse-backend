@@ -108,6 +108,14 @@ exports.seed = function(knex, Promise) {
         {
           name: "SEND_MAILS",
           value: 0x02000000
+        },
+        {
+          name: "ADD_LOCATION",
+          value: 0x04000000
+        },
+        {
+          name: "EDIT_LOCATION",
+          value: 0x08000000
         }
       ]);
     });

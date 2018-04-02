@@ -41,6 +41,37 @@ This project is meant to solve this problem by providing:
 
 ## API documentation
 
+## /api/v1/authenticate
+
+### POST /api/v1/authenticate
+
+_Returns:_ **JWT if the authentication succeeds**
+
+_Request content-type:_ **application/json**
+
+_Request body:_
+
+Required: ```username``` and ```password```
+
+```json
+{
+  "username": "user1",
+  "password": "password1"
+}
+```
+
+_Response status code:_ **HTTP 201** (success on authentication), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ JWT
+
+```json
+{
+  "token": "LoremIpsum"
+}
+```
+
 ## /api/v1/users
 
 ### GET /api/v1/users
@@ -91,7 +122,7 @@ _Returns:_ **Registered user if the request completes successfully**
 
 _Request parameters:_ ```userId``` (URL parameter, integer)
 
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+_Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
@@ -186,7 +217,7 @@ _Returns:_ **A single student unions in the service by its id.**
 
 _Request parameters:_ ```unionId``` (URL parameter, integer)
 
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+_Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
@@ -197,6 +228,37 @@ _Response body:_ **GET /api/v1/studentunion/1**
   "unionId": 1,
   "name": "Union 1",
   "description": "Union 1 description"
+}
+```
+
+### POST /api/v1/studentunion
+
+_Returns:_ **Created student union if the request succeeds**
+
+_Request content-type:_ **application/json**
+
+_Request body:_
+
+Required: ```name``` and ```description```
+
+```json
+{
+  "name": "StudentUnion",
+  "description": "Student union description"
+}
+```
+
+_Response status code:_ **HTTP 201** (success on student union creation), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ Created student union
+
+```json
+{
+  "name": "StudentUnion",
+  "description": "Student union description",
+  "unionId": 1
 }
 ```
 
@@ -245,11 +307,57 @@ _Returns:_ **A single calendar event in the service by its id.**
 
 _Request parameters:_ ```eventId``` (URL parameter, integer)
 
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+_Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
 _Response body:_ **GET /api/v1/calendar/1**
+
+```json
+{
+  "eventId": 1,
+  "name": "Friday hangouts",
+  "description": "Friday hangouts at our clubhouse",
+  "restricted": 0,
+  "startTime": 1524495600000,
+  "endTime": 1524524400000,
+  "addedBy": 1,
+  "unionId": 1,
+  "locationId": 2
+}
+```
+
+### POST /api/v1/calendar
+
+_Returns:_ **Created calendar event if the request succeeds**
+
+_Request content-type:_ **application/json**
+
+_Required permissions:_ **ADD_EVENT**
+
+_Request headers:_ **Authorization: Bearer ```[TOKEN]```**
+
+_Request body:_
+
+Required: ```name```, ```description```, ```restricted```, ```startTime```, ```endTime```, ```unionId``` and ```locationId```
+
+```json
+{
+  "name": "Friday hangouts",
+  "description": "Friday hangouts at our clubhouse",
+  "restricted": 0,
+  "startTime": 1524495600000,
+  "endTime": 1524524400000,
+  "unionId": 1,
+  "locationId": 2
+}
+```
+
+_Response status code:_ **HTTP 201** (success on calendar event creation), **HTTP 4xx** (validation error), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ Created calendar event
 
 ```json
 {
@@ -271,7 +379,7 @@ _Returns:_ **An iCal file of the event in the service by its id. Triggers a file
 
 _Request parameters:_ ```eventId``` (URL parameter, integer)
 
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+_Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
 _Response content-type:_ **text/calendar**
 
@@ -329,7 +437,7 @@ _Returns:_ **A single location in the service by its id.**
 
 _Request parameters:_ ```locationId``` (URL parameter, integer)
 
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+_Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
@@ -343,6 +451,205 @@ _Response body:_ **GET /api/v1/location/1**
 }
 ```
 
-## /api/v1/roles
+### POST /api/v1/location
 
-Todo
+_Returns:_ **Created location if the request succeeds**
+
+_Request content-type:_ **application/json**
+
+_Required permissions:_ **ADD_LOCATION**
+
+_Request headers:_ **Authorization: Bearer ```[TOKEN]```**
+
+_Request body:_
+
+Required: ```name``` and ```address```
+
+```json
+{
+  "name": "Meeting room",
+  "address": "Street Addr 1"
+}
+```
+
+_Response status code:_ **HTTP 201** (success on location creation), **HTTP 4xx** (validation error), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ Created location
+
+```json
+{
+  "locationId": 1,
+  "name": "Meeting room",
+  "address": "Street Addr 1"
+}
+```
+
+
+## /api/v1/permission
+
+### GET /api/v1/permission
+
+_Returns:_ **All permissions in the service.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "permissionId": 1,
+    "name": "BAN_USER",
+    "value": 1
+  },
+  {
+    "permissionId": 2,
+    "name": "EDIT_USER_ROLE",
+    "value": 2
+  },
+  {
+    "permissionId": 3,
+    "name": "MAKE_USER_ADMIN",
+    "value": 4
+  },
+  {
+    "permissionId": 4,
+    "name": "ALLOW_USER_LOGIN",
+    "value": 8
+  },
+  {
+    "permissionId": 5,
+    "name": "ADD_KEY_TO_USER",
+    "value": 16
+  },
+  {
+    "permissionId": 6,
+    "name": "REMOVE_KEY_FROM_USER",
+    "value": 32
+  },
+  {
+    "permissionId": 7,
+    "name": "CHANGE_KEY_TYPE_OF_USER",
+    "value": 64
+  },
+  {
+    "permissionId": 8,
+    "name": "ALLOW_VIEW_KEYS",
+    "value": 128
+  },
+  {
+    "permissionId": 9,
+    "name": "ADD_USER_TO_UNION",
+    "value": 256
+  },
+  {
+    "permissionId": 10,
+    "name": "REMOVE_USER_FROM_UNION",
+    "value": 512
+  },
+  {
+    "permissionId": 11,
+    "name": "ADD_STUDENT_UNION",
+    "value": 1024
+  },
+  {
+    "permissionId": 12,
+    "name": "REMOVE_STUDENT_UNION",
+    "value": 2048
+  },
+  {
+    "permissionId": 13,
+    "name": "EDIT_STUDENT_UNION",
+    "value": 4096
+  },
+  {
+    "permissionId": 14,
+    "name": "ALLOW_VIEW_STUDENT_UNIONS",
+    "value": 8192
+  },
+  {
+    "permissionId": 15,
+    "name": "ADD_EVENT",
+    "value": 16384
+  },
+  {
+    "permissionId": 16,
+    "name": "EDIT_EVENT",
+    "value": 32768
+  },
+  {
+    "permissionId": 17,
+    "name": "REMOVE_EVENT",
+    "value": 65536
+  },
+  {
+    "permissionId": 18,
+    "name": "ALLOW_VIEW_EVENTS",
+    "value": 131072
+  },
+  {
+    "permissionId": 19,
+    "name": "EDIT_RULES",
+    "value": 262144
+  },
+  {
+    "permissionId": 20,
+    "name": "ALLOW_VIEW_RULES",
+    "value": 524288
+  },
+  {
+    "permissionId": 21,
+    "name": "ADD_POSTS",
+    "value": 1048576
+  },
+  {
+    "permissionId": 22,
+    "name": "EDIT_AND_REMOVE_OWN_POSTS",
+    "value": 2097152
+  },
+  {
+    "permissionId": 23,
+    "name": "REMOVE_POSTS",
+    "value": 4194304
+  },
+  {
+    "permissionId": 24,
+    "name": "ALLOW_VIEW_POSTS",
+    "value": 8388608
+  },
+  {
+    "permissionId": 25,
+    "name": "EDIT_OTHERS_POSTS",
+    "value": 16777216
+  },
+  {
+    "permissionId": 26,
+    "name": "SEND_MAILS",
+    "value": 33554432
+  }
+]
+```
+
+### GET /api/v1/permission/:permissionId
+
+_Returns:_ **A single permission in the service by its id.**
+
+_Request parameters:_ ```permissionId``` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/permission/1**
+
+```json
+{
+  "permissionId": 1,
+  "name": "BAN_USER",
+  "value": 1
+}
+```
