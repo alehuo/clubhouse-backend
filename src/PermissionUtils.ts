@@ -40,7 +40,7 @@ export const permissionNames = {
 
 export const getPermission = async (
   permissionName: string
-): Promise<IPermission> => {
+): IPermission => {
   const perm: IPermission[] = await permissionDao.findByName(permissionName);
   if (perm && perm.length > 0) {
     return perm[0];

@@ -1,7 +1,8 @@
-POST http://localhost:8080/api/v1/studentUnions HTTP/1.1
+POST http://localhost:8080/api/v1/studentunion HTTP/1.1
 content-type: application/json
+Authorization: Bearer [TOKEN]
 
 {
-    "name": "HelloWorld",
+    "name": "HelloWorldl2",
     "description": "Description for student union"
 }
