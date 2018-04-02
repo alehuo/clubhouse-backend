@@ -11,3 +11,4 @@
 |27.3.2018|3h|Improve API documentation. Revamp permissions system to use bitwise operations in user permissions.|
 |30.3.2018|1h|Created route to get a single user and REST files for it.|
 |1.4.2018|2h|Created permission middleware and modified permission structure.|
+|2.4.2018|2h|Improved API documentation, recreated PermissionDao & PermissionController. Updated DB seed for permissions and improved PermissionUtils.|
