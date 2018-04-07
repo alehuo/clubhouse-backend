@@ -2,7 +2,7 @@
 
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
- [Code coverage] [Travis CI build status]
+[Code coverage][travis ci build status]
 
 Back-end for Full-stack software development project course.
 
@@ -31,13 +31,13 @@ This project is meant to solve this problem by providing:
 
 ## Installation instructions
 
-1. Clone the repo
-2. Install yarn if not yet installed
-3. Run `yarn` to install dependencies
-4. Create `.env` file and define environment variables. See `.env.example` file.
-5. `knex migrate:latest` to run migrations
-6. `knex seed:run` to seed the database
-7. `yarn start` to start the server or `yarn watch` to watch for code changes
+1.  Clone the repo
+2.  Install yarn if not yet installed
+3.  Run `yarn` to install dependencies
+4.  Create `.env` file and define environment variables. See `.env.example` file.
+5.  `knex migrate:latest` to run migrations
+6.  `knex seed:run` to seed the database
+7.  `yarn start` to start the server or `yarn watch` to watch for code changes
 
 ## API documentation
 
@@ -51,7 +51,7 @@ _Request content-type:_ **application/json**
 
 _Request body:_
 
-Required: ```username``` and ```password```
+Required: `username` and `password`
 
 ```json
 {
@@ -120,7 +120,7 @@ _Response body:_
 
 _Returns:_ **Registered user if the request completes successfully**
 
-_Request parameters:_ ```userId``` (URL parameter, integer)
+_Request parameters:_ `userId` (URL parameter, integer)
 
 _Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
@@ -148,7 +148,7 @@ _Request content-type:_ **application/json**
 
 _Request body:_
 
-Required: ```username```, ```email``` and ```password```
+Required: `username`, `email` and `password`
 
 ```json
 {
@@ -215,7 +215,7 @@ _Response body:_
 
 _Returns:_ **A single student unions in the service by its id.**
 
-_Request parameters:_ ```unionId``` (URL parameter, integer)
+_Request parameters:_ `unionId` (URL parameter, integer)
 
 _Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
@@ -239,7 +239,7 @@ _Request content-type:_ **application/json**
 
 _Request body:_
 
-Required: ```name``` and ```description```
+Required: `name` and `description`
 
 ```json
 {
@@ -305,7 +305,7 @@ _Response body:_
 
 _Returns:_ **A single calendar event in the service by its id.**
 
-_Request parameters:_ ```eventId``` (URL parameter, integer)
+_Request parameters:_ `eventId` (URL parameter, integer)
 
 _Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
@@ -335,11 +335,11 @@ _Request content-type:_ **application/json**
 
 _Required permissions:_ **ADD_EVENT**
 
-_Request headers:_ **Authorization: Bearer ```[TOKEN]```**
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
 
 _Request body:_
 
-Required: ```name```, ```description```, ```restricted```, ```startTime```, ```endTime```, ```unionId``` and ```locationId```
+Required: `name`, `description`, `restricted`, `startTime`, `endTime`, `unionId` and `locationId`
 
 ```json
 {
@@ -377,7 +377,7 @@ _Response body:_ Created calendar event
 
 _Returns:_ **An iCal file of the event in the service by its id. Triggers a file download in the browser.**
 
-_Request parameters:_ ```eventId``` (URL parameter, integer)
+_Request parameters:_ `eventId` (URL parameter, integer)
 
 _Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
@@ -435,7 +435,7 @@ _Response body:_
 
 _Returns:_ **A single location in the service by its id.**
 
-_Request parameters:_ ```locationId``` (URL parameter, integer)
+_Request parameters:_ `locationId` (URL parameter, integer)
 
 _Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
 
@@ -459,11 +459,11 @@ _Request content-type:_ **application/json**
 
 _Required permissions:_ **ADD_LOCATION**
 
-_Request headers:_ **Authorization: Bearer ```[TOKEN]```**
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
 
 _Request body:_
 
-Required: ```name``` and ```address```
+Required: `name` and `address`
 
 ```json
 {
@@ -485,7 +485,6 @@ _Response body:_ Created location
   "address": "Street Addr 1"
 }
 ```
-
 
 ## /api/v1/permission
 
@@ -638,7 +637,7 @@ _Response body:_
 
 _Returns:_ **A single permission in the service by its id.**
 
-_Request parameters:_ ```permissionId``` (URL parameter, integer)
+_Request parameters:_ `permissionId` (URL parameter, integer)
 
 _Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
 
