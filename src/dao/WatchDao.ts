@@ -38,6 +38,15 @@ export default class WatchDao implements IDao<IWatch> {
     return this.knex("watches").insert(watch);
   }
 
+  public endWatch(watchId: number, watch: IWatch): Promise<IWatch> {
+    return this.knex("watches")
+      .update({
+        endTime: watch.endTime,
+        endMessage: watch.endMessage
+      })
+      .where({ watchId });
+  }
+
   public remove(watchId: number): Promise<void> {
     return this.knex("watches")
       .delete()

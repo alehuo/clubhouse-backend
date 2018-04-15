@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/v1/studentunion HTTP/1.1
 content-type: application/json
-Authorization: Bearer [TOKEN]
+Authorization: Bearer {{clubhouse_token}}
 
 {
     "name": "HelloWorldl2",
