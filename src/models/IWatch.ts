@@ -4,4 +4,6 @@ export default interface IWatch {
   message: string;
   startTime: Date;
   endTime: Date;
-};
+  startMessage: string;
+  endMessage: string;
+}

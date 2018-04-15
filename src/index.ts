@@ -19,6 +19,8 @@ import LocationDao from "./dao/LocationDao";
 import LocationController from "./controllers/LocationController";
 import PermissionDao from "./dao/PermissionDao";
 import PermissionController from "./controllers/PermissionController";
+import WatchDao from "./dao/WatchDao";
+import WatchController from "./controllers/WatchController";
 
 // Express instance
 const app: express.Application = express();
@@ -75,6 +77,9 @@ app.use(
   apiUrl("permission"),
   new PermissionController(new PermissionDao(knex)).routes()
 );
+
+// Watch route
+app.use(apiUrl("watch"), new WatchController(new WatchDao(knex)).routes());
 
 app.use(
   expressWinston.logger({
