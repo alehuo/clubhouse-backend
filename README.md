@@ -699,7 +699,8 @@ _Response body:_ **GET /api/v1/watch/user/1**
   {
     "watchId": 2,
     "userId": 1,
-    "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
+    "startMessage":
+      "Good evening, I'm taking responsibility of a few exchange students.",
     "endMessage": "Good night.",
     "startTime": 1530478680000,
     "endTime": 1523806819143
@@ -814,6 +815,8 @@ _Response body:_ Created location
 
 The back end has an advanced permission system, that allows for a fine tuned management of user permissions. Below is a table that has listed all permission bits that are in use.
 
+### List of permissions
+
 | Name                      | Description                                     | Value      |
 | ------------------------- | ----------------------------------------------- | ---------- |
 | BAN_USER                  | Ban a user                                      | 0x00000001 |
@@ -845,7 +848,11 @@ The back end has an advanced permission system, that allows for a fine tuned man
 | ADD_LOCATION              | Allow user to add a location                    | 0x04000000 |
 | EDIT_LOCATION             | Allow user to edit a location                   | 0x08000000 |
 
+### Combining permissions
+
 Permissions can be combined with bitwise operations. For example, if I want a user to be able to login and view rules, a bitwise operation is made: `0x00000008 | 0x00080000` what is equal to `0x00080008`.
+
+### Checking permissions
 
 If you want to check if a user has a certain permission, do it like this:
 `0x00080008 & 0x00000008` = `0x00000008`
