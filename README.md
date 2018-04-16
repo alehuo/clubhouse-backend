@@ -670,14 +670,12 @@ _Response body:_
 ```json
 [
   {
-    "locationId": 1,
-    "name": "Meeting room",
-    "address": "Street Addr 1"
-  },
-  {
-    "locationId": 2,
-    "name": "Club",
-    "address": "Street Addr 1"
+    "watchId": 5,
+    "userId": 1,
+    "startMessage": "Hello world.!",
+    "endMessage": null,
+    "startTime": 1523871750825,
+    "endTime": null
   }
 ]
 ```
@@ -697,11 +695,32 @@ _Response content-type:_ **application/json**
 _Response body:_ **GET /api/v1/watch/user/1**
 
 ```json
-{
-  "locationId": 1,
-  "name": "Meeting room",
-  "address": "Street Addr 1"
-}
+[
+  {
+    "watchId": 2,
+    "userId": 1,
+    "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
+    "endMessage": "Good night.",
+    "startTime": 1530478680000,
+    "endTime": 1523806819143
+  },
+  {
+    "watchId": 3,
+    "userId": 1,
+    "startMessage": "Hello world",
+    "endMessage": "Good night.",
+    "startTime": 1523806831618,
+    "endTime": 1523807048380
+  },
+  {
+    "watchId": 5,
+    "userId": 1,
+    "startMessage": "Hello world.!",
+    "endMessage": null,
+    "startTime": 1523871750825,
+    "endTime": null
+  }
+]
 ```
 
 ### GET /api/v1/watch/ongoing/user/:userId
@@ -719,11 +738,16 @@ _Response content-type:_ **application/json**
 _Response body:_ **GET /api/v1/watch/ongoing/user/1**
 
 ```json
-{
-  "locationId": 1,
-  "name": "Meeting room",
-  "address": "Street Addr 1"
-}
+[
+  {
+    "watchId": 5,
+    "userId": 1,
+    "startMessage": "Hello world!",
+    "endMessage": null,
+    "startTime": 1523871750825,
+    "endTime": null
+  }
+]
 ```
 
 ### POST /api/v1/watch/begin
