@@ -14,5 +14,6 @@
 | 2.4.2018  | 2h    | Improved API documentation, recreated PermissionDao & PermissionController. Updated DB seed for permissions and improved PermissionUtils.                                                             |
 | 10.4.2018 | 1h | Added WatchDao, iWatch and migrations for 'watch' table. |
 | 15.4.2018 | 3h | Starting and ending a watch works now. Moved JWT to environment variable when using .rest files. User can also now get all past & ongoing watches from the back-end. |
+| 16.4.2018 | 1h | Add documentation for permissions & /api/v1/watch route. |
 
-Total: 34 h
+Total: 35 h
