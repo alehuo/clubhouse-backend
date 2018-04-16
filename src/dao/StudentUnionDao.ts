@@ -1,5 +1,5 @@
 import IDao from "./Dao";
-import * as Promise from "bluebird";
+import Promise from "bluebird";
 import * as Knex from "knex";
 import IStudentUnion from "../models/IStudentUnion";
 

@@ -1,6 +1,6 @@
 import IDao from "./Dao";
-import IUser, {userFilter} from "../models/IUser";
-import * as Promise from "bluebird";
+import IUser, { userFilter } from "../models/IUser";
+import Promise from "bluebird";
 import * as Knex from "knex";
 
 export default class UserDao implements IDao<IUser> {

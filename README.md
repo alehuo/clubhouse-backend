@@ -652,3 +652,209 @@ _Response body:_ **GET /api/v1/permission/1**
   "value": 1
 }
 ```
+
+## /api/v1/watch
+
+### GET /api/v1/watch/ongoing
+
+_Returns:_ **All ongoing watches in the service.**
+
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "watchId": 5,
+    "userId": 1,
+    "startMessage": "Hello world.!",
+    "endMessage": null,
+    "startTime": 1523871750825,
+    "endTime": null
+  }
+]
+```
+
+### GET /api/v1/watch/user/:userId
+
+_Returns:_ **All watches (old and ongoing) by a single user, by its id.**
+
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
+
+_Request parameters:_ `userId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/watch/user/1**
+
+```json
+[
+  {
+    "watchId": 2,
+    "userId": 1,
+    "startMessage":
+      "Good evening, I'm taking responsibility of a few exchange students.",
+    "endMessage": "Good night.",
+    "startTime": 1530478680000,
+    "endTime": 1523806819143
+  },
+  {
+    "watchId": 3,
+    "userId": 1,
+    "startMessage": "Hello world",
+    "endMessage": "Good night.",
+    "startTime": 1523806831618,
+    "endTime": 1523807048380
+  },
+  {
+    "watchId": 5,
+    "userId": 1,
+    "startMessage": "Hello world.!",
+    "endMessage": null,
+    "startTime": 1523871750825,
+    "endTime": null
+  }
+]
+```
+
+### GET /api/v1/watch/ongoing/user/:userId
+
+_Returns:_ **All ongoing watches by a single user, by its id.**
+
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
+
+_Request parameters:_ `userId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/watch/ongoing/user/1**
+
+```json
+[
+  {
+    "watchId": 5,
+    "userId": 1,
+    "startMessage": "Hello world!",
+    "endMessage": null,
+    "startTime": 1523871750825,
+    "endTime": null
+  }
+]
+```
+
+### POST /api/v1/watch/begin
+
+_Returns:_ **Starts a new watch.**
+
+_Request content-type:_ **application/json**
+
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
+
+_Request body:_
+
+Required: `startMessage`
+
+```json
+{
+  "startMessage": "Start message of the watch."
+}
+```
+
+_Response status code:_ **HTTP 200** (success on starting a new watch), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ Status message
+
+```json
+{
+  "message": "Watch started"
+}
+```
+
+### POST /api/v1/watch/end
+
+_Returns:_ **Ends an ongoing watch.**
+
+_Request content-type:_ **application/json**
+
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
+
+_Request body:_
+
+Required: `endMessage`
+
+```json
+{
+  "endMessage": "End message of the watch."
+}
+```
+
+_Response status code:_ **HTTP 200** (success on starting a new watch), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ Status message
+
+```json
+{
+  "message": "Watch ended with message 'End message of the watch.'"
+}
+```
+
+## Permissions
+
+The back end has an advanced permission system, that allows for a fine tuned management of user permissions. Below is a table that has listed all permission bits that are in use.
+
+### List of permissions
+
+| Name                      | Description                                     | Value      |
+| ------------------------- | ----------------------------------------------- | ---------- |
+| BAN_USER                  | Ban a user                                      | 0x00000001 |
+| EDIT_USER_ROLE            | Edit user roles                                 | 0x00000002 |
+| MAKE_USER_ADMIN           | Make user an admin                              | 0x00000004 |
+| ALLOW_USER_LOGIN          | Allow user to login (default permission)        | 0x00000008 |
+| ADD_KEY_TO_USER           | Add a key to user                               | 0x00000010 |
+| REMOVE_KEY_FROM_USER      | Remove key from user                            | 0x00000020 |
+| CHANGE_KEY_TYPE_OF_USER   | Change the key type of an user                  | 0x00000040 |
+| ALLOW_VIEW_KEYS           | Allow user to view keys                         | 0x00000080 |
+| ADD_USER_TO_UNION         | Add user to a student union.                    | 0x00000100 |
+| REMOVE_USER_FROM_UNION    | Remove user from a student union                | 0x00000200 |
+| ADD_STUDENT_UNION         | Add a student union                             | 0x00000400 |
+| REMOVE_STUDENT_UNION      | Remove a student union                          | 0x00000800 |
+| EDIT_STUDENT_UNION        | Edit a student union                            | 0x00001000 |
+| ALLOW_VIEW_STUDENT_UNIONS | Allow user to view student unions               | 0x00002000 |
+| ADD_EVENT                 | Add an event                                    | 0x00004000 |
+| EDIT_EVENT                | Edit an event                                   | 0x00008000 |
+| REMOVE_EVENT              | Remove an event                                 | 0x00010000 |
+| ALLOW_VIEW_EVENTS         | Allow user to view events                       | 0x00020000 |
+| EDIT_RULES                | Allow user to edit rules                        | 0x00040000 |
+| ALLOW_VIEW_RULES          | Allow user to view rules                        | 0x00080000 |
+| ADD_POSTS                 | Allow user to add posts                         | 0x00100000 |
+| EDIT_AND_REMOVE_OWN_POSTS | Allow user to edit and remove his/her own posts | 0x00200000 |
+| REMOVE_POSTS              | Allow user to remove posts                      | 0x00400000 |
+| ALLOW_VIEW_POSTS          | Allow user to view posts                        | 0x00800000 |
+| EDIT_OTHERS_POSTS         | Allow user to edit others' posts                | 0x01000000 |
+| SEND_MAILS                | Allow user to send mails                        | 0x02000000 |
+| ADD_LOCATION              | Allow user to add a location                    | 0x04000000 |
+| EDIT_LOCATION             | Allow user to edit a location                   | 0x08000000 |
+
+### Combining permissions
+
+Permissions can be combined with bitwise operations. For example, if I want a user to be able to login and view rules, a bitwise operation is made: `0x00000008 | 0x00080000` what is equal to `0x00080008`.
+
+### Checking permissions
+
+If you want to check if a user has a certain permission, do it like this:
+`0x00080008 & 0x00000008` = `0x00000008`
+
+If the result is equal to the permission that has been checked, the user is allowed to do the operation.

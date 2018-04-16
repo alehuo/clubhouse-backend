@@ -22,7 +22,7 @@ export default class PermissionDao implements IDao<IPermission> {
       .where({ name });
   }
 
-  public save(permissions: any): Promise<IPermission> {
+  public save(permissions: IPermission): Promise<IPermission> {
     return this.knex("permissions").insert(permissions);
   }
 
