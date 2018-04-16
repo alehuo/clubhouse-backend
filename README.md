@@ -773,7 +773,7 @@ _Response status code:_ **HTTP 200** (success on starting a new watch), **HTTP 5
 
 _Response content-type:_ **application/json**
 
-_Response body:_ Created location
+_Response body:_ Status message
 
 ```json
 {
@@ -803,7 +803,7 @@ _Response status code:_ **HTTP 200** (success on starting a new watch), **HTTP 5
 
 _Response content-type:_ **application/json**
 
-_Response body:_ Created location
+_Response body:_ Status message
 
 ```json
 {
