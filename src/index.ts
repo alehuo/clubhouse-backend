@@ -109,9 +109,22 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  return res.status(404).json({ error: "Invalid API route" });
-});
+app.use(
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    return res.status(404).json({ error: "Invalid API route" });
+  }
+);
+
+app.use(
+  (
+    err,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+);
 
 // Listen
 app.listen(process.env.SERVER_PORT, () => {
