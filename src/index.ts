@@ -21,6 +21,8 @@ import PermissionDao from "./dao/PermissionDao";
 import PermissionController from "./controllers/PermissionController";
 import WatchDao from "./dao/WatchDao";
 import WatchController from "./controllers/WatchController";
+import MessageController from "./controllers/MessageController";
+import MessageDao from "./dao/MessageDao";
 
 // Express instance
 const app: express.Application = express();
@@ -81,6 +83,12 @@ app.use(
 // Watch route
 app.use(apiUrl("watch"), new WatchController(new WatchDao(knex)).routes());
 
+// Message route
+app.use(
+  apiUrl("message"),
+  new MessageController(new MessageDao(knex)).routes()
+);
+
 app.use(
   expressWinston.logger({
     transports: [
@@ -99,6 +107,23 @@ app.use(
     colorize: true,
     ignoreRoute: (req, res) => false
   })
+);
+
+app.use(
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    return res.status(404).json({ error: "Invalid API route" });
+  }
+);
+
+app.use(
+  (
+    err,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    return res.status(500).json({ error: "Internal server error" });
+  }
 );
 
 // Listen

@@ -60,7 +60,7 @@ export default class PermissionController extends Controller {
                 .status(400)
                 .json({ error: "Permission already exists" });
             } else {
-              const savedPermission = await this.permissionDao.save({
+              const savedPermission: number[] = await this.permissionDao.save({
                 name: permissionData.name,
                 value: permissionData.value
               });

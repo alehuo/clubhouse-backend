@@ -34,7 +34,7 @@ export default class WatchDao implements IDao<IWatch> {
       .where({ userId });
   }
 
-  public save(watch: IWatch): Promise<IWatch> {
+  public save(watch: IWatch): Promise<number[]> {
     return this.knex("watches").insert(watch);
   }
 

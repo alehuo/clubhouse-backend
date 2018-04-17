@@ -29,10 +29,10 @@ export default class CalendarEventController extends Controller {
             .json({ error: "Missing request body parameters" });
         } else {
           try {
-            const calendarEvent = await this.calendarEventDao.save(
+            const calendarEvent: number[] = await this.calendarEventDao.save(
               calendarEventData
             );
-            return res.status(200).json(
+            return res.status(201).json(
               Object.assign({}, calendarEventData, {
                 eventId: calendarEvent[0]
               })

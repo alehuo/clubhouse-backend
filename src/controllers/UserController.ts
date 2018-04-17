@@ -79,7 +79,7 @@ export default class UserController extends Controller {
                 return res.status(400).json({ error: "Password is too short" });
               }
 
-              const savedUser = await this.userDao.save({
+              const savedUser: number[] = await this.userDao.save({
                 username: userData.username,
                 email: userData.email,
                 firstName: userData.firstName,

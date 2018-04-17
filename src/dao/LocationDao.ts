@@ -22,7 +22,7 @@ export default class LocationDao implements IDao<ILocation> {
       .where({ name });
   }
 
-  public save(location: ILocation): Promise<ILocation> {
+  public save(location: ILocation): Promise<number[]> {
     return this.knex("locations").insert(location);
   }
 
