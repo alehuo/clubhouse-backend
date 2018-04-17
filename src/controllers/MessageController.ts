@@ -7,6 +7,8 @@ import { getPermission, permissionNames } from "../PermissionUtils";
 import IMessage from "../models/IMessage";
 import MessageDao from "../dao/MessageDao";
 
+import MessageFactory from "./../MessageFactory";
+
 export default class MessageController extends Controller {
   constructor(private messageDao: MessageDao) {
     super();
@@ -14,14 +16,20 @@ export default class MessageController extends Controller {
 
   public routes(): express.Router {
     // All messages
-    this.router.get("", async (req: express.Request, res: express.Response) => {
-      try {
-        const messages: IMessage[] = await this.messageDao.findAll();
-        return res.status(200).json(messages);
-      } catch (err) {
-        return res.status(500).json({ error: "Internal server error" });
+    this.router.get(
+      "",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const messages: IMessage[] = await this.messageDao.findAll();
+          return res.status(200).json(messages);
+        } catch (err) {
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
+        }
       }
-    });
+    );
     // All watches from a single user
     this.router.post(
       "",
@@ -29,7 +37,9 @@ export default class MessageController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           if (!req.body.message) {
-            return res.status(400).json({ error: "Missing message" });
+            return res
+              .status(400)
+              .json(MessageFactory.createError("Missing message"));
           }
 
           const userId: number = res.locals.token.data.userId;
@@ -46,7 +56,9 @@ export default class MessageController extends Controller {
             .status(201)
             .json(Object.assign({}, msg, { messageId: savedMessage[0] }));
         } catch (err) {
-          return res.status(500).json({ error: "Internal server error" });
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
         }
       }
     );

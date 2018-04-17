@@ -7,6 +7,8 @@ import UserDao from "../dao/UserDao";
 import { JwtMiddleware, SignToken } from "../JwtUtils";
 import IPermission from "../models/IPermission";
 
+import MessageFactory from "./../MessageFactory";
+
 export default class AuthController extends Controller {
   constructor(private userDao: UserDao) {
     super();
@@ -25,7 +27,9 @@ export default class AuthController extends Controller {
           if (!(authData.username && authData.password)) {
             return res
               .status(500)
-              .json({ error: "Missing request body parameters" });
+              .json(
+                MessageFactory.createError("Missing request body parameters")
+              );
           } else {
             const user: IUser[] | undefined = await this.userDao.findByUsername(
               authData.username
@@ -34,7 +38,9 @@ export default class AuthController extends Controller {
             if (!(user && user.length > 0)) {
               return res
                 .status(400)
-                .json({ error: "Invalid username or password" });
+                .json(
+                  MessageFactory.createError("Invalid username or password")
+                );
             } else {
               // User exists, check for pash
               const dbPwd: string = user[0].password;
@@ -56,17 +62,23 @@ export default class AuthController extends Controller {
                 } else {
                   return res
                     .status(400)
-                    .json({ error: "Invalid username or password" });
+                    .json(
+                      MessageFactory.createError("Invalid username or password")
+                    );
                 }
               } catch (ex) {
                 console.error(ex);
-                return res.status(500).json({ error: "Internal server error" });
+                return res
+                  .status(500)
+                  .json(MessageFactory.createError("Internal server error"));
               }
             }
           }
         } catch (err) {
           console.error(err);
-          return res.status(500).json({ error: "Internal server error" });
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
         }
       }
     );

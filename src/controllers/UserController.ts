@@ -7,34 +7,47 @@ import UserDao from "../dao/UserDao";
 import PermissionDao from "../dao/PermissionDao";
 import { JwtMiddleware } from "../JwtUtils";
 
+import MessageFactory from "./../MessageFactory";
+
 export default class UserController extends Controller {
   constructor(private userDao: UserDao) {
     super();
   }
 
   public routes(): express.Router {
-    this.router.get("", async (req: express.Request, res: express.Response) => {
-      try {
-        const result: IUser[] = await this.userDao.findAll();
-        return res.json(result.map(userFilter));
-      } catch (err) {
-        return res.status(500).json({ error: "Internal server error" });
+    this.router.get(
+      "",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const result: IUser[] = await this.userDao.findAll();
+          return res.json(result.map(userFilter));
+        } catch (err) {
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
+        }
       }
-    });
+    );
 
     this.router.get(
       "/:userId",
+      JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const users: IUser[] = await this.userDao.findOne(req.params.userId);
           if (!(users && users.length === 1)) {
-            return res.status(404).json({ error: "User not found" });
+            return res
+              .status(404)
+              .json(MessageFactory.createError("User not found"));
           } else {
             return res.status(200).json(users.map(userFilter)[0]);
           }
         } catch (ex) {
           console.error(ex);
-          return res.status(500).json({ error: "Internal server error" });
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
         }
       }
     );
@@ -65,7 +78,9 @@ export default class UserController extends Controller {
           ) {
             return res
               .status(500)
-              .json({ error: "Missing request body parameters" });
+              .json(
+                MessageFactory.createError("Missing request body parameters")
+              );
           } else {
             // TODO: Save user
             const user: IUser[] | undefined = await this.userDao.findByUsername(
@@ -73,10 +88,14 @@ export default class UserController extends Controller {
             );
 
             if (user && user.length > 0) {
-              return res.status(400).json({ error: "User already exists" });
+              return res
+                .status(400)
+                .json(MessageFactory.createError("User already exists"));
             } else {
               if (userData.password.length < 8) {
-                return res.status(400).json({ error: "Password is too short" });
+                return res
+                  .status(400)
+                  .json(MessageFactory.createError("Password is too short"));
               }
 
               const savedUser: number[] = await this.userDao.save({
@@ -96,7 +115,9 @@ export default class UserController extends Controller {
           }
         } catch (err) {
           console.error(err);
-          return res.status(500).json({ error: "Internal server error" });
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
         }
       }
     );
