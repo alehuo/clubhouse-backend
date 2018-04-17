@@ -23,7 +23,7 @@ export default class StudentUnionDao implements IDao<IStudentUnion> {
   public save(stdu: {
     name: string;
     description: string;
-  }): Promise<IStudentUnion> {
+  }): Promise<number[]> {
     return this.knex("studentUnions").insert(stdu);
   }
 

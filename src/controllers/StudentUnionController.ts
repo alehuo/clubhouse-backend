@@ -70,10 +70,12 @@ export default class StudentUnionController extends Controller {
                   .json({ error: "Name or description cannot be empty" });
               }
 
-              const savedStudentUnion = await this.studentUnionDao.save({
-                name: studentUnionData.name,
-                description: studentUnionData.description
-              });
+              const savedStudentUnion: number[] = await this.studentUnionDao.save(
+                {
+                  name: studentUnionData.name,
+                  description: studentUnionData.description
+                }
+              );
 
               return res.status(201).json(
                 Object.assign({}, studentUnionData, {

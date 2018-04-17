@@ -76,7 +76,7 @@ export default class WatchController extends Controller {
               startMessage: req.body.startMessage,
               startTime: new Date()
             };
-            const savedWatch = await this.watchDao.save(watch);
+            const savedWatch: number[] = await this.watchDao.save(watch);
             return res.status(200).json({ message: "Watch started" });
           } else {
             return res

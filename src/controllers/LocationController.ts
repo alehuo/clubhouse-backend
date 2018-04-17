@@ -59,7 +59,7 @@ export default class LocationController extends Controller {
             if (location && location.length > 0) {
               return res.status(400).json({ error: "User already exists" });
             } else {
-              const savedLocation = await this.locationDao.save({
+              const savedLocation: number[] = await this.locationDao.save({
                 name: locationData.name,
                 address: locationData.address
               });

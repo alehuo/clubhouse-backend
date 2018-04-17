@@ -16,13 +16,19 @@ export default class PermissionDao implements IDao<IPermission> {
       .where({ permissionId });
   }
 
+  public findByValue(value: number): Promise<IPermission[]> {
+    return this.knex("permissions")
+      .select()
+      .where({ value });
+  }
+
   public findByName(name: string): Promise<IPermission[]> {
     return this.knex("permissions")
       .select()
       .where({ name });
   }
 
-  public save(permissions: IPermission): Promise<IPermission> {
+  public save(permissions: IPermission): Promise<number[]> {
     return this.knex("permissions").insert(permissions);
   }
 

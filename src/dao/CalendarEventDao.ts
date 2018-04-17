@@ -23,7 +23,7 @@ export default class CalendarEventDao implements IDao<ICalendarEvent> {
       .where("users.userId", userId);
   }
 
-  public save(calendarEvent: ICalendarEvent): Promise<ICalendarEvent> {
+  public save(calendarEvent: ICalendarEvent): Promise<number[]> {
     return this.knex("calendarEvents").insert(calendarEvent);
   }
 

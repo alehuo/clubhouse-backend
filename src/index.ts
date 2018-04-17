@@ -21,6 +21,8 @@ import PermissionDao from "./dao/PermissionDao";
 import PermissionController from "./controllers/PermissionController";
 import WatchDao from "./dao/WatchDao";
 import WatchController from "./controllers/WatchController";
+import MessageController from "./controllers/MessageController";
+import MessageDao from "./dao/MessageDao";
 
 // Express instance
 const app: express.Application = express();
@@ -81,6 +83,12 @@ app.use(
 // Watch route
 app.use(apiUrl("watch"), new WatchController(new WatchDao(knex)).routes());
 
+// Message route
+app.use(
+  apiUrl("message"),
+  new MessageController(new MessageDao(knex)).routes()
+);
+
 app.use(
   expressWinston.logger({
     transports: [
@@ -100,6 +108,10 @@ app.use(
     ignoreRoute: (req, res) => false
   })
 );
+
+app.use((req, res, next) => {
+  return res.status(404).json({ error: "Invalid API route" });
+});
 
 // Listen
 app.listen(process.env.SERVER_PORT, () => {

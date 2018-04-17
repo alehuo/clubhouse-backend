@@ -20,7 +20,7 @@ export default class UserDao implements IDao<IUser> {
       .where({ username });
   }
 
-  public save(user: IUser): Promise<IUser> {
+  public save(user: IUser): Promise<number[]> {
     return this.knex("users").insert(user);
   }
 

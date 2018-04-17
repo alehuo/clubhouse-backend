@@ -40,13 +40,13 @@ export default class MessageDao implements IDao<IMessage> {
     }
   }
 
-  public save(message: IMessage): Promise<IMessage> {
+  public save(message: IMessage): Promise<number[]> {
     return this.knex("messages").insert(message);
   }
 
-  public remove(watchMessageId: number): Promise<void> {
-    return this.knex("watchMessages")
+  public remove(messageId: number): Promise<void> {
+    return this.knex("messages")
       .delete()
-      .where({ watchMessageId });
+      .where({ messageId });
   }
 }
