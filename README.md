@@ -60,7 +60,7 @@ Required: `username` and `password`
 }
 ```
 
-_Response status code:_ **HTTP 201** (success on authentication), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
+_Response status code:_ **HTTP 200** (success on authentication), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
@@ -90,28 +90,34 @@ _Response body:_
     "userId": 1,
     "username": "user1",
     "email": "user1@email.com",
-    "firstName": "firstname",
-    "lastName": "lastname",
+    "firstName": "Hello",
+    "lastName": "World 1",
     "unionId": 1,
-    "permissions": 8
+    "permissions": 67108863,
+    "created_at": "2018-04-17 10:01:27",
+    "updateD_at": "2018-04-17 10:01:27"
   },
   {
     "userId": 2,
     "username": "user2",
     "email": "user2@email.com",
-    "firstName": "firstname",
-    "lastName": "lastname",
+    "firstName": "Hello",
+    "lastName": "World 2",
     "unionId": 1,
-    "permissions": 8
+    "permissions": 8,
+    "created_at": "2018-04-17 10:01:27",
+    "updateD_at": "2018-04-17 10:01:27"
   },
   {
     "userId": 3,
     "username": "user3",
     "email": "user3@email.com",
-    "firstName": "firstname",
-    "lastName": "lastname",
-    "unionId": 1,
-    "permissions": 8
+    "firstName": "Hello",
+    "lastName": "World 3",
+    "unionId": 2,
+    "permissions": 8,
+    "created_at": "2018-04-17 10:01:27",
+    "updateD_at": "2018-04-17 10:01:27"
   }
 ]
 ```
@@ -133,10 +139,12 @@ _Response body:_ **GET /api/v1/users/1**
   "userId": 1,
   "username": "user1",
   "email": "user1@email.com",
-  "firstName": "firstname",
-  "lastName": "lastname",
+  "firstName": "Hello",
+  "lastName": "World 1",
   "unionId": 1,
-  "permissions": 8
+  "permissions": 67108863,
+  "created_at": "2018-04-17 10:01:27",
+  "updateD_at": "2018-04-17 10:01:27"
 }
 ```
 
@@ -196,17 +204,23 @@ _Response body:_
   {
     "unionId": 1,
     "name": "Union 1",
-    "description": "Union 1 description"
+    "description": "Union 1 description",
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "unionId": 2,
     "name": "Union 2",
-    "description": "Union 2 description"
+    "description": "Union 2 description",
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "unionId": 3,
     "name": "Union 3",
-    "description": "Union 3 description"
+    "description": "Union 3 description",
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   }
 ]
 ```
@@ -227,7 +241,9 @@ _Response body:_ **GET /api/v1/studentunion/1**
 {
   "unionId": 1,
   "name": "Union 1",
-  "description": "Union 1 description"
+  "description": "Union 1 description",
+  "created_at": "2018-04-17 10:01:26",
+  "updated_at": "2018-04-17 10:01:26"
 }
 ```
 
@@ -285,7 +301,9 @@ _Response body:_
     "endTime": 1524524400000,
     "addedBy": 1,
     "unionId": 1,
-    "locationId": 2
+    "locationId": 2,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   },
   {
     "eventId": 2,
@@ -296,7 +314,9 @@ _Response body:_
     "endTime": 1524524400000,
     "addedBy": 1,
     "unionId": 1,
-    "locationId": 1
+    "locationId": 1,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
@@ -314,7 +334,7 @@ _Response content-type:_ **application/json**
 _Response body:_ **GET /api/v1/calendar/1**
 
 ```json
-{
+
   "eventId": 1,
   "name": "Friday hangouts",
   "description": "Friday hangouts at our clubhouse",
@@ -323,7 +343,9 @@ _Response body:_ **GET /api/v1/calendar/1**
   "endTime": 1524524400000,
   "addedBy": 1,
   "unionId": 1,
-  "locationId": 2
+  "locationId": 2,
+  "created_at": "2018-04-17 10:01:27",
+  "updated_at": "2018-04-17 10:01:27"
 }
 ```
 
@@ -421,12 +443,16 @@ _Response body:_
   {
     "locationId": 1,
     "name": "Meeting room",
-    "address": "Street Addr 1"
+    "address": "Street Addr 1",
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   },
   {
     "locationId": 2,
     "name": "Club",
-    "address": "Street Addr 1"
+    "address": "Street Addr 1",
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
@@ -447,7 +473,9 @@ _Response body:_ **GET /api/v1/location/1**
 {
   "locationId": 1,
   "name": "Meeting room",
-  "address": "Street Addr 1"
+  "address": "Street Addr 1",
+  "created_at": "2018-04-17 10:01:27",
+  "updated_at": "2018-04-17 10:01:27"
 }
 ```
 
@@ -503,132 +531,198 @@ _Response body:_
   {
     "permissionId": 1,
     "name": "BAN_USER",
-    "value": 1
+    "value": 1,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 2,
     "name": "EDIT_USER_ROLE",
-    "value": 2
+    "value": 2,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 3,
     "name": "MAKE_USER_ADMIN",
-    "value": 4
+    "value": 4,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 4,
     "name": "ALLOW_USER_LOGIN",
-    "value": 8
+    "value": 8,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 5,
     "name": "ADD_KEY_TO_USER",
-    "value": 16
+    "value": 16,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 6,
     "name": "REMOVE_KEY_FROM_USER",
-    "value": 32
+    "value": 32,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 7,
     "name": "CHANGE_KEY_TYPE_OF_USER",
-    "value": 64
+    "value": 64,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 8,
     "name": "ALLOW_VIEW_KEYS",
-    "value": 128
+    "value": 128,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 9,
     "name": "ADD_USER_TO_UNION",
-    "value": 256
+    "value": 256,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 10,
     "name": "REMOVE_USER_FROM_UNION",
-    "value": 512
+    "value": 512,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 11,
     "name": "ADD_STUDENT_UNION",
-    "value": 1024
+    "value": 1024,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 12,
     "name": "REMOVE_STUDENT_UNION",
-    "value": 2048
+    "value": 2048,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 13,
     "name": "EDIT_STUDENT_UNION",
-    "value": 4096
+    "value": 4096,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 14,
     "name": "ALLOW_VIEW_STUDENT_UNIONS",
-    "value": 8192
+    "value": 8192,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 15,
     "name": "ADD_EVENT",
-    "value": 16384
+    "value": 16384,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 16,
     "name": "EDIT_EVENT",
-    "value": 32768
+    "value": 32768,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 17,
     "name": "REMOVE_EVENT",
-    "value": 65536
+    "value": 65536,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 18,
     "name": "ALLOW_VIEW_EVENTS",
-    "value": 131072
+    "value": 131072,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 19,
     "name": "EDIT_RULES",
-    "value": 262144
+    "value": 262144,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 20,
     "name": "ALLOW_VIEW_RULES",
-    "value": 524288
+    "value": 524288,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 21,
     "name": "ADD_POSTS",
-    "value": 1048576
+    "value": 1048576,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 22,
     "name": "EDIT_AND_REMOVE_OWN_POSTS",
-    "value": 2097152
+    "value": 2097152,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 23,
     "name": "REMOVE_POSTS",
-    "value": 4194304
+    "value": 4194304,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 24,
     "name": "ALLOW_VIEW_POSTS",
-    "value": 8388608
+    "value": 8388608,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 25,
     "name": "EDIT_OTHERS_POSTS",
-    "value": 16777216
+    "value": 16777216,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 26,
     "name": "SEND_MAILS",
-    "value": 33554432
+    "value": 33554432,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
+  },
+  {
+    "permissionId": 27,
+    "name": "ADD_LOCATION",
+    "value": 67108864,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
+  },
+  {
+    "permissionId": 28,
+    "name": "EDIT_LOCATION",
+    "value": 134217728,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   }
 ]
 ```
@@ -649,7 +743,9 @@ _Response body:_ **GET /api/v1/permission/1**
 {
   "permissionId": 1,
   "name": "BAN_USER",
-  "value": 1
+  "value": 1,
+  "created_at": "2018-04-17 10:01:26",
+  "updated_at": "2018-04-17 10:01:26"
 }
 ```
 
@@ -668,14 +764,16 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
+
   {
-    "watchId": 5,
+    "watchId": 2,
     "userId": 1,
-    "startMessage": "Hello world.!",
+    "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
     "endMessage": null,
-    "startTime": 1523871750825,
-    "endTime": null
+    "startTime": 1530478680000,
+    "endTime": null,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
@@ -697,29 +795,24 @@ _Response body:_ **GET /api/v1/watch/user/1**
 ```json
 [
   {
+    "watchId": 1,
+    "userId": 1,
+    "startMessage": "Let's get this party started.",
+    "endMessage": "I have left the building. Moved people under my supervision to another keyholder.",
+    "startTime": 1498856400000,
+    "endTime": 1498877880000,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
+  },
+  {
     "watchId": 2,
     "userId": 1,
-    "startMessage":
-      "Good evening, I'm taking responsibility of a few exchange students.",
-    "endMessage": "Good night.",
-    "startTime": 1530478680000,
-    "endTime": 1523806819143
-  },
-  {
-    "watchId": 3,
-    "userId": 1,
-    "startMessage": "Hello world",
-    "endMessage": "Good night.",
-    "startTime": 1523806831618,
-    "endTime": 1523807048380
-  },
-  {
-    "watchId": 5,
-    "userId": 1,
-    "startMessage": "Hello world.!",
+    "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
     "endMessage": null,
-    "startTime": 1523871750825,
-    "endTime": null
+    "startTime": 1530478680000,
+    "endTime": null,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
@@ -741,12 +834,14 @@ _Response body:_ **GET /api/v1/watch/ongoing/user/1**
 ```json
 [
   {
-    "watchId": 5,
+    "watchId": 2,
     "userId": 1,
-    "startMessage": "Hello world!",
+    "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
     "endMessage": null,
-    "startTime": 1523871750825,
-    "endTime": null
+    "startTime": 1530478680000,
+    "endTime": null,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
@@ -875,15 +970,17 @@ _Response body:_
 [
   {
     "messageId": 1,
-    "timestamp": 1523950976094,
+    "created_at": "2018-04-17 10:13:22",
+    "updated_at": "2018-04-17 10:13:22",
     "userId": 1,
     "message": "Hello world!"
   },
   {
     "messageId": 2,
-    "timestamp": 1523951166370,
+    "created_at": "2018-04-17 10:13:38",
+    "updated_at": "2018-04-17 10:13:38",
     "userId": 1,
-    "message": "Hello world!"
+    "message": "Hello world, second time!"
   }
 ]
 ```
@@ -902,11 +999,12 @@ _Response body:_ **GET /api/v1/message/1**
 
 ```json
 {
-    "messageId": 1,
-    "timestamp": 1523950976094,
-    "userId": 1,
-    "message": "Hello world!"
-  }
+  "messageId": 1,
+  "created_at": "2018-04-17 10:13:22",
+  "updated_at": "2018-04-17 10:13:22",
+  "userId": 1,
+  "message": "Hello world!"
+}
 ```
 
 ### POST /api/v1/message

@@ -5,6 +5,8 @@ exports.up = function(knex, Promise) {
     table.string("name", 255).notNullable();
     // Location address
     table.string("address", 255).notNullable();
+    // Timestamp
+    table.timestamps(true, true);
   });
 };
 

@@ -5,6 +5,8 @@ exports.up = function(knex, Promise) {
     // Role id
     table.string("name");
     table.integer("value");
+    // Timestamp
+    table.timestamps(true, true);
   });
 };
 

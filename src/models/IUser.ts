@@ -8,6 +8,8 @@ export default interface IUser {
   password: string;
   hidden?: boolean;
   permissions?: number;
+  created_at?: Date;
+  updated_at?: Date;
 };
 
 /**
@@ -22,6 +24,8 @@ export const userFilter = (user: IUser) => {
     firstName: user.firstName,
     lastName: user.lastName,
     unionId: user.unionId,
-    permissions: user.permissions
+    permissions: user.permissions,
+    created_at: user.created_at,
+    updateD_at: user.updated_at
   };
 };

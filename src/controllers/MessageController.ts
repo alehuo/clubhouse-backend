@@ -37,7 +37,6 @@ export default class MessageController extends Controller {
 
           const msg: IMessage = {
             message: req.body.message,
-            timestamp: currentTimestamp,
             userId
           };
 
