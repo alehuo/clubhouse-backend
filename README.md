@@ -858,3 +858,88 @@ If you want to check if a user has a certain permission, do it like this:
 `0x00080008 & 0x00000008` = `0x00000008`
 
 If the result is equal to the permission that has been checked, the user is allowed to do the operation.
+
+## /api/v1/message
+
+### GET /api/v1/message
+
+_Returns:_ **All messages in the service.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "messageId": 1,
+    "timestamp": 1523950976094,
+    "userId": 1,
+    "message": "Hello world!"
+  },
+  {
+    "messageId": 2,
+    "timestamp": 1523951166370,
+    "userId": 1,
+    "message": "Hello world!"
+  }
+]
+```
+
+### GET /api/v1/message/:messageId
+
+_Returns:_ **A single message in the service by its id.**
+
+_Request parameters:_ `messageId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/message/1**
+
+```json
+{
+    "messageId": 1,
+    "timestamp": 1523950976094,
+    "userId": 1,
+    "message": "Hello world!"
+  }
+```
+
+### POST /api/v1/message
+
+_Returns:_ **Inserted message in the service**
+
+_Request content-type:_ **application/json**
+
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
+
+_Request body:_
+
+Required: `message`
+
+```json
+{
+  "message": "Hello world!"
+}
+```
+
+_Response status code:_ **HTTP 201** (success on message creation), **HTTP 400** (valiadtion error), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "messageId": 1,
+    "timestamp": 1523950976094,
+    "userId": 1,
+    "message": "Hello world!"
+  }
+]
+```
