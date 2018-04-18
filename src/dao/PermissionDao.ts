@@ -34,7 +34,7 @@ export default class PermissionDao implements IDao<IPermission> {
     return this.knex(TABLE_NAME).insert(permissions);
   }
 
-  public remove(permissionId: number): Promise<void> {
+  public remove(permissionId: number): Promise<boolean> {
     return this.knex(TABLE_NAME)
       .delete()
       .where({ permissionId });

@@ -29,7 +29,7 @@ export default class CalendarEventDao implements IDao<ICalendarEvent> {
     return this.knex(TABLE_NAME).insert(calendarEvent);
   }
 
-  public remove(eventId: number): Promise<void> {
+  public remove(eventId: number): Promise<boolean> {
     return this.knex(TABLE_NAME)
       .delete()
       .where({ eventId });

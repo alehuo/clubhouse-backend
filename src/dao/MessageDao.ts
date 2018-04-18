@@ -46,7 +46,7 @@ export default class MessageDao implements IDao<IMessage> {
     return this.knex(TABLE_NAME).insert(message);
   }
 
-  public remove(messageId: number): Promise<void> {
+  public remove(messageId: number): Promise<boolean> {
     return this.knex(TABLE_NAME)
       .delete()
       .where({ messageId });

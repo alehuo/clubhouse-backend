@@ -117,7 +117,9 @@ export default class NewsPostController extends Controller {
             req.params.newsPostId
           );
           if (newsPosts && newsPosts.length === 1) {
-            const result = await this.newsPostDao.remove(req.params.newsPostId);
+            const result: boolean = await this.newsPostDao.remove(
+              req.params.newsPostId
+            );
             if (result) {
               return res
                 .status(200)

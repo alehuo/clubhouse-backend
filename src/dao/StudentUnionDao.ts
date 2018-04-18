@@ -26,7 +26,7 @@ export default class StudentUnionDao implements IDao<IStudentUnion> {
     return this.knex(TABLE_NAME).insert(stdu);
   }
 
-  public remove(id: number): Promise<void> {
+  public remove(id: number): Promise<boolean> {
     return this.knex(TABLE_NAME)
       .delete()
       .where({ unionId: id });

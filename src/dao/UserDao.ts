@@ -26,7 +26,7 @@ export default class UserDao implements IDao<IUser> {
     return this.knex(TABLE_NAME).insert(user);
   }
 
-  public remove(id: number): Promise<void> {
+  public remove(id: number): Promise<boolean> {
     return this.knex(TABLE_NAME)
       .delete()
       .where({ imageId: id });

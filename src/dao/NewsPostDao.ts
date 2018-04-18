@@ -26,7 +26,7 @@ export default class NewsPostUnionDao implements IDao<INewsPost> {
     return this.knex(TABLE_NAME).insert(newsPost);
   }
 
-  public remove(postId: number): Promise<void> {
+  public remove(postId: number): Promise<boolean> {
     return this.knex(TABLE_NAME)
       .delete()
       .where({ postId });

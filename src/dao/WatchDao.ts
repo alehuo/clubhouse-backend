@@ -49,7 +49,7 @@ export default class WatchDao implements IDao<IWatch> {
       .where({ watchId });
   }
 
-  public remove(watchId: number): Promise<void> {
+  public remove(watchId: number): Promise<boolean> {
     return this.knex(TABLE_NAME)
       .delete()
       .where({ watchId });

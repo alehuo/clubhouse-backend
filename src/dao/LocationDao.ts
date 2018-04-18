@@ -28,7 +28,7 @@ export default class LocationDao implements IDao<ILocation> {
     return this.knex(TABLE_NAME).insert(location);
   }
 
-  public remove(locationId: number): Promise<void> {
+  public remove(locationId: number): Promise<boolean> {
     return this.knex(TABLE_NAME)
       .delete()
       .where({ locationId });
