@@ -31,7 +31,7 @@ export default class UserController extends Controller {
     );
 
     this.router.get(
-      "/:userId",
+      "/:userId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {

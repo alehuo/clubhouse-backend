@@ -29,7 +29,7 @@ export default class WatchController extends Controller {
     );
     // All watches from a single user
     this.router.get(
-      "/user/:userId",
+      "/user/:userId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -44,7 +44,7 @@ export default class WatchController extends Controller {
     );
     // All watches from a single user that are currently running
     this.router.get(
-      "/ongoing/user/:userId",
+      "/ongoing/user/:userId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -82,7 +82,7 @@ export default class WatchController extends Controller {
             };
             const savedWatch: number[] = await this.watchDao.save(watch);
             return res
-              .status(200)
+              .status(201)
               .json(MessageFactory.createMessage("Watch started"));
           } else {
             return res

@@ -32,7 +32,7 @@ export default class LocationController extends Controller {
     );
 
     this.router.get(
-      "/:locationId",
+      "/:locationId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         const locations: any = await this.locationDao.findOne(

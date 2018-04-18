@@ -35,7 +35,7 @@ export default class StudentUnionController extends Controller {
     );
 
     this.router.get(
-      "/:studentUnionId",
+      "/:studentUnionId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         const studentUnions: IStudentUnion[] = await this.studentUnionDao.findOne(

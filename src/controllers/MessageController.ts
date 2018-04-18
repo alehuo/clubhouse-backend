@@ -30,7 +30,30 @@ export default class MessageController extends Controller {
         }
       }
     );
-    // All watches from a single user
+    // A single message
+    this.router.get(
+      "/:messageId(\\d+)",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const messages: IMessage[] = await this.messageDao.findOne(
+            req.params.messageId
+          );
+          if (messages && messages.length === 1) {
+            return res.status(200).json(messages[0]);
+          } else {
+            return res
+              .status(404)
+              .json(MessageFactory.createError("Message not found"));
+          }
+        } catch (err) {
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
+        }
+      }
+    );
+    // Add a message
     this.router.post(
       "",
       JwtMiddleware,

@@ -66,7 +66,7 @@ export default class CalendarEventController extends Controller {
     );
 
     this.router.get(
-      "/:eventId",
+      "/:eventId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -90,7 +90,7 @@ export default class CalendarEventController extends Controller {
 
     // iCal
     this.router.get(
-      "/:eventId/ical",
+      "/:eventId(\\d+)/ical",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {

@@ -29,7 +29,7 @@ export default class PermissionController extends Controller {
     );
 
     this.router.get(
-      "/:permissionId",
+      "/:permissionId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
