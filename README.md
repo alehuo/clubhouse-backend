@@ -59,7 +59,7 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
     * [GET /api/v1/newspost/:newspostId](#get-apiv1newspostnewspostid)
     * [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
     * [POST /api/v1/newspost](#post-apiv1newspost)
-    * [DELETE GET /api/v1/newspost/:newspostId](#delete-get-apiv1newspostnewspostid)
+    * [DELETE /api/v1/newspost/:newspostId](#delete-apiv1newspostnewspostid)
 * [Permissions](#permissions)
   * [List of permissions](#list-of-permissions)
   * [Combining permissions](#combining-permissions)
