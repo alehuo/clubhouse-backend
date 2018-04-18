@@ -5,7 +5,6 @@ import IUser from "../models/IUser";
 import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
 import { JwtMiddleware, SignToken } from "../JwtUtils";
-import IPermission from "../models/IPermission";
 
 import MessageFactory from "./../MessageFactory";
 
