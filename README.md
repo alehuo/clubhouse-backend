@@ -54,6 +54,12 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
     * [GET /api/v1/message](#get-apiv1message)
     * [GET /api/v1/message/:messageId](#get-apiv1messagemessageid)
     * [POST /api/v1/message](#post-apiv1message)
+  * [/api/v1/newspost](#apiv1newspost)
+    * [GET /api/v1/newspost](#get-apiv1newspost)
+    * [GET /api/v1/newspost/:newspostId](#get-apiv1newspostnewspostid)
+    * [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
+    * [POST /api/v1/newspost](#post-apiv1newspost)
+    * [DELETE GET /api/v1/newspost/:newspostId](#delete-get-apiv1newspostnewspostid)
 * [Permissions](#permissions)
   * [List of permissions](#list-of-permissions)
   * [Combining permissions](#combining-permissions)
@@ -1161,7 +1167,7 @@ _Response body:_
 }
 ```
 
-#### DELETE GET /api/v1/newspost/:newspostId
+#### DELETE /api/v1/newspost/:newspostId
 
 _Returns:_ **Status if the deletion succeeded or not.**
 
