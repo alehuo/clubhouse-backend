@@ -3,6 +3,8 @@ exports.up = function(knex, Promise) {
     table.increments("unionId");
     table.string("name", 255).notNullable();
     table.string("description", 255).notNullable();
+    // Timestamp
+    table.timestamps(true, true);
   });
 };
 

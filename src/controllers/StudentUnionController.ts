@@ -7,6 +7,8 @@ import { JwtMiddleware } from "../JwtUtils";
 import { PermissionMiddleware } from "../PermissionMiddleware";
 import { getPermission, permissionNames } from "../PermissionUtils";
 
+import MessageFactory from "./../MessageFactory";
+
 /**
  * Student union controller.
  */
@@ -16,18 +18,25 @@ export default class StudentUnionController extends Controller {
   }
 
   public routes(): express.Router {
-    this.router.get("", async (req: express.Request, res: express.Response) => {
-      try {
-        const result: IStudentUnion[] = await this.studentUnionDao.findAll();
+    this.router.get(
+      "",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const result: IStudentUnion[] = await this.studentUnionDao.findAll();
 
-        return res.json(result.map(studentUnionFilter));
-      } catch (err) {
-        return res.status(500).json({ error: "Internal server error" });
+          return res.json(result.map(studentUnionFilter));
+        } catch (err) {
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
+        }
       }
-    });
+    );
 
     this.router.get(
-      "/:studentUnionId",
+      "/:studentUnionId(\\d+)",
+      JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         const studentUnions: IStudentUnion[] = await this.studentUnionDao.findOne(
           req.params.studentUnionId
@@ -35,7 +44,9 @@ export default class StudentUnionController extends Controller {
         if (studentUnions && studentUnions.length === 1) {
           return res.status(200).json(studentUnionFilter(studentUnions[0]));
         } else {
-          return res.status(404).json({ error: "Student union not found" });
+          return res
+            .status(404)
+            .json(MessageFactory.createError("Student union not found"));
         }
       }
     );
@@ -50,7 +61,9 @@ export default class StudentUnionController extends Controller {
           if (!(studentUnionData.name && studentUnionData.description)) {
             return res
               .status(500)
-              .json({ error: "Missing request body parameters" });
+              .json(
+                MessageFactory.createError("Missing request body parameters")
+              );
           } else {
             const studentUnion: IStudentUnion[] = await this.studentUnionDao.findByName(
               studentUnionData.name
@@ -59,7 +72,9 @@ export default class StudentUnionController extends Controller {
             if (studentUnion && studentUnion.length > 0) {
               return res
                 .status(400)
-                .json({ error: "Student union already exists" });
+                .json(
+                  MessageFactory.createError("Student union already exists")
+                );
             } else {
               if (
                 studentUnionData.name.length === 0 ||
@@ -67,7 +82,11 @@ export default class StudentUnionController extends Controller {
               ) {
                 return res
                   .status(400)
-                  .json({ error: "Name or description cannot be empty" });
+                  .json(
+                    MessageFactory.createError(
+                      "Name or description cannot be empty"
+                    )
+                  );
               }
 
               const savedStudentUnion: number[] = await this.studentUnionDao.save(
@@ -86,7 +105,9 @@ export default class StudentUnionController extends Controller {
           }
         } catch (err) {
           console.error(err);
-          return res.status(500).json({ error: "Internal server error" });
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
         }
       }
     );

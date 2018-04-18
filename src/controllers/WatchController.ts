@@ -7,6 +7,8 @@ import { PermissionMiddleware } from "../PermissionMiddleware";
 import { getPermission, permissionNames } from "../PermissionUtils";
 import IWatch from "../models/IWatch";
 
+import MessageFactory from "./../MessageFactory";
+
 export default class WatchController extends Controller {
   constructor(private watchDao: WatchDao) {
     super();
@@ -27,7 +29,7 @@ export default class WatchController extends Controller {
     );
     // All watches from a single user
     this.router.get(
-      "/user/:userId",
+      "/user/:userId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -42,7 +44,7 @@ export default class WatchController extends Controller {
     );
     // All watches from a single user that are currently running
     this.router.get(
-      "/ongoing/user/:userId",
+      "/ongoing/user/:userId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -68,7 +70,9 @@ export default class WatchController extends Controller {
           if (watches && watches.length > 0) {
             return res
               .status(400)
-              .json({ message: "You already have an ongoing watch." });
+              .json(
+                MessageFactory.createError("You already have an ongoing watch")
+              );
           }
           if (req.body.startMessage) {
             const watch: IWatch = {
@@ -77,14 +81,18 @@ export default class WatchController extends Controller {
               startTime: new Date()
             };
             const savedWatch: number[] = await this.watchDao.save(watch);
-            return res.status(200).json({ message: "Watch started" });
+            return res
+              .status(201)
+              .json(MessageFactory.createMessage("Watch started"));
           } else {
             return res
               .status(400)
-              .json({ message: "Missing starting message" });
+              .json(MessageFactory.createError("Missing starting message"));
           }
         } catch (err) {
-          return res.status(500).json({ error: "Internal server error" });
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
         }
       }
     );
@@ -102,12 +110,17 @@ export default class WatchController extends Controller {
             if (watches.length === 0) {
               return res
                 .status(400)
-                .json({ message: "You don't have an ongoing watch." });
+                .json(
+                  MessageFactory.createError("You don't have an ongoing watch.")
+                );
             } else if (watches.length > 1) {
-              return res.status(400).json({
-                message:
-                  "You have more than one watch running. Please contact a system administrator and use the email system as a backup."
-              });
+              return res
+                .status(400)
+                .json(
+                  MessageFactory.createError(
+                    "You have more than one watch running. Please contact a system administrator and use the email system as a backup."
+                  )
+                );
             }
           }
           if (req.body.endMessage) {
@@ -118,20 +131,30 @@ export default class WatchController extends Controller {
               endTime: new Date()
             };
             if (!currentWatch.watchId) {
-              return res.status(400).json({ message: "Invalid watch ID" });
+              return res
+                .status(400)
+                .json(MessageFactory.createError("Invalid watch id"));
             }
             const endedWatch = await this.watchDao.endWatch(
               currentWatch.watchId,
               watch
             );
-            return res.status(200).json({
-              message: "Watch ended with message '" + req.body.endMessage + "'"
-            });
+            return res
+              .status(200)
+              .json(
+                MessageFactory.createMessage(
+                  "Watch ended with message '" + req.body.endMessage + "'"
+                )
+              );
           } else {
-            return res.status(400).json({ message: "Missing ending message" });
+            return res
+              .status(400)
+              .json(MessageFactory.createError("Missing ending message"));
           }
         } catch (err) {
-          return res.status(500).json({ error: "Internal server error" });
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
         }
       }
     );

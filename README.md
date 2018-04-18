@@ -1,4 +1,4 @@
-# clubhouse-backend
+# clubhouse-backend <!-- DOCTOC SKIP -->
 
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
@@ -10,6 +10,63 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
 
 * Staging [URL]
 * Production [URL]
+
+## Table of contents <!-- DOCTOC SKIP -->
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+* [Introduction](#introduction)
+* [Installation instructions](#installation-instructions)
+* [API documentation](#api-documentation)
+  * [/api/v1/authenticate](#apiv1authenticate)
+    * [POST /api/v1/authenticate](#post-apiv1authenticate)
+  * [/api/v1/users](#apiv1users)
+    * [GET /api/v1/users](#get-apiv1users)
+    * [GET /api/v1/users/:userId](#get-apiv1usersuserid)
+    * [POST /api/v1/users](#post-apiv1users)
+  * [/api/v1/studentunion](#apiv1studentunion)
+    * [GET /api/v1/studentunion](#get-apiv1studentunion)
+    * [GET /api/v1/studentunion/:unionId](#get-apiv1studentunionunionid)
+    * [POST /api/v1/studentunion](#post-apiv1studentunion)
+  * [/api/v1/calendar](#apiv1calendar)
+    * [GET /api/v1/calendar](#get-apiv1calendar)
+    * [GET /api/v1/calendar/:eventId](#get-apiv1calendareventid)
+    * [POST /api/v1/calendar](#post-apiv1calendar)
+    * [GET /api/v1/calendar/:eventId/ical](#get-apiv1calendareventidical)
+  * [/api/v1/location](#apiv1location)
+    * [GET /api/v1/location](#get-apiv1location)
+    * [GET /api/v1/location/:locationId](#get-apiv1locationlocationid)
+    * [POST /api/v1/location](#post-apiv1location)
+  * [/api/v1/permission](#apiv1permission)
+    * [GET /api/v1/permission](#get-apiv1permission)
+    * [GET /api/v1/permission/:permissionId](#get-apiv1permissionpermissionid)
+  * [/api/v1/watch](#apiv1watch)
+    * [GET /api/v1/watch/ongoing](#get-apiv1watchongoing)
+    * [GET /api/v1/watch/user/:userId](#get-apiv1watchuseruserid)
+    * [GET /api/v1/watch/ongoing/user/:userId](#get-apiv1watchongoinguseruserid)
+    * [POST /api/v1/watch/begin](#post-apiv1watchbegin)
+    * [POST /api/v1/watch/end](#post-apiv1watchend)
+  * [/api/v1/message](#apiv1message)
+    * [GET /api/v1/message](#get-apiv1message)
+    * [GET /api/v1/message/:messageId](#get-apiv1messagemessageid)
+    * [POST /api/v1/message](#post-apiv1message)
+  * [/api/v1/newspost](#apiv1newspost)
+    * [GET /api/v1/newspost](#get-apiv1newspost)
+    * [GET /api/v1/newspost/:newspostId](#get-apiv1newspostnewspostid)
+    * [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
+    * [POST /api/v1/newspost](#post-apiv1newspost)
+    * [DELETE /api/v1/newspost/:newspostId](#delete-apiv1newspostnewspostid)
+* [Permissions](#permissions)
+  * [List of permissions](#list-of-permissions)
+  * [Combining permissions](#combining-permissions)
+  * [Checking permissions](#checking-permissions)
+* [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
 
@@ -41,9 +98,9 @@ This project is meant to solve this problem by providing:
 
 ## API documentation
 
-## /api/v1/authenticate
+### /api/v1/authenticate
 
-### POST /api/v1/authenticate
+#### POST /api/v1/authenticate
 
 _Returns:_ **JWT if the authentication succeeds**
 
@@ -60,7 +117,7 @@ Required: `username` and `password`
 }
 ```
 
-_Response status code:_ **HTTP 201** (success on authentication), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
+_Response status code:_ **HTTP 200** (success on authentication), **HTTP 4xx** (validation error or user already exists), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
@@ -72,9 +129,9 @@ _Response body:_ JWT
 }
 ```
 
-## /api/v1/users
+### /api/v1/users
 
-### GET /api/v1/users
+#### GET /api/v1/users
 
 _Returns:_ **A list of users registered in the service.**
 
@@ -90,33 +147,39 @@ _Response body:_
     "userId": 1,
     "username": "user1",
     "email": "user1@email.com",
-    "firstName": "firstname",
-    "lastName": "lastname",
+    "firstName": "Hello",
+    "lastName": "World 1",
     "unionId": 1,
-    "permissions": 8
+    "permissions": 67108863,
+    "created_at": "2018-04-17 10:01:27",
+    "updateD_at": "2018-04-17 10:01:27"
   },
   {
     "userId": 2,
     "username": "user2",
     "email": "user2@email.com",
-    "firstName": "firstname",
-    "lastName": "lastname",
+    "firstName": "Hello",
+    "lastName": "World 2",
     "unionId": 1,
-    "permissions": 8
+    "permissions": 8,
+    "created_at": "2018-04-17 10:01:27",
+    "updateD_at": "2018-04-17 10:01:27"
   },
   {
     "userId": 3,
     "username": "user3",
     "email": "user3@email.com",
-    "firstName": "firstname",
-    "lastName": "lastname",
-    "unionId": 1,
-    "permissions": 8
+    "firstName": "Hello",
+    "lastName": "World 3",
+    "unionId": 2,
+    "permissions": 8,
+    "created_at": "2018-04-17 10:01:27",
+    "updateD_at": "2018-04-17 10:01:27"
   }
 ]
 ```
 
-### GET /api/v1/users/:userId
+#### GET /api/v1/users/:userId
 
 _Returns:_ **Registered user if the request completes successfully**
 
@@ -133,14 +196,16 @@ _Response body:_ **GET /api/v1/users/1**
   "userId": 1,
   "username": "user1",
   "email": "user1@email.com",
-  "firstName": "firstname",
-  "lastName": "lastname",
+  "firstName": "Hello",
+  "lastName": "World 1",
   "unionId": 1,
-  "permissions": 8
+  "permissions": 67108863,
+  "created_at": "2018-04-17 10:01:27",
+  "updateD_at": "2018-04-17 10:01:27"
 }
 ```
 
-### POST /api/v1/users
+#### POST /api/v1/users
 
 _Returns:_ **Created user if the request succeeds**
 
@@ -179,9 +244,9 @@ _Response body:_ Created user
 }
 ```
 
-## /api/v1/studentunion
+### /api/v1/studentunion
 
-### GET /api/v1/studentunion
+#### GET /api/v1/studentunion
 
 _Returns:_ **A list of student unions in the service.**
 
@@ -196,22 +261,28 @@ _Response body:_
   {
     "unionId": 1,
     "name": "Union 1",
-    "description": "Union 1 description"
+    "description": "Union 1 description",
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "unionId": 2,
     "name": "Union 2",
-    "description": "Union 2 description"
+    "description": "Union 2 description",
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "unionId": 3,
     "name": "Union 3",
-    "description": "Union 3 description"
+    "description": "Union 3 description",
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   }
 ]
 ```
 
-### GET /api/v1/studentunion/:unionId
+#### GET /api/v1/studentunion/:unionId
 
 _Returns:_ **A single student unions in the service by its id.**
 
@@ -227,11 +298,13 @@ _Response body:_ **GET /api/v1/studentunion/1**
 {
   "unionId": 1,
   "name": "Union 1",
-  "description": "Union 1 description"
+  "description": "Union 1 description",
+  "created_at": "2018-04-17 10:01:26",
+  "updated_at": "2018-04-17 10:01:26"
 }
 ```
 
-### POST /api/v1/studentunion
+#### POST /api/v1/studentunion
 
 _Returns:_ **Created student union if the request succeeds**
 
@@ -262,9 +335,9 @@ _Response body:_ Created student union
 }
 ```
 
-## /api/v1/calendar
+### /api/v1/calendar
 
-### GET /api/v1/calendar
+#### GET /api/v1/calendar
 
 _Returns:_ **All calendar events in the service, past and present.**
 
@@ -285,7 +358,9 @@ _Response body:_
     "endTime": 1524524400000,
     "addedBy": 1,
     "unionId": 1,
-    "locationId": 2
+    "locationId": 2,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   },
   {
     "eventId": 2,
@@ -296,12 +371,14 @@ _Response body:_
     "endTime": 1524524400000,
     "addedBy": 1,
     "unionId": 1,
-    "locationId": 1
+    "locationId": 1,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
 
-### GET /api/v1/calendar/:eventId
+#### GET /api/v1/calendar/:eventId
 
 _Returns:_ **A single calendar event in the service by its id.**
 
@@ -314,7 +391,6 @@ _Response content-type:_ **application/json**
 _Response body:_ **GET /api/v1/calendar/1**
 
 ```json
-{
   "eventId": 1,
   "name": "Friday hangouts",
   "description": "Friday hangouts at our clubhouse",
@@ -323,11 +399,13 @@ _Response body:_ **GET /api/v1/calendar/1**
   "endTime": 1524524400000,
   "addedBy": 1,
   "unionId": 1,
-  "locationId": 2
+  "locationId": 2,
+  "created_at": "2018-04-17 10:01:27",
+  "updated_at": "2018-04-17 10:01:27"
 }
 ```
 
-### POST /api/v1/calendar
+#### POST /api/v1/calendar
 
 _Returns:_ **Created calendar event if the request succeeds**
 
@@ -373,7 +451,7 @@ _Response body:_ Created calendar event
 }
 ```
 
-### GET /api/v1/calendar/:eventId/ical
+#### GET /api/v1/calendar/:eventId/ical
 
 _Returns:_ **An iCal file of the event in the service by its id. Triggers a file download in the browser.**
 
@@ -404,9 +482,9 @@ END:VEVENT
 END:VCALENDAR
 ```
 
-## /api/v1/location
+### /api/v1/location
 
-### GET /api/v1/location
+#### GET /api/v1/location
 
 _Returns:_ **All locations in the service.**
 
@@ -421,17 +499,21 @@ _Response body:_
   {
     "locationId": 1,
     "name": "Meeting room",
-    "address": "Street Addr 1"
+    "address": "Street Addr 1",
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   },
   {
     "locationId": 2,
     "name": "Club",
-    "address": "Street Addr 1"
+    "address": "Street Addr 1",
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
 
-### GET /api/v1/location/:locationId
+#### GET /api/v1/location/:locationId
 
 _Returns:_ **A single location in the service by its id.**
 
@@ -447,11 +529,13 @@ _Response body:_ **GET /api/v1/location/1**
 {
   "locationId": 1,
   "name": "Meeting room",
-  "address": "Street Addr 1"
+  "address": "Street Addr 1",
+  "created_at": "2018-04-17 10:01:27",
+  "updated_at": "2018-04-17 10:01:27"
 }
 ```
 
-### POST /api/v1/location
+#### POST /api/v1/location
 
 _Returns:_ **Created location if the request succeeds**
 
@@ -486,9 +570,9 @@ _Response body:_ Created location
 }
 ```
 
-## /api/v1/permission
+### /api/v1/permission
 
-### GET /api/v1/permission
+#### GET /api/v1/permission
 
 _Returns:_ **All permissions in the service.**
 
@@ -503,137 +587,203 @@ _Response body:_
   {
     "permissionId": 1,
     "name": "BAN_USER",
-    "value": 1
+    "value": 1,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 2,
     "name": "EDIT_USER_ROLE",
-    "value": 2
+    "value": 2,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 3,
     "name": "MAKE_USER_ADMIN",
-    "value": 4
+    "value": 4,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 4,
     "name": "ALLOW_USER_LOGIN",
-    "value": 8
+    "value": 8,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 5,
     "name": "ADD_KEY_TO_USER",
-    "value": 16
+    "value": 16,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 6,
     "name": "REMOVE_KEY_FROM_USER",
-    "value": 32
+    "value": 32,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 7,
     "name": "CHANGE_KEY_TYPE_OF_USER",
-    "value": 64
+    "value": 64,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 8,
     "name": "ALLOW_VIEW_KEYS",
-    "value": 128
+    "value": 128,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 9,
     "name": "ADD_USER_TO_UNION",
-    "value": 256
+    "value": 256,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 10,
     "name": "REMOVE_USER_FROM_UNION",
-    "value": 512
+    "value": 512,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 11,
     "name": "ADD_STUDENT_UNION",
-    "value": 1024
+    "value": 1024,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 12,
     "name": "REMOVE_STUDENT_UNION",
-    "value": 2048
+    "value": 2048,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 13,
     "name": "EDIT_STUDENT_UNION",
-    "value": 4096
+    "value": 4096,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 14,
     "name": "ALLOW_VIEW_STUDENT_UNIONS",
-    "value": 8192
+    "value": 8192,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 15,
     "name": "ADD_EVENT",
-    "value": 16384
+    "value": 16384,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 16,
     "name": "EDIT_EVENT",
-    "value": 32768
+    "value": 32768,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 17,
     "name": "REMOVE_EVENT",
-    "value": 65536
+    "value": 65536,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 18,
     "name": "ALLOW_VIEW_EVENTS",
-    "value": 131072
+    "value": 131072,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 19,
     "name": "EDIT_RULES",
-    "value": 262144
+    "value": 262144,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 20,
     "name": "ALLOW_VIEW_RULES",
-    "value": 524288
+    "value": 524288,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 21,
     "name": "ADD_POSTS",
-    "value": 1048576
+    "value": 1048576,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 22,
     "name": "EDIT_AND_REMOVE_OWN_POSTS",
-    "value": 2097152
+    "value": 2097152,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 23,
     "name": "REMOVE_POSTS",
-    "value": 4194304
+    "value": 4194304,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 24,
     "name": "ALLOW_VIEW_POSTS",
-    "value": 8388608
+    "value": 8388608,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 25,
     "name": "EDIT_OTHERS_POSTS",
-    "value": 16777216
+    "value": 16777216,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   },
   {
     "permissionId": 26,
     "name": "SEND_MAILS",
-    "value": 33554432
+    "value": 33554432,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
+  },
+  {
+    "permissionId": 27,
+    "name": "ADD_LOCATION",
+    "value": 67108864,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
+  },
+  {
+    "permissionId": 28,
+    "name": "EDIT_LOCATION",
+    "value": 134217728,
+    "created_at": "2018-04-17 10:01:26",
+    "updated_at": "2018-04-17 10:01:26"
   }
 ]
 ```
 
-### GET /api/v1/permission/:permissionId
+#### GET /api/v1/permission/:permissionId
 
 _Returns:_ **A single permission in the service by its id.**
 
@@ -649,13 +799,15 @@ _Response body:_ **GET /api/v1/permission/1**
 {
   "permissionId": 1,
   "name": "BAN_USER",
-  "value": 1
+  "value": 1,
+  "created_at": "2018-04-17 10:01:26",
+  "updated_at": "2018-04-17 10:01:26"
 }
 ```
 
-## /api/v1/watch
+### /api/v1/watch
 
-### GET /api/v1/watch/ongoing
+#### GET /api/v1/watch/ongoing
 
 _Returns:_ **All ongoing watches in the service.**
 
@@ -668,19 +820,20 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
   {
-    "watchId": 5,
+    "watchId": 2,
     "userId": 1,
-    "startMessage": "Hello world.!",
+    "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
     "endMessage": null,
-    "startTime": 1523871750825,
-    "endTime": null
+    "startTime": 1530478680000,
+    "endTime": null,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
 
-### GET /api/v1/watch/user/:userId
+#### GET /api/v1/watch/user/:userId
 
 _Returns:_ **All watches (old and ongoing) by a single user, by its id.**
 
@@ -697,34 +850,31 @@ _Response body:_ **GET /api/v1/watch/user/1**
 ```json
 [
   {
+    "watchId": 1,
+    "userId": 1,
+    "startMessage": "Let's get this party started.",
+    "endMessage":
+      "I have left the building. Moved people under my supervision to another keyholder.",
+    "startTime": 1498856400000,
+    "endTime": 1498877880000,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
+  },
+  {
     "watchId": 2,
     "userId": 1,
     "startMessage":
       "Good evening, I'm taking responsibility of a few exchange students.",
-    "endMessage": "Good night.",
-    "startTime": 1530478680000,
-    "endTime": 1523806819143
-  },
-  {
-    "watchId": 3,
-    "userId": 1,
-    "startMessage": "Hello world",
-    "endMessage": "Good night.",
-    "startTime": 1523806831618,
-    "endTime": 1523807048380
-  },
-  {
-    "watchId": 5,
-    "userId": 1,
-    "startMessage": "Hello world.!",
     "endMessage": null,
-    "startTime": 1523871750825,
-    "endTime": null
+    "startTime": 1530478680000,
+    "endTime": null,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
 
-### GET /api/v1/watch/ongoing/user/:userId
+#### GET /api/v1/watch/ongoing/user/:userId
 
 _Returns:_ **All ongoing watches by a single user, by its id.**
 
@@ -741,17 +891,20 @@ _Response body:_ **GET /api/v1/watch/ongoing/user/1**
 ```json
 [
   {
-    "watchId": 5,
+    "watchId": 2,
     "userId": 1,
-    "startMessage": "Hello world!",
+    "startMessage":
+      "Good evening, I'm taking responsibility of a few exchange students.",
     "endMessage": null,
-    "startTime": 1523871750825,
-    "endTime": null
+    "startTime": 1530478680000,
+    "endTime": null,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27"
   }
 ]
 ```
 
-### POST /api/v1/watch/begin
+#### POST /api/v1/watch/begin
 
 _Returns:_ **Starts a new watch.**
 
@@ -781,7 +934,7 @@ _Response body:_ Status message
 }
 ```
 
-### POST /api/v1/watch/end
+#### POST /api/v1/watch/end
 
 _Returns:_ **Ends an ongoing watch.**
 
@@ -808,6 +961,227 @@ _Response body:_ Status message
 ```json
 {
   "message": "Watch ended with message 'End message of the watch.'"
+}
+```
+
+### /api/v1/message
+
+#### GET /api/v1/message
+
+_Returns:_ **All messages in the service.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "messageId": 1,
+    "created_at": "2018-04-17 10:13:22",
+    "updated_at": "2018-04-17 10:13:22",
+    "userId": 1,
+    "message": "Hello world!"
+  },
+  {
+    "messageId": 2,
+    "created_at": "2018-04-17 10:13:38",
+    "updated_at": "2018-04-17 10:13:38",
+    "userId": 1,
+    "message": "Hello world, second time!"
+  }
+]
+```
+
+#### GET /api/v1/message/:messageId
+
+_Returns:_ **A single message in the service by its id.**
+
+_Request parameters:_ `messageId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/message/1**
+
+```json
+{
+  "messageId": 1,
+  "created_at": "2018-04-17 10:13:22",
+  "updated_at": "2018-04-17 10:13:22",
+  "userId": 1,
+  "message": "Hello world!"
+}
+```
+
+#### POST /api/v1/message
+
+_Returns:_ **Inserted message in the service**
+
+_Request content-type:_ **application/json**
+
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
+
+_Request body:_
+
+Required: `message`
+
+```json
+{
+  "message": "Hello world!"
+}
+```
+
+_Response status code:_ **HTTP 201** (success on message creation), **HTTP 400** (valiadtion error), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "messageId": 1,
+    "timestamp": 1523950976094,
+    "userId": 1,
+    "message": "Hello world!"
+  }
+]
+```
+
+### /api/v1/newspost
+
+#### GET /api/v1/newspost
+
+_Returns:_ **All newsposts in the service.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "postId": 1,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27",
+    "author": 1,
+    "title": "Welcome to our site",
+    "message": "Welcome to the new clubhouse management website."
+  }
+]
+```
+
+#### GET /api/v1/newspost/:newspostId
+
+_Returns:_ **A single newspost in the service by its id.**
+
+_Request parameters:_ `newspostId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/newspost/1**
+
+```json
+{
+  "postId": 1,
+  "created_at": "2018-04-17 10:01:27",
+  "updated_at": "2018-04-17 10:01:27",
+  "author": 1,
+  "title": "Welcome to our site",
+  "message": "Welcome to the new clubhouse management website."
+}
+```
+
+#### GET /api/v1/newspost/user/:userId
+
+_Returns:_ **All newsposts by a single user in the service.**
+
+_Request parameters:_ `userId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/newspost/user1**
+
+```json
+[
+  {
+    "postId": 1,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27",
+    "author": 1,
+    "title": "Welcome to our site",
+    "message": "Welcome to the new clubhouse management website."
+  },
+  {
+    "postId": 2,
+    "created_at": "2018-04-18 05:27:28",
+    "updated_at": "2018-04-18 05:27:28",
+    "author": 1,
+    "title": "Hello world",
+    "message": "First post"
+  }
+]
+```
+
+#### POST /api/v1/newspost
+
+_Returns:_ **Inserted newspost in the service**
+
+_Request content-type:_ **application/json**
+
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
+
+_Request body:_
+
+Required: `title` and `message`
+
+```json
+{
+  "title": "Welcome to our site",
+  "message": "Welcome to the new clubhouse management website."
+}
+```
+
+_Response status code:_ **HTTP 201** (success on message creation), **HTTP 400** (valiadtion error), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+{
+  "postId": 1,
+  "author": 1,
+  "title": "Welcome to our site",
+  "message": "Welcome to the new clubhouse management website."
+}
+```
+
+#### DELETE /api/v1/newspost/:newspostId
+
+_Returns:_ **Status if the deletion succeeded or not.**
+
+_Request parameters:_ `newspostId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 400** (deletion error), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **DELETE /api/v1/newspost/1**
+
+```json
+{
+  "message": "Newspost deleted"
 }
 ```
 
@@ -859,87 +1233,6 @@ If you want to check if a user has a certain permission, do it like this:
 
 If the result is equal to the permission that has been checked, the user is allowed to do the operation.
 
-## /api/v1/message
+## License
 
-### GET /api/v1/message
-
-_Returns:_ **All messages in the service.**
-
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
-
-_Response content-type:_ **application/json**
-
-_Response body:_
-
-```json
-[
-  {
-    "messageId": 1,
-    "timestamp": 1523950976094,
-    "userId": 1,
-    "message": "Hello world!"
-  },
-  {
-    "messageId": 2,
-    "timestamp": 1523951166370,
-    "userId": 1,
-    "message": "Hello world!"
-  }
-]
-```
-
-### GET /api/v1/message/:messageId
-
-_Returns:_ **A single message in the service by its id.**
-
-_Request parameters:_ `messageId` (URL parameter, integer)
-
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
-
-_Response content-type:_ **application/json**
-
-_Response body:_ **GET /api/v1/message/1**
-
-```json
-{
-    "messageId": 1,
-    "timestamp": 1523950976094,
-    "userId": 1,
-    "message": "Hello world!"
-  }
-```
-
-### POST /api/v1/message
-
-_Returns:_ **Inserted message in the service**
-
-_Request content-type:_ **application/json**
-
-_Request headers:_ **Authorization: Bearer `[TOKEN]`**
-
-_Request body:_
-
-Required: `message`
-
-```json
-{
-  "message": "Hello world!"
-}
-```
-
-_Response status code:_ **HTTP 201** (success on message creation), **HTTP 400** (valiadtion error), **HTTP 500** (server error)
-
-_Response content-type:_ **application/json**
-
-_Response body:_
-
-```json
-[
-  {
-    "messageId": 1,
-    "timestamp": 1523950976094,
-    "userId": 1,
-    "message": "Hello world!"
-  }
-]
-```
+This project is licensed with MIT license.

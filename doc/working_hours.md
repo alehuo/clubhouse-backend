@@ -1,3 +1,11 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Working hours (Back-end)](#working-hours-back-end)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Working hours (Back-end)
 
 | Date      | Hours | Description                                                                                                                                                                                           |
@@ -15,6 +23,6 @@
 | 10.4.2018 | 1h | Added WatchDao, iWatch and migrations for 'watch' table. |
 | 15.4.2018 | 3h | Starting and ending a watch works now. Moved JWT to environment variable when using .rest files. User can also now get all past & ongoing watches from the back-end. |
 | 16.4.2018 | 1h | Add documentation for permissions & /api/v1/watch route. |
-| 17.4.2018 | 1h | Add /api/v1/message route (MessageController, MessageDao and iMessage model) |
+| 17.4.2018 | 2h | Add /api/v1/message route (MessageController, MessageDao and iMessage model). Created NewsPost DAO and Model. Updated documentation. |
 
-Total: 36 h
+Total: 37 h

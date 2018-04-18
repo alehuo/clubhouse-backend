@@ -17,6 +17,11 @@ module.exports = {
       password: "password"
     },
     pool: {
+      afterCreate: function(connection, callback) {
+        connection.query("SET time_zone = Europe / Helsinki;", function(err) {
+          callback(err, connection);
+        });
+      },
       min: 2,
       max: 10
     },
@@ -34,6 +39,11 @@ module.exports = {
       password: "password"
     },
     pool: {
+      afterCreate: function(connection, callback) {
+        connection.query("SET time_zone = Europe / Helsinki;", function(err) {
+          callback(err, connection);
+        });
+      },
       min: 2,
       max: 10
     },

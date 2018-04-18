@@ -8,4 +8,6 @@ export default interface ICalendarEvent {
   endTime: Date;
   addedBy: number;
   unionId: number;
+  created_at?: Date;
+  updated_at?: Date;
 };

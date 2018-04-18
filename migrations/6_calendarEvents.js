@@ -17,6 +17,9 @@ exports.up = function(knex, Promise) {
     // Location
     table.integer("locationId").notNullable();
 
+    // Timestamp
+    table.timestamps(true, true);
+
     table
       .foreign("locationId")
       .references("locationId")

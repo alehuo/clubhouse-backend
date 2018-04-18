@@ -23,6 +23,8 @@ import WatchDao from "./dao/WatchDao";
 import WatchController from "./controllers/WatchController";
 import MessageController from "./controllers/MessageController";
 import MessageDao from "./dao/MessageDao";
+import NewsPostController from "./controllers/NewsPostController";
+import NewsPostDao from "./dao/NewsPostDao";
 
 // Express instance
 const app: express.Application = express();
@@ -87,6 +89,12 @@ app.use(apiUrl("watch"), new WatchController(new WatchDao(knex)).routes());
 app.use(
   apiUrl("message"),
   new MessageController(new MessageDao(knex)).routes()
+);
+
+// Newspost route
+app.use(
+  apiUrl("newspost"),
+  new NewsPostController(new NewsPostDao(knex)).routes()
 );
 
 app.use(

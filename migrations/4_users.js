@@ -15,6 +15,8 @@ exports.up = function(knex, Promise) {
       .integer("permissions")
       .notNullable()
       .defaultTo(8);
+    // Timestamp
+    table.timestamps(true, true);
   });
 };
 

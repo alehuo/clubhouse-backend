@@ -1,5 +1,6 @@
 import * as express from "express";
 import * as jwt from "jsonwebtoken";
+import MessageFactory from "./MessageFactory";
 
 /**
  * Express middleware for verifying JWT's.
@@ -16,7 +17,9 @@ export const JwtMiddleware = async (
   const authHeader: string = req.get("Authorization");
   if (authHeader === undefined) {
     // If the token is undefined, return an error.
-    return res.status(403).json({ error: "Missing Authorization header" });
+    return res
+      .status(403)
+      .json(MessageFactory.createError("Missing Authorization header"));
   }
   // Split header into parts to extract token & check for Bearer
   const headerParts: string[] = authHeader.split(" ");
@@ -29,10 +32,14 @@ export const JwtMiddleware = async (
       next();
     } catch (ex) {
       console.error(ex);
-      return res.status(403).json({ error: "Malformed Authorization header" });
+      return res
+        .status(403)
+        .json(MessageFactory.createError("Malformed Authorization header"));
     }
   } else {
-    return res.status(403).json({ error: "Malformed Authorization header" });
+    return res
+      .status(403)
+      .json(MessageFactory.createError("Malformed Authorization header"));
   }
 };
 

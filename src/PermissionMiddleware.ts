@@ -1,6 +1,7 @@
 import * as express from "express";
 import { hasPermissions } from "./PermissionUtils";
 import IPermission from "./models/IPermission";
+import MessageFactory from "./MessageFactory";
 
 /**
  * Permission middleware.
@@ -23,9 +24,9 @@ export const PermissionMiddleware = (
     if (hasPermissions(userPerms, requiredPermissions)) {
       next();
     } else {
-      res.status(400).json({ error: "Unauthorized" });
+      res.status(400).json(MessageFactory.createError("Unauthorized"));
     }
   } else {
-    res.status(400).json({ error: "Invalid token" });
+    res.status(400).json(MessageFactory.createError("Invalid token"));
   }
 };
