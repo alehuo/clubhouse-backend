@@ -1,5 +1,18 @@
 # clubhouse-backend <!-- DOCTOC SKIP -->
 
+[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+[Code coverage][travis ci build status]
+
+Back-end for Full-stack software development project course.
+
+The back-end has been coded with TypeScript. A Dockerfile is also provided if you wish to deploy the app easily. Knex is used to handle DB migrations and seeding.
+
+* Staging [URL]
+* Production [URL]
+
+## Table of contents <!-- DOCTOC SKIP -->
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -48,17 +61,6 @@
 * [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
-[Code coverage][travis ci build status]
-
-Back-end for Full-stack software development project course.
-
-The back-end has been coded with TypeScript. A Dockerfile is also provided if you wish to deploy the app easily. Knex is used to handle DB migrations and seeding.
-
-* Staging [URL]
-* Production [URL]
 
 ## Introduction
 
