@@ -3,8 +3,6 @@ import * as bcrypt from "bcrypt";
 import Controller from "./Controller";
 import { JwtMiddleware } from "../JwtUtils";
 import NewsPostDao from "../dao/NewsPostDao";
-import { PermissionMiddleware } from "../PermissionMiddleware";
-import { getPermission, permissionNames } from "../PermissionUtils";
 import INewsPost from "../models/INewsPost";
 
 import MessageFactory from "./../MessageFactory";
@@ -32,7 +30,7 @@ export default class NewsPostController extends Controller {
     );
     // A single newspost
     this.router.get(
-      "/:newsPostId",
+      "/:newsPostId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -53,14 +51,14 @@ export default class NewsPostController extends Controller {
         }
       }
     );
-    // All newsposts by a single user.
+    // All newsposts by a single user
     this.router.get(
-      "/user/:userId",
+      "/user/:userId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPosts: INewsPost[] = await this.newsPostDao.findByAuthor(
-            req.params.newsPostId
+            req.params.userId
           );
           return res.status(200).json(newsPosts);
         } catch (err) {
@@ -100,6 +98,41 @@ export default class NewsPostController extends Controller {
                 .status(400)
                 .json(MessageFactory.createError("Error saving newspost"));
             }
+          }
+        } catch (err) {
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
+        }
+      }
+    );
+
+    // Delete a newspost
+    this.router.delete(
+      "/:newsPostId(\\d+)",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const newsPosts: INewsPost[] = await this.newsPostDao.findOne(
+            req.params.newsPostId
+          );
+          if (newsPosts && newsPosts.length === 1) {
+            const result = await this.newsPostDao.remove(req.params.newsPostId);
+            if (result) {
+              return res
+                .status(200)
+                .json(MessageFactory.createMessage("Newspost deleted"));
+            } else {
+              return res
+                .status(400)
+                .json(
+                  MessageFactory.createMessage("Failed to delete newspost")
+                );
+            }
+          } else {
+            return res
+              .status(404)
+              .json(MessageFactory.createError("Newspost not found"));
           }
         } catch (err) {
           return res

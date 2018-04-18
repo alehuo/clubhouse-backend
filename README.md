@@ -1046,6 +1046,139 @@ _Response body:_
 ]
 ```
 
+### /api/v1/newspost
+
+#### GET /api/v1/newspost
+
+_Returns:_ **All newsposts in the service.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+[
+  {
+    "postId": 1,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27",
+    "author": 1,
+    "title": "Welcome to our site",
+    "message": "Welcome to the new clubhouse management website."
+  }
+]
+```
+
+#### GET /api/v1/newspost/:newspostId
+
+_Returns:_ **A single newspost in the service by its id.**
+
+_Request parameters:_ `newspostId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/newspost/1**
+
+```json
+{
+  "postId": 1,
+  "created_at": "2018-04-17 10:01:27",
+  "updated_at": "2018-04-17 10:01:27",
+  "author": 1,
+  "title": "Welcome to our site",
+  "message": "Welcome to the new clubhouse management website."
+}
+```
+
+#### GET /api/v1/newspost/user/:userId
+
+_Returns:_ **All newsposts by a single user in the service.**
+
+_Request parameters:_ `userId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/newspost/user1**
+
+```json
+[
+  {
+    "postId": 1,
+    "created_at": "2018-04-17 10:01:27",
+    "updated_at": "2018-04-17 10:01:27",
+    "author": 1,
+    "title": "Welcome to our site",
+    "message": "Welcome to the new clubhouse management website."
+  },
+  {
+    "postId": 2,
+    "created_at": "2018-04-18 05:27:28",
+    "updated_at": "2018-04-18 05:27:28",
+    "author": 1,
+    "title": "Hello world",
+    "message": "First post"
+  }
+]
+```
+
+#### POST /api/v1/newspost
+
+_Returns:_ **Inserted newspost in the service**
+
+_Request content-type:_ **application/json**
+
+_Request headers:_ **Authorization: Bearer `[TOKEN]`**
+
+_Request body:_
+
+Required: `title` and `message`
+
+```json
+{
+  "title": "Welcome to our site",
+  "message": "Welcome to the new clubhouse management website."
+}
+```
+
+_Response status code:_ **HTTP 201** (success on message creation), **HTTP 400** (valiadtion error), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+{
+  "postId": 1,
+  "author": 1,
+  "title": "Welcome to our site",
+  "message": "Welcome to the new clubhouse management website."
+}
+```
+
+#### DELETE GET /api/v1/newspost/:newspostId
+
+_Returns:_ **Status if the deletion succeeded or not.**
+
+_Request parameters:_ `newspostId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 400** (deletion error), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **DELETE /api/v1/newspost/1**
+
+```json
+{
+  "message": "Newspost deleted"
+}
+```
+
 ## Permissions
 
 The back end has an advanced permission system, that allows for a fine tuned management of user permissions. Below is a table that has listed all permission bits that are in use.
