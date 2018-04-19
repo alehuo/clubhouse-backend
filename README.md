@@ -14,57 +14,60 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
 ## Table of contents <!-- DOCTOC SKIP -->
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-* [Introduction](#introduction)
-* [Installation instructions](#installation-instructions)
-* [API documentation](#api-documentation)
-  * [/api/v1/authenticate](#apiv1authenticate)
-    * [POST /api/v1/authenticate](#post-apiv1authenticate)
-  * [/api/v1/users](#apiv1users)
-    * [GET /api/v1/users](#get-apiv1users)
-    * [GET /api/v1/users/:userId](#get-apiv1usersuserid)
-    * [POST /api/v1/users](#post-apiv1users)
-  * [/api/v1/studentunion](#apiv1studentunion)
-    * [GET /api/v1/studentunion](#get-apiv1studentunion)
-    * [GET /api/v1/studentunion/:unionId](#get-apiv1studentunionunionid)
-    * [POST /api/v1/studentunion](#post-apiv1studentunion)
-  * [/api/v1/calendar](#apiv1calendar)
-    * [GET /api/v1/calendar](#get-apiv1calendar)
-    * [GET /api/v1/calendar/:eventId](#get-apiv1calendareventid)
-    * [POST /api/v1/calendar](#post-apiv1calendar)
-    * [GET /api/v1/calendar/:eventId/ical](#get-apiv1calendareventidical)
-  * [/api/v1/location](#apiv1location)
-    * [GET /api/v1/location](#get-apiv1location)
-    * [GET /api/v1/location/:locationId](#get-apiv1locationlocationid)
-    * [POST /api/v1/location](#post-apiv1location)
-  * [/api/v1/permission](#apiv1permission)
-    * [GET /api/v1/permission](#get-apiv1permission)
-    * [GET /api/v1/permission/:permissionId](#get-apiv1permissionpermissionid)
-  * [/api/v1/watch](#apiv1watch)
-    * [GET /api/v1/watch/ongoing](#get-apiv1watchongoing)
-    * [GET /api/v1/watch/user/:userId](#get-apiv1watchuseruserid)
-    * [GET /api/v1/watch/ongoing/user/:userId](#get-apiv1watchongoinguseruserid)
-    * [POST /api/v1/watch/begin](#post-apiv1watchbegin)
-    * [POST /api/v1/watch/end](#post-apiv1watchend)
-  * [/api/v1/message](#apiv1message)
-    * [GET /api/v1/message](#get-apiv1message)
-    * [GET /api/v1/message/:messageId](#get-apiv1messagemessageid)
-    * [POST /api/v1/message](#post-apiv1message)
-  * [/api/v1/newspost](#apiv1newspost)
-    * [GET /api/v1/newspost](#get-apiv1newspost)
-    * [GET /api/v1/newspost/:newspostId](#get-apiv1newspostnewspostid)
-    * [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
-    * [POST /api/v1/newspost](#post-apiv1newspost)
-    * [DELETE /api/v1/newspost/:newspostId](#delete-apiv1newspostnewspostid)
-* [Permissions](#permissions)
-  * [List of permissions](#list-of-permissions)
-  * [Combining permissions](#combining-permissions)
-  * [Checking permissions](#checking-permissions)
-* [License](#license)
+- [Introduction](#introduction)
+- [Installation instructions](#installation-instructions)
+- [API documentation](#api-documentation)
+  - [/api/v1/authenticate](#apiv1authenticate)
+    - [POST /api/v1/authenticate](#post-apiv1authenticate)
+  - [/api/v1/user](#apiv1user)
+    - [GET /api/v1/user](#get-apiv1user)
+    - [GET /api/v1/user/:userId](#get-apiv1useruserid)
+    - [POST /api/v1/user](#post-apiv1user)
+    - [DELETE /api/v1/user/:userId](#delete-apiv1useruserid)
+  - [/api/v1/studentunion](#apiv1studentunion)
+    - [GET /api/v1/studentunion](#get-apiv1studentunion)
+    - [GET /api/v1/studentunion/:unionId](#get-apiv1studentunionunionid)
+    - [POST /api/v1/studentunion](#post-apiv1studentunion)
+    - [DELETE /api/v1/studentunion/:unionId](#delete-apiv1studentunionunionid)
+  - [/api/v1/calendar](#apiv1calendar)
+    - [GET /api/v1/calendar](#get-apiv1calendar)
+    - [GET /api/v1/calendar/:eventId](#get-apiv1calendareventid)
+    - [POST /api/v1/calendar](#post-apiv1calendar)
+    - [GET /api/v1/calendar/:eventId/ical](#get-apiv1calendareventidical)
+    - [DELETE /api/v1/calendar/:eventId](#delete-apiv1calendareventid)
+  - [/api/v1/location](#apiv1location)
+    - [GET /api/v1/location](#get-apiv1location)
+    - [GET /api/v1/location/:locationId](#get-apiv1locationlocationid)
+    - [POST /api/v1/location](#post-apiv1location)
+    - [DELETE /api/v1/location/:locationId](#delete-apiv1locationlocationid)
+  - [/api/v1/permission](#apiv1permission)
+    - [GET /api/v1/permission](#get-apiv1permission)
+    - [GET /api/v1/permission/:permissionId](#get-apiv1permissionpermissionid)
+  - [/api/v1/watch](#apiv1watch)
+    - [GET /api/v1/watch/ongoing](#get-apiv1watchongoing)
+    - [GET /api/v1/watch/user/:userId](#get-apiv1watchuseruserid)
+    - [GET /api/v1/watch/ongoing/user/:userId](#get-apiv1watchongoinguseruserid)
+    - [POST /api/v1/watch/begin](#post-apiv1watchbegin)
+    - [POST /api/v1/watch/end](#post-apiv1watchend)
+  - [/api/v1/message](#apiv1message)
+    - [GET /api/v1/message](#get-apiv1message)
+    - [GET /api/v1/message/:messageId](#get-apiv1messagemessageid)
+    - [POST /api/v1/message](#post-apiv1message)
+    - [DELETE /api/v1/message/:messageId](#delete-apiv1messagemessageid)
+  - [/api/v1/newspost](#apiv1newspost)
+    - [GET /api/v1/newspost](#get-apiv1newspost)
+    - [GET /api/v1/newspost/:postId](#get-apiv1newspostpostid)
+    - [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
+    - [POST /api/v1/newspost](#post-apiv1newspost)
+    - [DELETE /api/v1/newspost/:postId](#delete-apiv1newspostpostid)
+- [Permissions](#permissions)
+  - [List of permissions](#list-of-permissions)
+  - [Combining permissions](#combining-permissions)
+  - [Checking permissions](#checking-permissions)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -129,9 +132,9 @@ _Response body:_ JWT
 }
 ```
 
-### /api/v1/users
+### /api/v1/user
 
-#### GET /api/v1/users
+#### GET /api/v1/user
 
 _Returns:_ **A list of users registered in the service.**
 
@@ -179,7 +182,7 @@ _Response body:_
 ]
 ```
 
-#### GET /api/v1/users/:userId
+#### GET /api/v1/user/:userId
 
 _Returns:_ **Registered user if the request completes successfully**
 
@@ -189,7 +192,7 @@ _Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP
 
 _Response content-type:_ **application/json**
 
-_Response body:_ **GET /api/v1/users/1**
+_Response body:_ **GET /api/v1/user/1**
 
 ```json
 {
@@ -205,7 +208,7 @@ _Response body:_ **GET /api/v1/users/1**
 }
 ```
 
-#### POST /api/v1/users
+#### POST /api/v1/user
 
 _Returns:_ **Created user if the request succeeds**
 
@@ -243,6 +246,10 @@ _Response body:_ Created user
   "permissions": 8
 }
 ```
+
+#### DELETE /api/v1/user/:userId
+
+Todo
 
 ### /api/v1/studentunion
 
@@ -334,6 +341,10 @@ _Response body:_ Created student union
   "unionId": 1
 }
 ```
+
+#### DELETE /api/v1/studentunion/:unionId
+
+Todo
 
 ### /api/v1/calendar
 
@@ -482,6 +493,10 @@ END:VEVENT
 END:VCALENDAR
 ```
 
+#### DELETE /api/v1/calendar/:eventId
+
+Todo
+
 ### /api/v1/location
 
 #### GET /api/v1/location
@@ -569,6 +584,10 @@ _Response body:_ Created location
   "address": "Street Addr 1"
 }
 ```
+
+#### DELETE /api/v1/location/:locationId
+
+Todo
 
 ### /api/v1/permission
 
@@ -1052,6 +1071,10 @@ _Response body:_
 ]
 ```
 
+#### DELETE /api/v1/message/:messageId
+
+Todo
+
 ### /api/v1/newspost
 
 #### GET /api/v1/newspost
@@ -1077,11 +1100,11 @@ _Response body:_
 ]
 ```
 
-#### GET /api/v1/newspost/:newspostId
+#### GET /api/v1/newspost/:postId
 
 _Returns:_ **A single newspost in the service by its id.**
 
-_Request parameters:_ `newspostId` (URL parameter, integer)
+_Request parameters:_ `postId` (URL parameter, integer)
 
 _Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
 
@@ -1167,17 +1190,17 @@ _Response body:_
 }
 ```
 
-#### DELETE /api/v1/newspost/:newspostId
+#### DELETE /api/v1/newspost/:postId
 
 _Returns:_ **Status if the deletion succeeded or not.**
 
-_Request parameters:_ `newspostId` (URL parameter, integer)
+_Request parameters:_ `postId` (URL parameter, integer)
 
 _Response status code:_ **HTTP 200** (success), **HTTP 400** (deletion error), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
-_Response body:_ **DELETE /api/v1/newspost/1**
+_Response body:_ **DELETE /api/v1/post/1**
 
 ```json
 {
