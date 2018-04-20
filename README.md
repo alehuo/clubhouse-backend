@@ -19,7 +19,7 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
 
 - [Introduction](#introduction)
 - [Installation instructions](#installation-instructions)
-- [API documentation](#api-documentation)
+- [API routes](#api-routes)
   - [/api/v1/authenticate](#apiv1authenticate)
     - [POST /api/v1/authenticate](#post-apiv1authenticate)
   - [/api/v1/user](#apiv1user)
@@ -63,6 +63,9 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
     - [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
     - [POST /api/v1/newspost](#post-apiv1newspost)
     - [DELETE /api/v1/newspost/:postId](#delete-apiv1newspostpostid)
+  - [/api/v1/statistics](#apiv1statistics)
+    - [GET /api/v1/statistics](#get-apiv1statistics)
+    - [GET /api/v1/statistics/:userId](#get-apiv1statisticsuserid)
 - [Permissions](#permissions)
   - [List of permissions](#list-of-permissions)
   - [Combining permissions](#combining-permissions)
@@ -99,7 +102,7 @@ This project is meant to solve this problem by providing:
 6.  `knex seed:run` to seed the database
 7.  `yarn start` to start the server or `yarn watch` to watch for code changes
 
-## API documentation
+## API routes
 
 ### /api/v1/authenticate
 
@@ -1133,7 +1136,7 @@ _Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
-_Response body:_ **GET /api/v1/newspost/user1**
+_Response body:_ **GET /api/v1/newspost/user/1**
 
 ```json
 [
@@ -1200,11 +1203,55 @@ _Response status code:_ **HTTP 200** (success), **HTTP 400** (deletion error), *
 
 _Response content-type:_ **application/json**
 
-_Response body:_ **DELETE /api/v1/post/1**
+_Response body:_ **DELETE /api/v1/newspost/1**
 
 ```json
 {
   "message": "Newspost deleted"
+}
+```
+
+### /api/v1/statistics
+
+#### GET /api/v1/statistics
+
+_Returns:_ **Statistics of the clubhouse management system.**
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_
+
+```json
+{
+  "userCount": 3,
+  "eventCount": 2,
+  "newspostCount": 1,
+  "hoursOnWatch": 0.16666666666666666,
+  "messageCount": 2
+}
+```
+
+#### GET /api/v1/statistics/:userId
+
+_Returns:_ **Statistics of a single user in the clubhouse management system.**
+
+_Request parameters:_ `userId` (URL parameter, integer)
+
+_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
+
+_Response content-type:_ **application/json**
+
+_Response body:_ **GET /api/v1/statistics/1**
+
+```json
+{
+  "eventCount": 2,
+  "newspostCount": 1,
+  "hoursOnWatch": 0.16666666666666666,
+  "watchCount": 2,
+  "messageCount": 2
 }
 ```
 

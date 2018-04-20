@@ -8,9 +8,14 @@ import PermissionDao from "../dao/PermissionDao";
 import { JwtMiddleware } from "../JwtUtils";
 
 import MessageFactory from "./../MessageFactory";
+import CalendarEventDao from "../dao/CalendarEventDao";
+import ICalendarEvent from "../models/ICalendarEvent";
 
 export default class UserController extends Controller {
-  constructor(private userDao: UserDao) {
+  constructor(
+    private userDao: UserDao,
+    private calendarEventDao: CalendarEventDao
+  ) {
     super();
   }
 
@@ -115,6 +120,37 @@ export default class UserController extends Controller {
           }
         } catch (err) {
           console.error(err);
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
+        }
+      }
+    );
+
+    this.router.delete(
+      "/:userId(\\d+)",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const users: IUser[] = await this.userDao.findOne(req.params.userId);
+          if (!(users && users.length === 1)) {
+            return res
+              .status(404)
+              .json(MessageFactory.createError("User not found"));
+          } else {
+            // Remove calendar events, messages, newsposts and watches by this user
+            const calendarEvents: ICalendarEvent[] = await this.calendarEventDao.findCalendarEventsByUser(
+              res.locals.token.data.userid
+            );
+            await Promise.all(
+              calendarEvents.map(event =>
+                this.calendarEventDao.remove(event.eventId)
+              )
+            );
+            return res.status(200).json(MessageFactory.createError("Todo"));
+          }
+        } catch (ex) {
+          console.error(ex);
           return res
             .status(500)
             .json(MessageFactory.createError("Internal server error"));

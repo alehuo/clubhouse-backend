@@ -86,6 +86,40 @@ export default class MessageController extends Controller {
       }
     );
 
+    this.router.delete(
+      "/:messageId(\\d+)",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const messages: IMessage[] = await this.messageDao.findOne(
+            req.params.messageId
+          );
+          if (messages && messages.length === 1) {
+            const result: boolean = await this.messageDao.remove(
+              req.params.messageId
+            );
+            if (result) {
+              return res
+                .status(200)
+                .json(MessageFactory.createError("Message removed"));
+            } else {
+              return res
+                .status(400)
+                .json(MessageFactory.createError("Failed to remove message"));
+            }
+          } else {
+            return res
+              .status(404)
+              .json(MessageFactory.createError("Message not found"));
+          }
+        } catch (err) {
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
+        }
+      }
+    );
+
     return this.router;
   }
 }

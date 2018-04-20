@@ -12,7 +12,7 @@ exports.seed = function(knex, Promise) {
           endMessage:
             "I have left the building. Moved people under my supervision to another keyholder.",
           startTime: new Date(2017, 6, 1, 0, 00),
-          endTime: new Date(2017, 6, 1, 5, 58)
+          endTime: new Date(2017, 6, 1, 0, 10)
         },
         {
           watchId: 2,

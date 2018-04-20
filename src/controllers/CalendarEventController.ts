@@ -88,6 +88,42 @@ export default class CalendarEventController extends Controller {
       }
     );
 
+    this.router.delete(
+      "/:eventId(\\d+)",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const events: ICalendarEvent[] = await this.calendarEventDao.findOne(
+            req.params.eventId
+          );
+          if (!(events && events.length === 1)) {
+            return res
+              .status(404)
+              .json(MessageFactory.createError("Calendar event not found"));
+          } else {
+            const result: boolean = await this.calendarEventDao.remove(
+              req.params.eventId
+            );
+            if (result) {
+              return res
+                .status(200)
+                .json(MessageFactory.createMessage("Calendar event removed"));
+            } else {
+              return res
+                .status(400)
+                .json(
+                  MessageFactory.createError("Failed to remove calendar event")
+                );
+            }
+          }
+        } catch (ex) {
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
+        }
+      }
+    );
+
     // iCal
     this.router.get(
       "/:eventId(\\d+)/ical",

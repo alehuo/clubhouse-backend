@@ -25,6 +25,8 @@ import MessageController from "./controllers/MessageController";
 import MessageDao from "./dao/MessageDao";
 import NewsPostController from "./controllers/NewsPostController";
 import NewsPostDao from "./dao/NewsPostDao";
+import StatisticsDao from "./dao/StatisticsDao";
+import StatisticsController from "./controllers/StatisticsController";
 
 // Express instance
 const app: express.Application = express();
@@ -53,7 +55,10 @@ app.use(compression());
 app.use(cache("5 minutes"));*/
 
 // Users route
-app.use(apiUrl("users"), new UserController(new UserDao(knex)).routes());
+app.use(
+  apiUrl("users"),
+  new UserController(new UserDao(knex), new CalendarEventDao(knex)).routes()
+);
 
 // Auth route
 app.use(apiUrl("authenticate"), new AuthController(new UserDao(knex)).routes());
@@ -95,6 +100,12 @@ app.use(
 app.use(
   apiUrl("newspost"),
   new NewsPostController(new NewsPostDao(knex)).routes()
+);
+
+// Statistics route
+app.use(
+  apiUrl("statistics"),
+  new StatisticsController(new StatisticsDao(knex), new UserDao(knex)).routes()
 );
 
 app.use(

@@ -94,6 +94,34 @@ export default class LocationController extends Controller {
       }
     );
 
+    this.router.delete(
+      "/:locationId(\\d+)",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        const locations: any = await this.locationDao.findOne(
+          req.params.locationId
+        );
+        if (locations && locations.length === 1) {
+          const result: boolean = await this.locationDao.remove(
+            req.params.locationId
+          );
+          if (result) {
+            return res
+              .status(200)
+              .json(MessageFactory.createMessage("Location removed"));
+          } else {
+            return res
+              .status(400)
+              .json(MessageFactory.createMessage("Failed to remove location"));
+          }
+        } else {
+          return res
+            .status(404)
+            .json(MessageFactory.createError("Location not found"));
+        }
+      }
+    );
+
     return this.router;
   }
 }

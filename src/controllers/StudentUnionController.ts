@@ -112,6 +112,36 @@ export default class StudentUnionController extends Controller {
       }
     );
 
+    this.router.delete(
+      "/:studentUnionId(\\d+)",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        const studentUnions: IStudentUnion[] = await this.studentUnionDao.findOne(
+          req.params.studentUnionId
+        );
+        if (studentUnions && studentUnions.length === 1) {
+          const result: boolean = await this.studentUnionDao.remove(
+            req.params.studentUnionId
+          );
+          if (result) {
+            return res
+              .status(200)
+              .json(MessageFactory.createMessage("Student union removed"));
+          } else {
+            return res
+              .status(400)
+              .json(
+                MessageFactory.createError("Failed to remove student union")
+              );
+          }
+        } else {
+          return res
+            .status(404)
+            .json(MessageFactory.createError("Student union not found"));
+        }
+      }
+    );
+
     return this.router;
   }
 }
