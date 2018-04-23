@@ -28,6 +28,16 @@ export default class PermissionController extends Controller {
       }
     );
 
+    // Return permissions of the logged in user.
+    this.router.get(
+      "/user",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        const permissions: number = res.locals.token.data.permissions;
+        return res.status(200).json({ permissions });
+      }
+    );
+
     this.router.get(
       "/:permissionId(\\d+)",
       JwtMiddleware,

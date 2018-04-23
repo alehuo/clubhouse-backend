@@ -25,7 +25,7 @@ exports.seed = function(knex, Promise) {
           firstName: "Hello",
           lastName: "World 2",
           unionId: 1,
-          permissions: 8,
+          permissions: 136,
           password: bcrypt.hashSync("user2", salt)
         },
         {

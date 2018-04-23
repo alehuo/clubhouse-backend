@@ -98,7 +98,7 @@ export default class StudentUnionController extends Controller {
 
               return res.status(201).json(
                 Object.assign({}, studentUnionData, {
-                  studentUnionId: savedStudentUnion[0]
+                  unionId: savedStudentUnion[0]
                 })
               );
             }
