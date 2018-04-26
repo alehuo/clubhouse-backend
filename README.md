@@ -14,63 +14,71 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
 ## Table of contents <!-- DOCTOC SKIP -->
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Introduction](#introduction)
-- [Installation instructions](#installation-instructions)
-- [API routes](#api-routes)
-  - [/api/v1/authenticate](#apiv1authenticate)
-    - [POST /api/v1/authenticate](#post-apiv1authenticate)
-  - [/api/v1/user](#apiv1user)
-    - [GET /api/v1/user](#get-apiv1user)
-    - [GET /api/v1/user/:userId](#get-apiv1useruserid)
-    - [POST /api/v1/user](#post-apiv1user)
-    - [DELETE /api/v1/user/:userId](#delete-apiv1useruserid)
-  - [/api/v1/studentunion](#apiv1studentunion)
-    - [GET /api/v1/studentunion](#get-apiv1studentunion)
-    - [GET /api/v1/studentunion/:unionId](#get-apiv1studentunionunionid)
-    - [POST /api/v1/studentunion](#post-apiv1studentunion)
-    - [DELETE /api/v1/studentunion/:unionId](#delete-apiv1studentunionunionid)
-  - [/api/v1/calendar](#apiv1calendar)
-    - [GET /api/v1/calendar](#get-apiv1calendar)
-    - [GET /api/v1/calendar/:eventId](#get-apiv1calendareventid)
-    - [POST /api/v1/calendar](#post-apiv1calendar)
-    - [GET /api/v1/calendar/:eventId/ical](#get-apiv1calendareventidical)
-    - [DELETE /api/v1/calendar/:eventId](#delete-apiv1calendareventid)
-  - [/api/v1/location](#apiv1location)
-    - [GET /api/v1/location](#get-apiv1location)
-    - [GET /api/v1/location/:locationId](#get-apiv1locationlocationid)
-    - [POST /api/v1/location](#post-apiv1location)
-    - [DELETE /api/v1/location/:locationId](#delete-apiv1locationlocationid)
-  - [/api/v1/permission](#apiv1permission)
-    - [GET /api/v1/permission](#get-apiv1permission)
-    - [GET /api/v1/permission/:permissionId](#get-apiv1permissionpermissionid)
-  - [/api/v1/watch](#apiv1watch)
-    - [GET /api/v1/watch/ongoing](#get-apiv1watchongoing)
-    - [GET /api/v1/watch/user/:userId](#get-apiv1watchuseruserid)
-    - [GET /api/v1/watch/ongoing/user/:userId](#get-apiv1watchongoinguseruserid)
-    - [POST /api/v1/watch/begin](#post-apiv1watchbegin)
-    - [POST /api/v1/watch/end](#post-apiv1watchend)
-  - [/api/v1/message](#apiv1message)
-    - [GET /api/v1/message](#get-apiv1message)
-    - [GET /api/v1/message/:messageId](#get-apiv1messagemessageid)
-    - [POST /api/v1/message](#post-apiv1message)
-    - [DELETE /api/v1/message/:messageId](#delete-apiv1messagemessageid)
-  - [/api/v1/newspost](#apiv1newspost)
-    - [GET /api/v1/newspost](#get-apiv1newspost)
-    - [GET /api/v1/newspost/:postId](#get-apiv1newspostpostid)
-    - [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
-    - [POST /api/v1/newspost](#post-apiv1newspost)
-    - [DELETE /api/v1/newspost/:postId](#delete-apiv1newspostpostid)
-  - [/api/v1/statistics](#apiv1statistics)
-    - [GET /api/v1/statistics](#get-apiv1statistics)
-    - [GET /api/v1/statistics/:userId](#get-apiv1statisticsuserid)
-- [Permissions](#permissions)
-  - [List of permissions](#list-of-permissions)
-  - [Combining permissions](#combining-permissions)
-  - [Checking permissions](#checking-permissions)
-- [License](#license)
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+* [Introduction](#introduction)
+* [Installation instructions](#installation-instructions)
+* [API routes](#api-routes)
+  * [/api/v1/authenticate](#apiv1authenticate)
+    * [POST /api/v1/authenticate](#post-apiv1authenticate)
+  * [/api/v1/user](#apiv1user)
+    * [GET /api/v1/user](#get-apiv1user)
+    * [GET /api/v1/user/:userId](#get-apiv1useruserid)
+    * [POST /api/v1/user](#post-apiv1user)
+    * [DELETE /api/v1/user/:userId](#delete-apiv1useruserid)
+    * [PUT /api/v1/user/:userId](#put-apiv1useruserid)
+  * [/api/v1/studentunion](#apiv1studentunion)
+    * [GET /api/v1/studentunion](#get-apiv1studentunion)
+    * [GET /api/v1/studentunion/:unionId](#get-apiv1studentunionunionid)
+    * [POST /api/v1/studentunion](#post-apiv1studentunion)
+    * [DELETE /api/v1/studentunion/:unionId](#delete-apiv1studentunionunionid)
+    * [PUT /api/v1/studentunion/:unionId](#put-apiv1studentunionunionid)
+  * [/api/v1/calendar](#apiv1calendar)
+    * [GET /api/v1/calendar](#get-apiv1calendar)
+    * [GET /api/v1/calendar/:eventId](#get-apiv1calendareventid)
+    * [POST /api/v1/calendar](#post-apiv1calendar)
+    * [GET /api/v1/calendar/:eventId/ical](#get-apiv1calendareventidical)
+    * [DELETE /api/v1/calendar/:eventId](#delete-apiv1calendareventid)
+    * [PUT /api/v1/calendar/:eventId](#put-apiv1calendareventid)
+  * [/api/v1/location](#apiv1location)
+    * [GET /api/v1/location](#get-apiv1location)
+    * [GET /api/v1/location/:locationId](#get-apiv1locationlocationid)
+    * [POST /api/v1/location](#post-apiv1location)
+    * [DELETE /api/v1/location/:locationId](#delete-apiv1locationlocationid)
+    * [PUT /api/v1/location/:locationId](#put-apiv1locationlocationid)
+  * [/api/v1/permission](#apiv1permission)
+    * [GET /api/v1/permission](#get-apiv1permission)
+    * [GET /api/v1/permission/:permissionId](#get-apiv1permissionpermissionid)
+  * [/api/v1/watch](#apiv1watch)
+    * [GET /api/v1/watch/ongoing](#get-apiv1watchongoing)
+    * [GET /api/v1/watch/user/:userId](#get-apiv1watchuseruserid)
+    * [GET /api/v1/watch/ongoing/user/:userId](#get-apiv1watchongoinguseruserid)
+    * [POST /api/v1/watch/begin](#post-apiv1watchbegin)
+    * [POST /api/v1/watch/end](#post-apiv1watchend)
+  * [/api/v1/message](#apiv1message)
+    * [GET /api/v1/message](#get-apiv1message)
+    * [GET /api/v1/message/:messageId](#get-apiv1messagemessageid)
+    * [POST /api/v1/message](#post-apiv1message)
+    * [DELETE /api/v1/message/:messageId](#delete-apiv1messagemessageid)
+    * [PUT /api/v1/message/:messageId](#put-apiv1messagemessageid)
+  * [/api/v1/newspost](#apiv1newspost)
+    * [GET /api/v1/newspost](#get-apiv1newspost)
+    * [GET /api/v1/newspost/:postId](#get-apiv1newspostpostid)
+    * [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
+    * [POST /api/v1/newspost](#post-apiv1newspost)
+    * [DELETE /api/v1/newspost/:postId](#delete-apiv1newspostpostid)
+    * [PUT /api/v1/newspost/:postId](#put-apiv1newspostpostid)
+  * [/api/v1/statistics](#apiv1statistics)
+    * [GET /api/v1/statistics](#get-apiv1statistics)
+    * [GET /api/v1/statistics/:userId](#get-apiv1statisticsuserid)
+* [Permissions](#permissions)
+  * [List of permissions](#list-of-permissions)
+  * [Combining permissions](#combining-permissions)
+  * [Checking permissions](#checking-permissions)
+* [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -254,6 +262,10 @@ _Response body:_ Created user
 
 Todo
 
+#### PUT /api/v1/user/:userId
+
+Todo
+
 ### /api/v1/studentunion
 
 #### GET /api/v1/studentunion
@@ -346,6 +358,10 @@ _Response body:_ Created student union
 ```
 
 #### DELETE /api/v1/studentunion/:unionId
+
+Todo
+
+#### PUT /api/v1/studentunion/:unionId
 
 Todo
 
@@ -500,6 +516,10 @@ END:VCALENDAR
 
 Todo
 
+#### PUT /api/v1/calendar/:eventId
+
+Todo
+
 ### /api/v1/location
 
 #### GET /api/v1/location
@@ -589,6 +609,10 @@ _Response body:_ Created location
 ```
 
 #### DELETE /api/v1/location/:locationId
+
+Todo
+
+#### PUT /api/v1/location/:locationId
 
 Todo
 
@@ -1078,6 +1102,10 @@ _Response body:_
 
 Todo
 
+#### PUT /api/v1/message/:messageId
+
+Todo
+
 ### /api/v1/newspost
 
 #### GET /api/v1/newspost
@@ -1210,6 +1238,10 @@ _Response body:_ **DELETE /api/v1/newspost/1**
   "message": "Newspost deleted"
 }
 ```
+
+#### PUT /api/v1/newspost/:postId
+
+Todo
 
 ### /api/v1/statistics
 
