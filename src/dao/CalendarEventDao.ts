@@ -12,10 +12,11 @@ export default class CalendarEventDao implements IDao<ICalendarEvent> {
     return this.knex(TABLE_NAME).select();
   }
 
-  public findOne(eventId: number): Promise<ICalendarEvent[]> {
+  public findOne(eventId: number): Promise<ICalendarEvent> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ eventId });
+      .where({ eventId })
+      .first();
   }
 
   public findCalendarEventsByUser(userId: number): Promise<ICalendarEvent[]> {

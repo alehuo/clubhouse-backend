@@ -35,11 +35,11 @@ export default class LocationController extends Controller {
       "/:locationId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
-        const locations: any = await this.locationDao.findOne(
+        const location: ILocation = await this.locationDao.findOne(
           req.params.locationId
         );
-        if (locations && locations.length === 1) {
-          return res.status(200).json(locationFilter(locations[0]));
+        if (location) {
+          return res.status(200).json(locationFilter(location));
         } else {
           return res
             .status(404)
@@ -62,16 +62,14 @@ export default class LocationController extends Controller {
                 MessageFactory.createError("Missing request body parameters")
               );
           } else {
-            const location:
-              | ILocation[]
-              | undefined = await this.locationDao.findByName(
+            const location: ILocation = await this.locationDao.findByName(
               locationData.name
             );
 
-            if (location && location.length > 0) {
+            if (location) {
               return res
                 .status(400)
-                .json(MessageFactory.createError("User already exists"));
+                .json(MessageFactory.createError("Location already exists"));
             } else {
               const savedLocation: number[] = await this.locationDao.save({
                 name: locationData.name,

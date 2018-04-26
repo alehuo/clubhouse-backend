@@ -11,15 +11,15 @@ export default class StudentUnionDao implements IDao<IStudentUnion> {
   public findAll(): Promise<IStudentUnion[]> {
     return this.knex(TABLE_NAME).select();
   }
-  public findOne(unionId: number): Promise<IStudentUnion[]> {
+  public findOne(unionId: number): Promise<IStudentUnion> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ unionId });
+      .where({ unionId }).first();
   }
-  public findByName(name: string): Promise<IStudentUnion[]> {
+  public findByName(name: string): Promise<IStudentUnion> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ name });
+      .where({ name }).first();
   }
 
   public save(stdu: IStudentUnion): Promise<number[]> {

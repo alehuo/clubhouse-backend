@@ -43,15 +43,15 @@ export default class PermissionController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const permissions: IPermission[] = await this.permissionDao.findOne(
-            req.params.userId
+          const permission: IPermission = await this.permissionDao.findOne(
+            req.params.permissionId
           );
-          if (!(permissions && permissions.length === 1)) {
+          if (!permission) {
             return res
               .status(404)
               .json(MessageFactory.createError("Permission not found"));
           } else {
-            return res.status(200).json(permissions[0]);
+            return res.status(200).json(permission);
           }
         } catch (ex) {
           console.error(ex);
@@ -75,13 +75,11 @@ export default class PermissionController extends Controller {
                 MessageFactory.createError("Missing request body parameters")
               );
           } else {
-            const perm:
-              | IPermission[]
-              | undefined = await this.permissionDao.findByValue(
+            const perm: IPermission = await this.permissionDao.findByValue(
               permissionData.value
             );
 
-            if (perm && perm.length > 0) {
+            if (perm) {
               return res
                 .status(400)
                 .json(MessageFactory.createError("Permission already exists"));

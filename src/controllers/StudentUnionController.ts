@@ -38,11 +38,11 @@ export default class StudentUnionController extends Controller {
       "/:studentUnionId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
-        const studentUnions: IStudentUnion[] = await this.studentUnionDao.findOne(
+        const studentUnion: IStudentUnion = await this.studentUnionDao.findOne(
           req.params.studentUnionId
         );
-        if (studentUnions && studentUnions.length === 1) {
-          return res.status(200).json(studentUnionFilter(studentUnions[0]));
+        if (studentUnion) {
+          return res.status(200).json(studentUnionFilter(studentUnion));
         } else {
           return res
             .status(404)
@@ -65,11 +65,11 @@ export default class StudentUnionController extends Controller {
                 MessageFactory.createError("Missing request body parameters")
               );
           } else {
-            const studentUnion: IStudentUnion[] = await this.studentUnionDao.findByName(
+            const studentUnion: IStudentUnion = await this.studentUnionDao.findByName(
               studentUnionData.name
             );
 
-            if (studentUnion && studentUnion.length > 0) {
+            if (studentUnion) {
               return res
                 .status(400)
                 .json(
@@ -116,10 +116,10 @@ export default class StudentUnionController extends Controller {
       "/:studentUnionId(\\d+)",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
-        const studentUnions: IStudentUnion[] = await this.studentUnionDao.findOne(
+        const studentUnion: IStudentUnion = await this.studentUnionDao.findOne(
           req.params.studentUnionId
         );
-        if (studentUnions && studentUnions.length === 1) {
+        if (studentUnion) {
           const result: boolean = await this.studentUnionDao.remove(
             req.params.studentUnionId
           );

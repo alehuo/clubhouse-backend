@@ -40,8 +40,8 @@ export default class StatisticsController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const user: IUser[] = await this.userDao.findOne(req.params.userId);
-          if (!(user && user.length === 1)) {
+          const user: IUser = await this.userDao.findOne(req.params.userId);
+          if (!user) {
             return res
               .status(404)
               .json(MessageFactory.createError("User not found"));
@@ -50,7 +50,7 @@ export default class StatisticsController extends Controller {
             req.params.userId
           );
           if (result && result.length === 1) {
-            return res.json(result[0]);
+            return res.json(result);
           } else {
             return res
               .status(404)

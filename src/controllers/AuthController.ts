@@ -30,11 +30,11 @@ export default class AuthController extends Controller {
                 MessageFactory.createError("Missing request body parameters")
               );
           } else {
-            const user: IUser[] | undefined = await this.userDao.findByUsername(
+            const user: IUser | undefined = await this.userDao.findByUsername(
               authData.username
             );
 
-            if (!(user && user.length > 0)) {
+            if (!user) {
               return res
                 .status(400)
                 .json(
@@ -42,20 +42,20 @@ export default class AuthController extends Controller {
                 );
             } else {
               // User exists, check for pash
-              const dbPwd: string = user[0].password;
+              const dbPwd: string = user.password;
               const inputPwd: string = authData.password;
 
               try {
                 const match: boolean = await bcrypt.compare(inputPwd, dbPwd);
                 if (match) {
                   const token = SignToken({
-                    username: user[0].username,
-                    userId: user[0].userId,
-                    unionId: user[0].unionId,
-                    email: user[0].email,
-                    firstName: user[0].firstName,
-                    lastName: user[0].lastName,
-                    permissions: user[0].permissions
+                    username: user.username,
+                    userId: user.userId,
+                    unionId: user.unionId,
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    permissions: user.permissions
                   });
                   return res.status(200).json(Object.assign({}, { token }));
                 } else {

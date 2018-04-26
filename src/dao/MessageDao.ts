@@ -15,10 +15,11 @@ export default class MessageDao implements IDao<IMessage> {
     return this.knex(TABLE_NAME).select();
   }
 
-  public findOne(messageId: number): Promise<IMessage[]> {
+  public findOne(messageId: number): Promise<IMessage> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ messageId });
+      .where({ messageId })
+      .first();
   }
 
   public findByUser(userId: number): Promise<IMessage[]> {

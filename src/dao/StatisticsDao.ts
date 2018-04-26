@@ -34,7 +34,7 @@ export default class StatisticsDao implements IDao<IStatistics> {
     );
   }
 
-  public findOne(statisticsId: number): Promise<IStatistics[]> {
+  public findOne(statisticsId: number): Promise<IStatistics> {
     throw new Error("Not implemented");
   }
 

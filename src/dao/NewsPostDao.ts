@@ -11,15 +11,17 @@ export default class NewsPostUnionDao implements IDao<INewsPost> {
   public findAll(): Promise<INewsPost[]> {
     return this.knex(TABLE_NAME).select();
   }
-  public findOne(postId: number): Promise<INewsPost[]> {
+  public findOne(postId: number): Promise<INewsPost> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ postId });
+      .where({ postId })
+      .first();
   }
-  public findByAuthor(author: number): Promise<INewsPost[]> {
+  public findByAuthor(author: number): Promise<INewsPost> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ author });
+      .where({ author })
+      .first();
   }
 
   public save(newsPost: INewsPost): Promise<number[]> {

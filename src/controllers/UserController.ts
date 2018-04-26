@@ -40,13 +40,49 @@ export default class UserController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const users: IUser[] = await this.userDao.findOne(req.params.userId);
-          if (!(users && users.length === 1)) {
+          const user: IUser = await this.userDao.findOne(req.params.userId);
+          if (!user) {
             return res
               .status(404)
               .json(MessageFactory.createError("User not found"));
           } else {
-            return res.status(200).json(users.map(userFilter)[0]);
+            return res.status(200).json(userFilter(user));
+          }
+        } catch (ex) {
+          console.error(ex);
+          return res
+            .status(500)
+            .json(MessageFactory.createError("Internal server error"));
+        }
+      }
+    );
+
+    this.router.put(
+      "/:userId(\\d+)",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const userId: number = res.locals.token.data.userId;
+          // Check that the JWT's userId matches with the request userId
+          // In the future, admin permission check can be used for this functionality.
+          if (userId !== req.params.userId) {
+            return res
+              .status(400)
+              .json(
+                MessageFactory.createError(
+                  "You can only edit your own information"
+                )
+              );
+          }
+          const user: IUser = await this.userDao.findOne(
+            res.locals.token.data.userId
+          );
+          if (!user) {
+            return res
+              .status(404)
+              .json(MessageFactory.createError("User not found"));
+          } else {
+            return res.status(200).json(MessageFactory.createError("TODO"));
           }
         } catch (ex) {
           console.error(ex);
@@ -87,12 +123,11 @@ export default class UserController extends Controller {
                 MessageFactory.createError("Missing request body parameters")
               );
           } else {
-            // TODO: Save user
-            const user: IUser[] | undefined = await this.userDao.findByUsername(
+            const user: IUser = await this.userDao.findByUsername(
               userData.username
             );
 
-            if (user && user.length > 0) {
+            if (user) {
               return res
                 .status(400)
                 .json(MessageFactory.createError("User already exists"));
@@ -132,8 +167,8 @@ export default class UserController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const users: IUser[] = await this.userDao.findOne(req.params.userId);
-          if (!(users && users.length === 1)) {
+          const user: IUser = await this.userDao.findOne(req.params.userId);
+          if (!user) {
             return res
               .status(404)
               .json(MessageFactory.createError("User not found"));

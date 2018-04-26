@@ -12,16 +12,18 @@ export default class LocationDao implements IDao<ILocation> {
     return this.knex(TABLE_NAME).select();
   }
 
-  public findOne(locationId: number): Promise<ILocation[]> {
+  public findOne(locationId: number): Promise<ILocation> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ locationId });
+      .where({ locationId })
+      .first();
   }
 
-  public findByName(name: string): Promise<ILocation[]> {
+  public findByName(name: string): Promise<ILocation> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ name });
+      .where({ name })
+      .first();
   }
 
   public save(location: ILocation): Promise<number[]> {

@@ -11,15 +11,15 @@ export default class UserDao implements IDao<IUser> {
   public findAll(): Promise<IUser[]> {
     return this.knex(TABLE_NAME).select();
   }
-  public findOne(userId: number): Promise<IUser[]> {
+  public findOne(userId: number): Promise<IUser> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ userId });
+      .where({ userId }).first();
   }
-  public findByUsername(username: string): Promise<IUser[]> {
+  public findByUsername(username: string): Promise<IUser> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ username });
+      .where({ username }).first();
   }
 
   public save(user: IUser): Promise<number[]> {

@@ -36,11 +36,11 @@ export default class MessageController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const messages: IMessage[] = await this.messageDao.findOne(
+          const message: IMessage = await this.messageDao.findOne(
             req.params.messageId
           );
-          if (messages && messages.length === 1) {
-            return res.status(200).json(messages[0]);
+          if (message) {
+            return res.status(200).json(message);
           } else {
             return res
               .status(404)

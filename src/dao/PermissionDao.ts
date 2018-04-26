@@ -12,22 +12,25 @@ export default class PermissionDao implements IDao<IPermission> {
     return this.knex(TABLE_NAME).select();
   }
 
-  public findOne(permissionId: number): Promise<IPermission[]> {
+  public findOne(permissionId: number): Promise<IPermission> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ permissionId });
+      .where({ permissionId })
+      .first();
   }
 
-  public findByValue(value: number): Promise<IPermission[]> {
+  public findByValue(value: number): Promise<IPermission> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ value });
+      .where({ value })
+      .first();
   }
 
-  public findByName(name: string): Promise<IPermission[]> {
+  public findByName(name: string): Promise<IPermission> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ name });
+      .where({ name })
+      .first();
   }
 
   public save(permissions: IPermission): Promise<number[]> {

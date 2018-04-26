@@ -70,15 +70,15 @@ export default class CalendarEventController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const events: ICalendarEvent[] = await this.calendarEventDao.findOne(
+          const event: ICalendarEvent = await this.calendarEventDao.findOne(
             req.params.eventId
           );
-          if (!(events && events.length === 1)) {
+          if (!event) {
             return res
               .status(404)
               .json(MessageFactory.createError("Calendar event not found"));
           } else {
-            return res.status(200).json(events[0]);
+            return res.status(200).json(event);
           }
         } catch (ex) {
           return res
@@ -93,10 +93,10 @@ export default class CalendarEventController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const events: ICalendarEvent[] = await this.calendarEventDao.findOne(
+          const event: ICalendarEvent = await this.calendarEventDao.findOne(
             req.params.eventId
           );
-          if (!(events && events.length === 1)) {
+          if (!event) {
             return res
               .status(404)
               .json(MessageFactory.createError("Calendar event not found"));
@@ -130,18 +130,18 @@ export default class CalendarEventController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const events: ICalendarEvent[] = await this.calendarEventDao.findOne(
+          const event: ICalendarEvent = await this.calendarEventDao.findOne(
             req.params.eventId
           );
-          if (!(events && events.length > 0)) {
+          if (!event) {
             return res
               .status(404)
               .json(MessageFactory.createError("Event not found"));
           } else {
-            const calData: string = createICal(events[0]);
+            const calData: string = createICal(event);
             res.setHeader(
               "Content-disposition",
-              "attachment; filename=event_" + events[0].eventId + ".ics"
+              "attachment; filename=event_" + event.eventId + ".ics"
             );
             res.setHeader("Content-type", "text/calendar");
             res.send(calData);

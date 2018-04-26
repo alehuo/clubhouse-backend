@@ -34,11 +34,11 @@ export default class NewsPostController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const newsPosts: INewsPost[] = await this.newsPostDao.findOne(
+          const newsPost: INewsPost = await this.newsPostDao.findOne(
             req.params.newsPostId
           );
-          if (newsPosts && newsPosts.length === 1) {
-            return res.status(200).json(newsPosts[0]);
+          if (newsPost) {
+            return res.status(200).json(newsPost);
           } else {
             return res
               .status(404)
@@ -57,10 +57,10 @@ export default class NewsPostController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const newsPosts: INewsPost[] = await this.newsPostDao.findByAuthor(
+          const newsPost: INewsPost = await this.newsPostDao.findByAuthor(
             req.params.userId
           );
-          return res.status(200).json(newsPosts);
+          return res.status(200).json(newsPost);
         } catch (err) {
           return res
             .status(500)
@@ -113,10 +113,10 @@ export default class NewsPostController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const newsPosts: INewsPost[] = await this.newsPostDao.findOne(
+          const newsPost: INewsPost = await this.newsPostDao.findOne(
             req.params.newsPostId
           );
-          if (newsPosts && newsPosts.length === 1) {
+          if (newsPost) {
             const result: boolean = await this.newsPostDao.remove(
               req.params.newsPostId
             );

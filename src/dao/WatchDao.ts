@@ -19,10 +19,11 @@ export default class WatchDao implements IDao<IWatch> {
       .select()
       .where("endTime", "IS", null);
   }
-  public findOne(watchId: number): Promise<IWatch[]> {
+  public findOne(watchId: number): Promise<IWatch> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ watchId });
+      .where({ watchId })
+      .first();
   }
   public findOngoingByUser(userId: number): Promise<IWatch[]> {
     return this.knex(TABLE_NAME)
