@@ -29,6 +29,6 @@
 | 18.4.2018 | 1h    | Add /api/v1/newspost route. Created table of contents for controllers and improved API param validation.                                                                                                    |
 | 19.4.2018 | 3h    | Add DELETE /api/v1/user, DELETE /api/v1/message, DELETE /api/v1/location, DELETE /api/v1/studentunion and DELETE /api/v1/newspost routes and documentation for them. Renamed /api/v1/users to /api/v1/user. |
 | 20.4.2018 | 1h    |  Added /api/v1/statistics route for getting server and user statistics + documentation for the endpoint.                                                                                                    |
-| 28.4.2018 | 2h    |  Restructurize project. Created PUT route to edit user info. Created methods for validating user input.                                                                                                     |
+| 28.4.2018 | 2h    |  Removed username from User model. Restructurize project. Created PUT route to edit user info. Created methods for validating user input.                                                                   |
 
 Total: 44 h
