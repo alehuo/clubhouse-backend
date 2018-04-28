@@ -3,12 +3,11 @@ import * as bcrypt from "bcrypt";
 import ILocation, { locationFilter } from "../models/ILocation";
 
 import Controller from "./Controller";
-import { JwtMiddleware } from "../JwtUtils";
+import JwtMiddleware from "./../middleware/JwtMiddleware";
 import LocationDao from "../dao/LocationDao";
-import { PermissionMiddleware } from "../PermissionMiddleware";
-import { getPermission, permissionNames } from "../PermissionUtils";
-
-import MessageFactory from "./../MessageFactory";
+import MessageFactory from "../Utils/MessageFactory";
+import { PermissionMiddleware } from "../Middleware/PermissionMiddleware";
+import { getPermission, permissionNames } from "../utils/PermissionUtils";
 
 export default class LocationController extends Controller {
   constructor(private locationDao: LocationDao) {

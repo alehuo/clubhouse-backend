@@ -5,11 +5,13 @@ import IUser, { userFilter } from "../models/IUser";
 import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
 import PermissionDao from "../dao/PermissionDao";
-import { JwtMiddleware } from "../JwtUtils";
+import JwtMiddleware from "./../middleware/JWTMiddleware";
 
-import MessageFactory from "./../MessageFactory";
 import CalendarEventDao from "../dao/CalendarEventDao";
 import ICalendarEvent from "../models/ICalendarEvent";
+
+import Validator from "./../utils/Validator";
+import MessageFactory from "../Utils/MessageFactory";
 
 export default class UserController extends Controller {
   constructor(
@@ -65,7 +67,7 @@ export default class UserController extends Controller {
           const userId: number = res.locals.token.data.userId;
           // Check that the JWT's userId matches with the request userId
           // In the future, admin permission check can be used for this functionality.
-          if (userId !== req.params.userId) {
+          if (Number(userId) !== Number(req.params.userId)) {
             return res
               .status(400)
               .json(
@@ -82,7 +84,75 @@ export default class UserController extends Controller {
               .status(404)
               .json(MessageFactory.createError("User not found"));
           } else {
-            return res.status(200).json(MessageFactory.createError("TODO"));
+            const errors: string[] = [];
+            user.firstName = req.body.firstName
+              ? req.body.firstName
+              : user.firstName;
+            user.lastName = req.body.lastName
+              ? req.body.lastName
+              : user.lastName;
+            if (req.body.email && user.email !== req.body.email) {
+              const usr: IUser = await this.userDao.findByEmail(req.body.email);
+              if (usr) {
+                return res
+                  .status(400)
+                  .json(
+                    MessageFactory.createError(
+                      "Email address is already in use"
+                    )
+                  );
+              }
+            }
+            user.email = req.body.email ? req.body.email : user.email;
+            if (
+              !Validator.validateStringLength.minMax(user.firstName, 2, 255)
+            ) {
+              errors.push(
+                "First name cannot be shorter than 2 or longer than 255 characters"
+              );
+            }
+            if (!Validator.validateStringLength.minMax(user.lastName, 2, 255)) {
+              errors.push(
+                "Last name cannot be shorter than 2 or longer than 255 characters"
+              );
+            }
+            if (!Validator.validateStringLength.minMax(user.email, 10, 255)) {
+              errors.push(
+                "Email address cannot be shorter than 10 or longer than 255 characters"
+              );
+            }
+            if (
+              req.body.password &&
+              !Validator.validateStringLength.min(req.body.password, 8)
+            ) {
+              errors.push(
+                "Password cannot be empty or shorter than 8 characters"
+              );
+            } else {
+              user.password = req.body.password
+                ? bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
+                : user.password;
+            }
+            if (errors.length === 0) {
+              const result: boolean = await this.userDao.update(user);
+              if (result) {
+                const updatedUser: IUser = await this.userDao.findOne(userId);
+                return res.status(200).json(userFilter(updatedUser));
+              } else {
+                return res
+                  .status(400)
+                  .json(MessageFactory.createError("Error editing user"));
+              }
+            } else {
+              return res
+                .status(400)
+                .json(
+                  MessageFactory.createError(
+                    "Error editing user information",
+                    errors
+                  )
+                );
+            }
           }
         } catch (ex) {
           console.error(ex);
@@ -106,10 +176,8 @@ export default class UserController extends Controller {
             password: string;
           } =
             req.body;
-          console.log(req.body);
           if (
             !(
-              userData.username &&
               userData.email &&
               userData.firstName &&
               userData.lastName &&
@@ -123,28 +191,66 @@ export default class UserController extends Controller {
                 MessageFactory.createError("Missing request body parameters")
               );
           } else {
-            const user: IUser = await this.userDao.findByUsername(
-              userData.username
-            );
+            const user: IUser = await this.userDao.findByEmail(userData.email);
 
             if (user) {
               return res
                 .status(400)
                 .json(MessageFactory.createError("User already exists"));
             } else {
-              if (userData.password.length < 8) {
+              const errors: string[] = [];
+              if (
+                !Validator.validateStringLength.minMax(
+                  userData.firstName,
+                  0,
+                  255
+                )
+              ) {
+                errors.push(
+                  "First name cannot be shorter than 2 or longer than 255 characters"
+                );
+              }
+              if (
+                !Validator.validateStringLength.minMax(
+                  userData.lastName,
+                  2,
+                  255
+                )
+              ) {
+                errors.push(
+                  "Last name cannot be shorter than 2 or longer than 255 characters"
+                );
+              }
+              if (
+                !Validator.validateStringLength.minMax(userData.email, 10, 255)
+              ) {
+                errors.push(
+                  "Email address cannot be shorter than 10 or longer than 255 characters"
+                );
+              }
+              if (!Validator.validateStringLength.min(userData.password, 8)) {
+                errors.push(
+                  "Password cannot be empty or shorter than 8 characters"
+                );
+              }
+
+              if (errors.length > 0) {
                 return res
                   .status(400)
-                  .json(MessageFactory.createError("Password is too short"));
+                  .json(
+                    MessageFactory.createError("Error registering user", errors)
+                  );
               }
 
               const savedUser: number[] = await this.userDao.save({
-                username: userData.username,
                 email: userData.email,
                 firstName: userData.firstName,
                 lastName: userData.lastName,
                 unionId: userData.unionId,
-                password: userData.password,
+                password: bcrypt.hashSync(
+                  req.body.password,
+                  bcrypt.genSaltSync(10)
+                ),
                 permissions: 8
               });
 

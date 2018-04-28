@@ -1,13 +1,11 @@
 import * as express from "express";
 import * as bcrypt from "bcrypt";
 import Controller from "./Controller";
-import { JwtMiddleware } from "../JwtUtils";
-import { PermissionMiddleware } from "../PermissionMiddleware";
-import { getPermission, permissionNames } from "../PermissionUtils";
+
 import IMessage from "../models/IMessage";
 import MessageDao from "../dao/MessageDao";
-
-import MessageFactory from "./../MessageFactory";
+import JwtMiddleware from "../middleware/JWTMiddleware";
+import MessageFactory from "../Utils/MessageFactory";
 
 export default class MessageController extends Controller {
   constructor(private messageDao: MessageDao) {
@@ -91,10 +89,10 @@ export default class MessageController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const messages: IMessage[] = await this.messageDao.findOne(
+          const message: IMessage = await this.messageDao.findOne(
             req.params.messageId
           );
-          if (messages && messages.length === 1) {
+          if (message) {
             const result: boolean = await this.messageDao.remove(
               req.params.messageId
             );

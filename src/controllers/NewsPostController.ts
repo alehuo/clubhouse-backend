@@ -1,11 +1,11 @@
 import * as express from "express";
 import * as bcrypt from "bcrypt";
 import Controller from "./Controller";
-import { JwtMiddleware } from "../JwtUtils";
+
 import NewsPostDao from "../dao/NewsPostDao";
 import INewsPost from "../models/INewsPost";
-
-import MessageFactory from "./../MessageFactory";
+import JwtMiddleware from "../middleware/JWTMiddleware";
+import MessageFactory from "../Utils/MessageFactory";
 
 export default class NewsPostController extends Controller {
   constructor(private newsPostDao: NewsPostDao) {

@@ -2,13 +2,13 @@ import * as express from "express";
 
 import Controller from "./Controller";
 import IStudentUnion, { studentUnionFilter } from "../models/IStudentUnion";
-import { JwtMiddleware } from "../JwtUtils";
 import StatisticsDao from "./../dao/StatisticsDao";
-import MessageFactory from "./../MessageFactory";
 import IStatistics from "../models/IStatistics";
 import IUserStatistics from "../models/IUserStatistics";
 import UserDao from "../dao/UserDao";
 import IUser from "../models/IUser";
+import JwtMiddleware from "../middleware/JWTMiddleware";
+import MessageFactory from "../Utils/MessageFactory";
 
 /**
  * Statistics controller.

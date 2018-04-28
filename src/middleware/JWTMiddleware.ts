@@ -1,14 +1,13 @@
 import * as express from "express";
-import * as jwt from "jsonwebtoken";
-import MessageFactory from "./MessageFactory";
-
+import MessageFactory from "../Utils/MessageFactory";
+import { VerifyToken } from "../Utils/JwtUtils";
 /**
  * Express middleware for verifying JWT's.
  * @param req Express request.
  * @param res Express response.
  * @param next Express NextFunction
  */
-export const JwtMiddleware = async (
+const JwtMiddleware = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
@@ -43,25 +42,4 @@ export const JwtMiddleware = async (
   }
 };
 
-/**
- * Signs and returns a JWT.
- * @param data Data.
- */
-export const SignToken = (data: string | object | Buffer): string =>
-  jwt.sign({ expiresIn: "1 day", data }, process.env.JWT_SECRET, {
-    algorithm: "HS256"
-  });
-/**
- * Verifies the JWT.
- * @param token Decoded JWT.
- */
-export const VerifyToken = (
-  token: string,
-  secret: string | Buffer = process.env.JWT_SECRET
-): string | object => {
-  try {
-    return jwt.verify(token, secret);
-  } catch (ex) {
-    throw new Error(ex);
-  }
-};
+export default JwtMiddleware;

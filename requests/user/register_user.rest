@@ -3,7 +3,6 @@ content-type: application/json
 Authorization: Bearer {{clubhouse_token}}
 
 {
-    "username": "HelloWorld",
     "email": "hello@world.com",
     "firstName": "Hello",
     "lastName": "World",

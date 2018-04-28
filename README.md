@@ -122,11 +122,11 @@ _Request content-type:_ **application/json**
 
 _Request body:_
 
-Required: `username` and `password`
+Required: `email` and `password`
 
 ```json
 {
-  "username": "user1",
+  "email": "user1@email.com",
   "password": "password1"
 }
 ```

@@ -5,13 +5,13 @@ import IUser from "../models/IUser";
 import Controller from "./Controller";
 import CalendarEventDao from "../dao/CalendarEventDao";
 import ICalendarEvent from "../models/ICalendarEvent";
-import { createICal } from "./../iCalService";
+import { createICal } from "./../utils/iCalUtils";
 import fs from "fs";
-import { PermissionMiddleware } from "./../PermissionMiddleware";
-import { JwtMiddleware } from "../JwtUtils";
-import { getPermission, permissionNames } from "../PermissionUtils";
+import { PermissionMiddleware } from "./../Middleware/PermissionMiddleware";
+import JwtMiddleware from "./../Middleware/JWTMiddleware";
+import { getPermission, permissionNames } from "./../Utils/PermissionUtils";
 
-import MessageFactory from "./../MessageFactory";
+import MessageFactory from "./../Utils/MessageFactory";
 
 export default class CalendarEventController extends Controller {
   constructor(private calendarEventDao: CalendarEventDao) {

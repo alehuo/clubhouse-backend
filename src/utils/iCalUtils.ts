@@ -1,5 +1,5 @@
-import ICalendarEvent from "./models/ICalendarEvent";
 import * as moment from "moment";
+import ICalendarEvent from "../models/ICalendarEvent";
 
 export const createICal = (data: ICalendarEvent) => {
   const dStart: string = moment(new Date(data.startTime)).format(
@@ -29,9 +29,11 @@ export const createICal = (data: ICalendarEvent) => {
   iCalData += "DTEND:" + dEnd + "\r\n";
   iCalData += "SUMMARY: " + data.name + "\r\n";
   iCalData += "DESCRIPTION: " + data.description + "\r\n";
+  /*
+  Temp
   if (data.location !== null) {
     iCalData += "LOCATION: " + data.location + "\r\n";
-  }
+  }*/
   iCalData += "CLASS:PRIVATE\r\n";
   iCalData += "END:VEVENT\r\n";
   iCalData += "END:VCALENDAR";

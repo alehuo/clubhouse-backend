@@ -3,9 +3,8 @@ import IPermission from "../models/IPermission";
 
 import Controller from "./Controller";
 import PermissionDao from "../dao/PermissionDao";
-import { JwtMiddleware } from "../JwtUtils";
-
-import MessageFactory from "./../MessageFactory";
+import JwtMiddleware from "../middleware/JWTMiddleware";
+import MessageFactory from "../Utils/MessageFactory";
 
 export default class PermissionController extends Controller {
   constructor(private permissionDao: PermissionDao) {

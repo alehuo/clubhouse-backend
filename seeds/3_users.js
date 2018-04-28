@@ -10,7 +10,6 @@ exports.seed = function(knex, Promise) {
       return knex("users").insert([
         {
           userId: 1,
-          username: "user1",
           email: "user1@email.com",
           firstName: "Hello",
           lastName: "World 1",
@@ -20,7 +19,6 @@ exports.seed = function(knex, Promise) {
         },
         {
           userId: 2,
-          username: "user2",
           email: "user2@email.com",
           firstName: "Hello",
           lastName: "World 2",
@@ -30,7 +28,6 @@ exports.seed = function(knex, Promise) {
         },
         {
           userId: 3,
-          username: "user3",
           email: "user3@email.com",
           firstName: "Hello",
           lastName: "World 3",

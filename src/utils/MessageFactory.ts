@@ -1,6 +1,7 @@
-const createError = (error: string) => {
+const createError = (error: string, errors?: string[]) => {
   return {
-    error
+    error,
+    errors
   };
 };
 

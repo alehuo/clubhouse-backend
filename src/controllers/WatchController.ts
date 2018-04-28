@@ -1,13 +1,11 @@
 import * as express from "express";
 import * as bcrypt from "bcrypt";
 import Controller from "./Controller";
-import { JwtMiddleware } from "../JwtUtils";
 import WatchDao from "../dao/WatchDao";
-import { PermissionMiddleware } from "../PermissionMiddleware";
-import { getPermission, permissionNames } from "../PermissionUtils";
-import IWatch from "../models/IWatch";
 
-import MessageFactory from "./../MessageFactory";
+import IWatch from "../models/IWatch";
+import JwtMiddleware from "../middleware/JWTMiddleware";
+import MessageFactory from "../Utils/MessageFactory";
 
 export default class WatchController extends Controller {
   constructor(private watchDao: WatchDao) {
@@ -118,7 +116,8 @@ export default class WatchController extends Controller {
                 .status(400)
                 .json(
                   MessageFactory.createError(
-                    "You have more than one watch running. Please contact a system administrator and use the email system as a backup."
+                    "You have more than one watch running." +
+                      "Please contact a system administrator and use the email system as a backup."
                   )
                 );
             }

@@ -4,9 +4,10 @@ import IUser from "../models/IUser";
 
 import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
-import { JwtMiddleware, SignToken } from "../JwtUtils";
+import JwtMiddleware from "./../middleware/JWTMiddleware";
+import { SignToken } from "./../Utils/JwtUtils";
 
-import MessageFactory from "./../MessageFactory";
+import MessageFactory from "./../Utils/MessageFactory";
 
 export default class AuthController extends Controller {
   constructor(private userDao: UserDao) {
@@ -19,19 +20,19 @@ export default class AuthController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const authData: {
-            username: string;
+            email: string;
             password: string;
           } =
             req.body;
-          if (!(authData.username && authData.password)) {
+          if (!(authData.email && authData.password)) {
             return res
               .status(500)
               .json(
                 MessageFactory.createError("Missing request body parameters")
               );
           } else {
-            const user: IUser | undefined = await this.userDao.findByUsername(
-              authData.username
+            const user: IUser | undefined = await this.userDao.findByEmail(
+              authData.email
             );
 
             if (!user) {
@@ -49,7 +50,6 @@ export default class AuthController extends Controller {
                 const match: boolean = await bcrypt.compare(inputPwd, dbPwd);
                 if (match) {
                   const token = SignToken({
-                    username: user.username,
                     userId: user.userId,
                     unionId: user.unionId,
                     email: user.email,
