@@ -1,8 +1,10 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Working hours (Back-end)](#working-hours-back-end)
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+* [Working hours (Back-end)](#working-hours-back-end)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -26,6 +28,7 @@
 | 17.4.2018 | 2h    | Add /api/v1/message route (MessageController, MessageDao and iMessage model). Created NewsPost DAO and Model. Updated documentation.                                                                        |
 | 18.4.2018 | 1h    | Add /api/v1/newspost route. Created table of contents for controllers and improved API param validation.                                                                                                    |
 | 19.4.2018 | 3h    | Add DELETE /api/v1/user, DELETE /api/v1/message, DELETE /api/v1/location, DELETE /api/v1/studentunion and DELETE /api/v1/newspost routes and documentation for them. Renamed /api/v1/users to /api/v1/user. |
-| 20.4.2018 | 1h | Added /api/v1/statistics route for getting server and user statistics + documentation for the endpoint. |
+| 20.4.2018 | 1h    |  Added /api/v1/statistics route for getting server and user statistics + documentation for the endpoint.                                                                                                    |
+| 28.4.2018 | 2h    |  Restructurize project. Created PUT route to edit user info. Created methods for validating user input.                                                                                                     |
 
-Total: 42 h
+Total: 44 h
