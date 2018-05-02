@@ -38,14 +38,9 @@ export const permissionNames = {
   ADD_LOCATION: "ADD_LOCATION"
 };
 
-export const getPermission = async (permissionName: string): IPermission => {
-  const perm: IPermission[] = await permissionDao.findByName(permissionName);
-  if (perm && perm.length > 0) {
-    return perm[0];
-  } else {
-    return null;
-  }
-};
+export const getPermission = async (
+  permissionName: string
+): Promise<IPermission> => null;
 
 /**
  * Calculates user's permissions using bitwise operations.
