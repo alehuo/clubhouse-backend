@@ -102,6 +102,8 @@ This project is meant to solve this problem by providing:
 
 ## Installation instructions
 
+### Without Docker
+
 1.  Clone the repo
 2.  Install yarn if not yet installed
 3.  Run `yarn` to install dependencies
@@ -109,6 +111,12 @@ This project is meant to solve this problem by providing:
 5.  `knex migrate:latest` to run migrations
 6.  `knex seed:run` to seed the database
 7.  `yarn start` to start the server or `yarn watch` to watch for code changes
+
+### With docker
+
+1.  Clone the repo
+2.  Run `docker build -t clubhousebackend .` to build the image
+3.  Run `docker run --env-file=.env clubhousebackend:latest` to run the image
 
 ## API routes
 
