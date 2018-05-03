@@ -31,5 +31,6 @@
 | 20.4.2018 | 1h    |  Added /api/v1/statistics route for getting server and user statistics + documentation for the endpoint.                                                                                                    |
 | 28.4.2018 | 2h    |  Removed username from User model. Restructurize project. Created PUT route to edit user info. Created methods for validating user input.                                                                   |
 | 2.5.2018  | 3h    |  Modified migration files to use new async table queries. Created Dockerfile and wrote some tests for AuthController.                                                                                       |
+| 3.5.2018  | 2h    |  Created tests for UserController and WatchController.                                                                                                                                                      |
 
-Total: 47 h
+Total: 49 h
