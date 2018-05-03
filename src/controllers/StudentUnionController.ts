@@ -4,9 +4,7 @@ import Controller from "./Controller";
 import IStudentUnion, { studentUnionFilter } from "../models/IStudentUnion";
 import StudentUnionDao from "../dao/StudentUnionDao";
 import JwtMiddleware from "./../Middleware/JWTMiddleware";
-import { PermissionMiddleware } from "./../Middleware/PermissionMiddleware";
 import MessageFactory from "../Utils/MessageFactory";
-import { getPermission, permissionNames } from "../utils/PermissionUtils";
 
 /**
  * Student union controller.
@@ -53,7 +51,6 @@ export default class StudentUnionController extends Controller {
     this.router.post(
       "",
       JwtMiddleware,
-      PermissionMiddleware([getPermission(permissionNames.ADD_STUDENT_UNION)]),
       async (req: express.Request, res: express.Response) => {
         try {
           const studentUnionData: IStudentUnion = req.body;

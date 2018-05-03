@@ -6,10 +6,7 @@ import Controller from "./Controller";
 import CalendarEventDao from "../dao/CalendarEventDao";
 import ICalendarEvent from "../models/ICalendarEvent";
 import { createICal } from "./../utils/iCalUtils";
-import fs from "fs";
-import { PermissionMiddleware } from "./../Middleware/PermissionMiddleware";
 import JwtMiddleware from "./../Middleware/JWTMiddleware";
-import { getPermission, permissionNames } from "./../Utils/PermissionUtils";
 
 import MessageFactory from "./../Utils/MessageFactory";
 
@@ -22,7 +19,6 @@ export default class CalendarEventController extends Controller {
     this.router.post(
       "",
       JwtMiddleware,
-      PermissionMiddleware([getPermission(permissionNames.ADD_EVENT)]),
       async (req: express.Request, res: express.Response) => {
         const calendarEventData: ICalendarEvent = req.body;
         if (!calendarEventData) {

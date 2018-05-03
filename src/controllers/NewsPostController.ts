@@ -57,7 +57,7 @@ export default class NewsPostController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const newsPost: INewsPost = await this.newsPostDao.findByAuthor(
+          const newsPost: INewsPost[] = await this.newsPostDao.findByAuthor(
             req.params.userId
           );
           return res.status(200).json(newsPost);
