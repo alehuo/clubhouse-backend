@@ -121,7 +121,7 @@ This project is meant to solve this problem by providing:
 
 ## Running tests & calculating code coverage
 
-To run tests, run `yarn test`. To calculate code coverage, run `yarn coverage`. On your project root directory, run `yarn serve-coverage` and navigate to `http://localhost:5000` to see the coverage report.
+To run tests, run `yarn test`. To calculate code coverage, run `yarn coverage`. On your project root directory, run `yarn view-coverage` to see the coverage report.
 
 ## API routes
 

@@ -12,7 +12,7 @@
     "lint-ts": "tslint -c tslint.json 'src/**/*.ts'",
     "test": "mocha -r ts-node/register test/**/*.test.ts --exit",
     "coverage": "nyc --reporter=html --reporter=text mocha -r ts-node/register test/**/*.test.ts --exit",
-    "serve-coverage": "node_modules/.bin/serve coverage"
+    "view-coverage": "node_modules/.bin/serve coverage -o"
   },
   "devDependencies": {
     "@types/bcrypt": "^1.0.0",
