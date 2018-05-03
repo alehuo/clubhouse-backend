@@ -34,9 +34,9 @@ export default class UserDao implements IDao<IUser> {
       .update(user);
   }
 
-  public remove(id: number): Promise<boolean> {
+  public remove(userId: number): Promise<boolean> {
     return this.knex(TABLE_NAME)
       .delete()
-      .where({ imageId: id });
+      .where({ userId });
   }
 }

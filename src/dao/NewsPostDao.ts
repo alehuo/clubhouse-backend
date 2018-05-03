@@ -5,7 +5,7 @@ import INewsPost from "../models/INewsPost";
 
 const TABLE_NAME = "newsposts";
 
-export default class NewsPostUnionDao implements IDao<INewsPost> {
+export default class NewsPostDao implements IDao<INewsPost> {
   constructor(private readonly knex: Knex) {}
 
   public findAll(): Promise<INewsPost[]> {
@@ -17,11 +17,10 @@ export default class NewsPostUnionDao implements IDao<INewsPost> {
       .where({ postId })
       .first();
   }
-  public findByAuthor(author: number): Promise<INewsPost> {
+  public findByAuthor(author: number): Promise<INewsPost[]> {
     return this.knex(TABLE_NAME)
       .select()
-      .where({ author })
-      .first();
+      .where({ author });
   }
 
   public save(newsPost: INewsPost): Promise<number[]> {

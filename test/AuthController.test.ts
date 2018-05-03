@@ -14,8 +14,8 @@ chai.use(chaiHttp);
 
 const authUrl = "/api/v1/authenticate";
 const correctCreds = {
-  email: "user1@email.com",
-  password: "user1"
+  email: "testuser@email.com",
+  password: "testuser"
 };
 const incorrectCreds = {
   email: "wronguser@email.com",

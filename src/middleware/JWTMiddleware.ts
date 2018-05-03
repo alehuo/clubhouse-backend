@@ -30,7 +30,6 @@ const JwtMiddleware = async (
       res.locals.token = token;
       next();
     } catch (ex) {
-      console.error(ex);
       return res
         .status(403)
         .json(MessageFactory.createError("Malformed Authorization header"));

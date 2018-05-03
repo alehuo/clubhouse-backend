@@ -27,7 +27,6 @@ import NewsPostController from "./controllers/NewsPostController";
 import NewsPostDao from "./dao/NewsPostDao";
 import StatisticsDao from "./dao/StatisticsDao";
 import StatisticsController from "./controllers/StatisticsController";
-import { EWOULDBLOCK } from "constants";
 
 // Express instance
 const app: express.Application = express();
@@ -79,7 +78,14 @@ app.use(cache("5 minutes"));*/
 app.use(
   apiUrl("users"),
   apiHeader("users"),
-  new UserController(new UserDao(knex), new CalendarEventDao(knex)).routes()
+  new UserController(
+    new UserDao(knex),
+    new CalendarEventDao(knex),
+    new StudentUnionDao(knex),
+    new MessageDao(knex),
+    new NewsPostDao(knex),
+    new WatchDao(knex)
+  ).routes()
 );
 
 // Auth route

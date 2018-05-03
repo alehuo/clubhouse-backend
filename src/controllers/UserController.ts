@@ -12,11 +12,23 @@ import ICalendarEvent from "../models/ICalendarEvent";
 
 import Validator from "./../utils/Validator";
 import MessageFactory from "../Utils/MessageFactory";
+import IStudentUnion from "../models/IStudentUnion";
+import StudentUnionDao from "../dao/StudentUnionDao";
+import IMessage from "../models/IMessage";
+import MessageDao from "../dao/MessageDao";
+import INewsPost from "../models/INewsPost";
+import NewsPostDao from "../dao/NewsPostDao";
+import WatchDao from "../dao/WatchDao";
+import IWatch from "../models/IWatch";
 
 export default class UserController extends Controller {
   constructor(
     private userDao: UserDao,
-    private calendarEventDao: CalendarEventDao
+    private calendarEventDao: CalendarEventDao,
+    private studentUnionDao: StudentUnionDao,
+    private messageDao: MessageDao,
+    private newsPostDao: NewsPostDao,
+    private watchDao: WatchDao
   ) {
     super();
   }
@@ -51,7 +63,6 @@ export default class UserController extends Controller {
             return res.status(200).json(userFilter(user));
           }
         } catch (ex) {
-          console.error(ex);
           return res
             .status(500)
             .json(MessageFactory.createError("Internal server error"));
@@ -155,7 +166,6 @@ export default class UserController extends Controller {
             }
           }
         } catch (ex) {
-          console.error(ex);
           return res
             .status(500)
             .json(MessageFactory.createError("Internal server error"));
@@ -199,6 +209,14 @@ export default class UserController extends Controller {
                 .json(MessageFactory.createError("User already exists"));
             } else {
               const errors: string[] = [];
+
+              const stdu: IStudentUnion = await this.studentUnionDao.findOne(
+                userData.unionId
+              );
+              if (!stdu) {
+                errors.push("Student union does not exist");
+              }
+
               if (
                 !Validator.validateStringLength.minMax(
                   userData.firstName,
@@ -260,7 +278,6 @@ export default class UserController extends Controller {
             }
           }
         } catch (err) {
-          console.error(err);
           return res
             .status(500)
             .json(MessageFactory.createError("Internal server error"));
@@ -279,19 +296,60 @@ export default class UserController extends Controller {
               .status(404)
               .json(MessageFactory.createError("User not found"));
           } else {
-            // Remove calendar events, messages, newsposts and watches by this user
+            if (Number(res.locals.token.data.userId) !== Number(user.userId)) {
+              return res
+                .status(400)
+                .json(
+                  MessageFactory.createError(
+                    "You can only delete your own user account"
+                  )
+                );
+            }
+            // Remove calendar events
             const calendarEvents: ICalendarEvent[] = await this.calendarEventDao.findCalendarEventsByUser(
-              res.locals.token.data.userid
+              res.locals.token.data.userId
             );
             await Promise.all(
               calendarEvents.map(event =>
                 this.calendarEventDao.remove(event.eventId)
               )
             );
-            return res.status(200).json(MessageFactory.createError("Todo"));
+            // Remove messages
+            const messages: IMessage[] = await this.messageDao.findByUser(
+              res.locals.token.data.userId
+            );
+            await Promise.all(
+              messages.map(msg => this.messageDao.remove(msg.messageId))
+            );
+            // Remove newsposts
+            const newsPosts: INewsPost[] = await this.newsPostDao.findByAuthor(
+              res.locals.token.data.userId
+            );
+            await Promise.all(
+              newsPosts.map(newsPost =>
+                this.newsPostDao.remove(newsPost.postId)
+              )
+            );
+            // Remove watches
+            const watches: IWatch[] = await this.watchDao.findByUser(
+              res.locals.token.data.userId
+            );
+            await Promise.all(
+              watches.map(watch => this.watchDao.remove(watch.watchId))
+            );
+            // Remove user
+            await this.userDao.remove(res.locals.token.data.userId);
+
+            return res
+              .status(200)
+              .json(
+                MessageFactory.createMessage(
+                  "User deleted from the server (including his calendar events, messages, watches and newsposts.)"
+                )
+              );
           }
         } catch (ex) {
-          console.error(ex);
+          console.log(ex);
           return res
             .status(500)
             .json(MessageFactory.createError("Internal server error"));
