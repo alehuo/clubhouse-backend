@@ -71,29 +71,31 @@ describe("UserController", () => {
     });
   });
 
-  it("Missing Authorization header should throw an error", done => {
-    chai
-      .request(app)
-      .get(url)
-      .end((err, res) => {
-        res.status.should.equal(403);
-        should.exist(res.body.error);
-        res.body.error.should.equal("Missing Authorization header");
-        done();
-      });
-  });
+  describe("API endpoint protection", () => {
+    it("Missing Authorization header should throw an error", done => {
+      chai
+        .request(app)
+        .get(url)
+        .end((err, res) => {
+          res.status.should.equal(403);
+          should.exist(res.body.error);
+          res.body.error.should.equal("Missing Authorization header");
+          done();
+        });
+    });
 
-  it("Malformed Authorization header should throw an error", done => {
-    chai
-      .request(app)
-      .get(url)
-      .set("Authorization", "Bearer HelloWorld")
-      .end((err, res) => {
-        res.status.should.equal(403);
-        should.exist(res.body.error);
-        res.body.error.should.equal("Malformed Authorization header");
-        done();
-      });
+    it("Malformed Authorization header should throw an error", done => {
+      chai
+        .request(app)
+        .get(url)
+        .set("Authorization", "Bearer HelloWorld")
+        .end((err, res) => {
+          res.status.should.equal(403);
+          should.exist(res.body.error);
+          res.body.error.should.equal("Malformed Authorization header");
+          done();
+        });
+    });
   });
 
   describe("GET /api/v1/users", () => {

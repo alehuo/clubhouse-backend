@@ -16,6 +16,7 @@ export default class WatchController extends Controller {
     // All watches that are currently running
     this.router.get(
       "/ongoing",
+      JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const watches: IWatch[] = await this.watchDao.findAllOngoing();
