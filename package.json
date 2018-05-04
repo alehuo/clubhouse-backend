@@ -10,8 +10,8 @@
     "start": "ts-node src/index.ts",
     "watch": "nodemon start",
     "lint-ts": "tslint -c tslint.json 'src/**/*.ts'",
-    "test": "mocha -r ts-node/register test/**/*.test.ts --exit",
-    "coverage": "nyc --reporter=html --reporter=text mocha -r ts-node/register test/**/*.test.ts --exit",
+    "test": "nyc mocha -r ts-node/register test/**/*.test.ts --exit",
+    "coverage": "nyc report --reporter=html --reporter=json mocha -r ts-node/register test/**/*.test.ts --exit",
     "view-coverage": "node_modules/.bin/serve coverage -o"
   },
   "devDependencies": {
