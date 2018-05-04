@@ -1,5 +1,5 @@
 import IDao from "./Dao";
-import Promise from "bluebird";
+import * as Promise from "bluebird";
 import * as Knex from "knex";
 import IWatch from "../models/IWatch";
 
