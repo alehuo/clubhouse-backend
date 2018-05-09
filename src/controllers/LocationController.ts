@@ -7,6 +7,9 @@ import JwtMiddleware from "./../middleware/JwtMiddleware";
 import LocationDao from "../dao/LocationDao";
 import MessageFactory from "../Utils/MessageFactory";
 
+import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
+import permissions = require("./../Permissions");
+
 export default class LocationController extends Controller {
   constructor(private locationDao: LocationDao) {
     super();
@@ -16,6 +19,7 @@ export default class LocationController extends Controller {
     this.router.get(
       "",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_VIEW_LOCATIONS]),
       async (req: express.Request, res: express.Response) => {
         try {
           const result: ILocation[] = await this.locationDao.findAll();
@@ -31,6 +35,7 @@ export default class LocationController extends Controller {
     this.router.get(
       "/:locationId(\\d+)",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_VIEW_LOCATIONS]),
       async (req: express.Request, res: express.Response) => {
         const location: ILocation = await this.locationDao.findOne(
           req.params.locationId
@@ -48,6 +53,7 @@ export default class LocationController extends Controller {
     this.router.post(
       "",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_ADD_LOCATION]),
       async (req: express.Request, res: express.Response) => {
         try {
           const locationData: ILocation = req.body;
@@ -91,6 +97,7 @@ export default class LocationController extends Controller {
     this.router.delete(
       "/:locationId(\\d+)",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_DELETE_LOCATION]),
       async (req: express.Request, res: express.Response) => {
         const locations: any = await this.locationDao.findOne(
           req.params.locationId

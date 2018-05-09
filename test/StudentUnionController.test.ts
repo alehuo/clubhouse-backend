@@ -10,6 +10,9 @@ import app from "./../src/index";
 
 import { SignToken } from "./../src/utils/JwtUtils";
 import IStudentUnion from "../src/models/IStudentUnion";
+import { bodyBlacklist } from "express-winston";
+
+import permissions = require("./../src/Permissions");
 
 const generateToken = (userData?: any) => {
   if (userData) {
@@ -126,6 +129,24 @@ describe("StudentUnionController", () => {
         });
     });
 
+    it("Returns all student unions : Wrong permissions should return unauthorized", done => {
+      chai
+        .request(app)
+        .get(url)
+        .set(
+          "Authorization",
+          generateToken({
+            permissions: Math.pow(2, 2)
+          })
+        )
+        .end((err, res) => {
+          res.status.should.equal(400);
+          should.exist(res.body.error);
+          res.body.error.should.equal("Unauthorized");
+          done();
+        });
+    });
+
     it("Returns a single student union", done => {
       chai
         .request(app)
@@ -142,6 +163,25 @@ describe("StudentUnionController", () => {
           done();
         });
     });
+
+    it("Returns a single student union : Wrong permissions should return unauthorized", done => {
+      chai
+        .request(app)
+        .get(url + "/1")
+        .set(
+          "Authorization",
+          generateToken({
+            permissions: Math.pow(2, 2)
+          })
+        )
+        .end((err, res) => {
+          res.status.should.equal(400);
+          should.exist(res.body.error);
+          res.body.error.should.equal("Unauthorized");
+          done();
+        });
+    });
+
     it("Returns an error if a student union does not exist", done => {
       chai
         .request(app)
@@ -174,6 +214,28 @@ describe("StudentUnionController", () => {
           res.body.description.should.equal("Union description");
           should.exist(res.body.unionId);
           res.body.unionId.should.equal(4);
+          done();
+        });
+    });
+
+    it("Can add a new student union : Wrong permissions should return unauthorized", done => {
+      chai
+        .request(app)
+        .post(url)
+        .set(
+          "Authorization",
+          generateToken({
+            permissions: Math.pow(2, 2)
+          })
+        )
+        .send({
+          name: "TestUnion",
+          description: "Union description"
+        })
+        .end((err, res) => {
+          res.status.should.equal(400);
+          should.exist(res.body.error);
+          res.body.error.should.equal("Unauthorized");
           done();
         });
     });
@@ -217,6 +279,24 @@ describe("StudentUnionController", () => {
               res2.status.should.equal(404);
               done();
             });
+        });
+    });
+
+    it("A student union can be removed : Wrong permissions should return unauthorized", done => {
+      chai
+        .request(app)
+        .del(url + "/1")
+        .set(
+          "Authorization",
+          generateToken({
+            permissions: Math.pow(2, 2)
+          })
+        )
+        .end((err, res) => {
+          res.status.should.equal(400);
+          should.exist(res.body.error);
+          res.body.error.should.equal("Unauthorized");
+          done();
         });
     });
   });

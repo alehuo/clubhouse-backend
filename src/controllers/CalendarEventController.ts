@@ -9,6 +9,8 @@ import { createICal } from "./../utils/iCalUtils";
 import JwtMiddleware from "./../Middleware/JWTMiddleware";
 
 import MessageFactory from "./../Utils/MessageFactory";
+import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
+import permissions = require("./../Permissions");
 
 export default class CalendarEventController extends Controller {
   constructor(private calendarEventDao: CalendarEventDao) {
@@ -19,6 +21,7 @@ export default class CalendarEventController extends Controller {
     this.router.post(
       "",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_ADD_EVENT]),
       async (req: express.Request, res: express.Response) => {
         const calendarEventData: ICalendarEvent = req.body;
         if (!calendarEventData) {
@@ -49,6 +52,7 @@ export default class CalendarEventController extends Controller {
     this.router.get(
       "",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_VIEW_EVENTS]),
       async (req: express.Request, res: express.Response) => {
         try {
           const events: ICalendarEvent[] = await this.calendarEventDao.findAll();
@@ -64,6 +68,7 @@ export default class CalendarEventController extends Controller {
     this.router.get(
       "/:eventId(\\d+)",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_VIEW_EVENTS]),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(
@@ -87,6 +92,7 @@ export default class CalendarEventController extends Controller {
     this.router.delete(
       "/:eventId(\\d+)",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_REMOVE_EVENT]),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(
@@ -124,6 +130,7 @@ export default class CalendarEventController extends Controller {
     this.router.get(
       "/:eventId(\\d+)/ical",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_VIEW_EVENTS]),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(

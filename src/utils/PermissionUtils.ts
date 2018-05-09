@@ -8,39 +8,9 @@ const knex: Knex = Database.connect();
 
 const permissionDao: PermissionDao = new PermissionDao(knex);
 
-export const permissionNames = {
-  BAN_USER: "BAN_USER",
-  EDIT_USER_ROLE: "EDIT_USER_ROLE",
-  MAKE_USER_ADMIN: "MAKE_USER_ADMIN",
-  ALLOW_USER_LOGIN: "ALLOW_USER_LOGIN",
-  ADD_KEY_TO_USER: "ADD_KEY_TO_USER",
-  REMOVE_KEY_FROM_USER: "REMOVE_KEY_FROM_USER",
-  CHANGE_KEY_TYPE_OF_USER: "CHANGE_KEY_TYPE_OF_USER",
-  ALLOW_VIEW_KEYS: "ALLOW_VIEW_KEYS",
-  ADD_USER_TO_UNION: "ADD_USER_TO_UNION",
-  REMOVE_USER_FROM_UNION: "REMOVE_USER_FROM_UNION",
-  ADD_STUDENT_UNION: "ADD_STUDENT_UNION",
-  REMOVE_STUDENT_UNION: "REMOVE_STUDENT_UNION",
-  EDIT_STUDENT_UNION: "EDIT_STUDENT_UNION",
-  ALLOW_VIEW_STUDENT_UNIONS: "ALLOW_VIEW_STUDENT_UNIONS",
-  ADD_EVENT: "ADD_EVENT",
-  EDIT_EVENT: "EDIT_EVENT",
-  REMOVE_EVENT: "REMOVE_EVENT",
-  ALLOW_VIEW_EVENTS: "ALLOW_VIEW_EVENTS",
-  EDIT_RULES: "EDIT_RULES",
-  ALLOW_VIEW_RULES: "ALLOW_VIEW_RULES",
-  ADD_POSTS: "ADD_POSTS",
-  EDIT_AND_REMOVE_OWN_POSTS: "EDIT_AND_REMOVE_OWN_POSTS",
-  REMOVE_POSTS: "REMOVE_POSTS",
-  ALLOW_VIEW_POSTS: "ALLOW_VIEW_POSTS",
-  EDIT_OTHERS_POSTS: "EDIT_OTHERS_POSTS",
-  SEND_MAILS: "SEND_MAILS",
-  ADD_LOCATION: "ADD_LOCATION"
-};
-
 export const getPermission = async (
   permissionName: string
-): Promise<IPermission> => null;
+): Promise<IPermission> => permissionDao.findByName(permissionName);
 
 /**
  * Calculates user's permissions using bitwise operations.
@@ -53,14 +23,16 @@ export const calculatePermissions = (perms: IPermission[]): number =>
  * Returns the user's permissions.
  * @param userPerms User permission number.
  */
-export const getPermissions = async (userPerms: number): Promise<string[]> => {
-  const allowed = [];
+export const getPermissions = async (
+  userPerms: number
+): Promise<IPermission[]> => {
+  const allowed: IPermission[] = [];
   const allPerms: IPermission[] = await permissionDao.findAll();
   allPerms.map((k: IPermission) => {
     const permissionName: string = k.name;
     const permissionValue: number = k.value;
     if ((userPerms & permissionValue) === permissionValue) {
-      allowed.push(permissionName);
+      allowed.push(k);
     }
   });
   return allowed;

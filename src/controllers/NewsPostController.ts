@@ -7,6 +7,9 @@ import INewsPost from "../models/INewsPost";
 import JwtMiddleware from "../middleware/JWTMiddleware";
 import MessageFactory from "../Utils/MessageFactory";
 
+import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
+import permissions = require("./../Permissions");
+
 export default class NewsPostController extends Controller {
   constructor(private newsPostDao: NewsPostDao) {
     super();
@@ -17,6 +20,7 @@ export default class NewsPostController extends Controller {
     this.router.get(
       "",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_VIEW_POSTS]),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPosts: INewsPost[] = await this.newsPostDao.findAll();
@@ -32,6 +36,7 @@ export default class NewsPostController extends Controller {
     this.router.get(
       "/:newsPostId(\\d+)",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_VIEW_POSTS]),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPost: INewsPost = await this.newsPostDao.findOne(
@@ -55,6 +60,7 @@ export default class NewsPostController extends Controller {
     this.router.get(
       "/user/:userId(\\d+)",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_VIEW_POSTS]),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPost: INewsPost[] = await this.newsPostDao.findByAuthor(
@@ -73,6 +79,7 @@ export default class NewsPostController extends Controller {
     this.router.post(
       "",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_ADD_POSTS]),
       async (req: express.Request, res: express.Response) => {
         try {
           const userId = res.locals.token.data.userId;
@@ -111,6 +118,7 @@ export default class NewsPostController extends Controller {
     this.router.delete(
       "/:newsPostId(\\d+)",
       JwtMiddleware,
+      PermissionMiddleware([permissions.ALLOW_REMOVE_POSTS]),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPost: INewsPost = await this.newsPostDao.findOne(
