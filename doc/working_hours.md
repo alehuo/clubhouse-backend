@@ -33,5 +33,6 @@
 | 2.5.2018  | 3h    |  Modified migration files to use new async table queries. Created Dockerfile and wrote some tests for AuthController.                                                                                                                                                                     |
 | 3.5.2018  | 5h    |  Created tests for UserController, WatchController and StudentUnionController. Code cleanup. Enabled Nyc for generating code coverage reports and added a script for generating & viewing code coverage. Updated README for instructions on how to run tests and calculate code coverage. |
 | 4.5.2018  | 1h    |  Upgraded dependencies to latest version                                                                                                                                                                                                                                                  |
+| 9.5.2018  | 1h    | Hook up permission system to routes & improve tests for Student union controller                                                                                                                                                                                                          |
 
-Total: 52 h
+Total: 53 h
