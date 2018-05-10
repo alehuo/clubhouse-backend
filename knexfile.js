@@ -6,6 +6,9 @@ module.exports = {
     connection: {
       filename: "./database.dev.sqlite3"
     },
+    seeds: {
+      directory: "./seeds/dev"
+    },
     useNullAsDefault: true
   },
 
@@ -14,27 +17,8 @@ module.exports = {
     connection: {
       filename: "./database.test.sqlite3"
     },
-    useNullAsDefault: true
-  },
-
-  staging: {
-    client: "postgresql",
-    connection: {
-      database: "my_db",
-      user: "username",
-      password: "password"
-    },
-    pool: {
-      afterCreate: function(connection, callback) {
-        connection.query("SET time_zone = Europe / Helsinki;", function(err) {
-          callback(err, connection);
-        });
-      },
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      tableName: "knex_migrations"
+    seeds: {
+      directory: "./seeds/test"
     },
     useNullAsDefault: true
   },
@@ -42,13 +26,17 @@ module.exports = {
   production: {
     client: "postgresql",
     connection: {
-      database: "my_db",
-      user: "username",
-      password: "password"
+      host: "localhost",
+      database: "clubhouse",
+      user: "postgres",
+      password: ""
+    },
+    seeds: {
+      directory: "./seeds/production"
     },
     pool: {
       afterCreate: function(connection, callback) {
-        connection.query("SET time_zone = Europe / Helsinki;", function(err) {
+        connection.query("SET TIME ZONE 'Europe/Helsinki';", function(err) {
           callback(err, connection);
         });
       },
