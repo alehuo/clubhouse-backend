@@ -34,5 +34,6 @@
 | 3.5.2018  | 5h    |  Created tests for UserController, WatchController and StudentUnionController. Code cleanup. Enabled Nyc for generating code coverage reports and added a script for generating & viewing code coverage. Updated README for instructions on how to run tests and calculate code coverage. |
 | 4.5.2018  | 1h    |  Upgraded dependencies to latest version                                                                                                                                                                                                                                                  |
 | 9.5.2018  | 1h    | Hook up permission system to routes & improve tests for Student union controller                                                                                                                                                                                                          |
+| 12.5.2018 | 4h    | Moved from SQLite to MySQL. Fixed tests, migrations, seeds and Knexfile as SQLite was initially used in the development process. Created WatchFilter to fix the GET route return schema. Added instructions to README.md on how to start a MySQL server.                                  |
 
-Total: 53 h
+Total: 57 h

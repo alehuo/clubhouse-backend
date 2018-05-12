@@ -28,7 +28,7 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get all newsposts"));
         }
       }
     );
@@ -52,7 +52,7 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get a single newspost"));
         }
       }
     );
@@ -70,7 +70,7 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get newspost from a single user"));
         }
       }
     );
@@ -109,7 +109,7 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot add a newspost"));
         }
       }
     );
@@ -147,7 +147,7 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot delete newspost"));
         }
       }
     );

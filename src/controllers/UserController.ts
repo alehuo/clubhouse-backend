@@ -44,7 +44,7 @@ export default class UserController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get all users"));
         }
       }
     );
@@ -65,7 +65,7 @@ export default class UserController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get a single user"));
         }
       }
     );
@@ -168,7 +168,7 @@ export default class UserController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot edit user"));
         }
       }
     );
@@ -280,7 +280,7 @@ export default class UserController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot add user"));
         }
       }
     );
@@ -352,7 +352,7 @@ export default class UserController extends Controller {
           console.log(ex);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot delete user"));
         }
       }
     );

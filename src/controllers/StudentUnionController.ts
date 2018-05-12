@@ -123,18 +123,28 @@ export default class StudentUnionController extends Controller {
           req.params.studentUnionId
         );
         if (studentUnion) {
-          const result: boolean = await this.studentUnionDao.remove(
-            req.params.studentUnionId
-          );
-          if (result) {
+          try {
+            const result: boolean = await this.studentUnionDao.remove(
+              req.params.studentUnionId
+            );
+            if (result) {
+              return res
+                .status(200)
+                .json(MessageFactory.createMessage("Student union removed"));
+            } else {
+              return res
+                .status(400)
+                .json(
+                  MessageFactory.createError("Failed to remove student union")
+                );
+            }
+          } catch (err) {
             return res
-              .status(200)
-              .json(MessageFactory.createMessage("Student union removed"));
-          } else {
-            return res
-              .status(400)
+              .status(500)
               .json(
-                MessageFactory.createError("Failed to remove student union")
+                MessageFactory.createError(
+                  "Internal server error: Cannot remove student union"
+                )
               );
           }
         } else {

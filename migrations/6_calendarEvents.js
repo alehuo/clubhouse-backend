@@ -10,14 +10,14 @@ exports.up = function(knex, Promise) {
         // Is this a restricted event (for only the members of the student union)?
         table.boolean("restricted").defaultTo(false);
         // Start & end times
-        table.timestamp("startTime");
-        table.timestamp("endTime");
+        table.timestamp("startTime").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("endTime").notNullable().defaultTo(knex.fn.now());
         // Added by (user)
-        table.integer("addedBy").notNullable();
+        table.integer("addedBy").unsigned().notNullable();
         // Union id
-        table.integer("unionId").notNullable();
+        table.integer("unionId").unsigned().notNullable();
         // Location
-        table.integer("locationId").notNullable();
+        table.integer("locationId").unsigned().notNullable();
 
         // Timestamp
         table.timestamps(true, true);

@@ -43,7 +43,7 @@ export default class CalendarEventController extends Controller {
           } catch (ex) {
             return res
               .status(500)
-              .json(MessageFactory.createError("Error saving calendar event."));
+              .json(MessageFactory.createError("Internal server error: Cannot add a new event"));
           }
         }
       }
@@ -60,7 +60,7 @@ export default class CalendarEventController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get all events"));
         }
       }
     );
@@ -84,7 +84,7 @@ export default class CalendarEventController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get a single event"));
         }
       }
     );
@@ -121,7 +121,7 @@ export default class CalendarEventController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot delete a single event"));
         }
       }
     );
@@ -153,7 +153,7 @@ export default class CalendarEventController extends Controller {
           console.error(ex);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server erro: Cannot get a single event as iCal"));
         }
       }
     );

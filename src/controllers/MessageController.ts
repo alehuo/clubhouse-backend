@@ -24,7 +24,7 @@ export default class MessageController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get all messages"));
         }
       }
     );
@@ -47,7 +47,7 @@ export default class MessageController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get a single message"));
         }
       }
     );
@@ -79,7 +79,7 @@ export default class MessageController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot add a message"));
         }
       }
     );
@@ -113,7 +113,7 @@ export default class MessageController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot delete a message"));
         }
       }
     );

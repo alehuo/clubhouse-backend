@@ -7,6 +7,8 @@ import IWatch from "../models/IWatch";
 import JwtMiddleware from "../middleware/JWTMiddleware";
 import MessageFactory from "../Utils/MessageFactory";
 
+import { watchFilter } from "./../models/IWatch";
+
 export default class WatchController extends Controller {
   constructor(private watchDao: WatchDao) {
     super();
@@ -20,9 +22,11 @@ export default class WatchController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const watches: IWatch[] = await this.watchDao.findAllOngoing();
-          return res.status(200).json(watches);
+          return res.status(200).json(watches.map(watchFilter));
         } catch (err) {
-          return res.status(500).json({ error: "Internal server error" });
+          return res.status(500).json({
+            error: "Internal server error: Cannot get ongoing watches"
+          });
         }
       }
     );
@@ -35,9 +39,12 @@ export default class WatchController extends Controller {
           const watches: IWatch[] = await this.watchDao.findByUser(
             req.params.userId
           );
-          return res.status(200).json(watches);
+          return res.status(200).json(watches.map(watchFilter));
         } catch (err) {
-          return res.status(500).json({ error: "Internal server error" });
+          return res.status(500).json({
+            error:
+              "Internal server error: Cannot get watches from a single user"
+          });
         }
       }
     );
@@ -50,9 +57,13 @@ export default class WatchController extends Controller {
           const watches: IWatch[] = await this.watchDao.findOngoingByUser(
             req.params.userId
           );
-          return res.status(200).json(watches);
+          return res.status(200).json(watches.map(watchFilter));
         } catch (err) {
-          return res.status(500).json({ error: "Internal server error" });
+          return res.status(500).json({
+            error:
+              "Internal server error:" +
+              " Cannot get current running watches from a single user"
+          });
         }
       }
     );
@@ -91,7 +102,11 @@ export default class WatchController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot start a watch"
+              )
+            );
         }
       }
     );
@@ -128,7 +143,8 @@ export default class WatchController extends Controller {
             const watch: IWatch = {
               userId,
               endMessage: req.body.endMessage,
-              endTime: new Date()
+              endTime: new Date(),
+              ended: true
             };
             if (!currentWatch.watchId) {
               return res
@@ -154,7 +170,11 @@ export default class WatchController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Can't end a watch"
+              )
+            );
         }
       }
     );

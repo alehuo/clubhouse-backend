@@ -7,7 +7,7 @@ exports.up = function(knex, Promise) {
         table.string("password", 255).notNullable();
         table.string("firstName", 255).notNullable();
         table.string("lastName", 255).notNullable();
-        table.integer("unionId");
+        table.integer("unionId").unsigned().notNullable();
         table
           .foreign("unionId")
           .references("unionId")

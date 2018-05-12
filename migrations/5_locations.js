@@ -2,7 +2,7 @@ exports.up = function(knex, Promise) {
   return knex.schema.hasTable("locations").then(exists => {
     if (!exists) {
       return knex.schema.createTable("locations", table => {
-        table.increments("locationId");
+        table.increments("locationId").unsigned();
         // Location name
         table.string("name", 255).notNullable();
         // Location address

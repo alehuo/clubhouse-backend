@@ -6,7 +6,7 @@ exports.up = function(knex, Promise) {
         // Timestamp
         table.timestamps(true, true);
         // Author
-        table.integer("author").notNullable();
+        table.integer("author").unsigned().notNullable();
         // Title
         table.string("title", 4096).notNullable();
         // Message

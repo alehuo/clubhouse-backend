@@ -59,7 +59,9 @@ const url = "/api/v1/studentunion";
 const unions: IStudentUnion[] = [
   { unionId: 1, name: "Union 1", description: "Union 1 description" },
   { unionId: 2, name: "Union 2", description: "Union 2 description" },
-  { unionId: 3, name: "Union 3", description: "Union 3 description" }
+  { unionId: 3, name: "Union 3", description: "Union 3 description" },
+  { unionId: 4, name: "Union 4", description: "Union 4 description" },
+  { unionId: 5, name: "Union 5", description: "Union 5 description" }
 ];
 
 describe("StudentUnionController", () => {
@@ -213,7 +215,7 @@ describe("StudentUnionController", () => {
           should.exist(res.body.description);
           res.body.description.should.equal("Union description");
           should.exist(res.body.unionId);
-          res.body.unionId.should.equal(4);
+          res.body.unionId.should.equal(unions.length + 1);
           done();
         });
     });
@@ -261,7 +263,7 @@ describe("StudentUnionController", () => {
     it("A student union can be removed", done => {
       chai
         .request(app)
-        .del(url + "/1")
+        .del(url + "/5")
         .set("Authorization", generateToken())
         .end((err, res) => {
           res.status.should.equal(200);
@@ -271,7 +273,7 @@ describe("StudentUnionController", () => {
           // Check that the union was really removed
           chai
             .request(app)
-            .get(url + "/1")
+            .get(url + "/5")
             .set("Authorization", generateToken())
             .end((err2, res2) => {
               should.exist(res2.body.error);
@@ -285,7 +287,7 @@ describe("StudentUnionController", () => {
     it("A student union can be removed : Wrong permissions should return unauthorized", done => {
       chai
         .request(app)
-        .del(url + "/1")
+        .del(url + "/5")
         .set(
           "Authorization",
           generateToken({

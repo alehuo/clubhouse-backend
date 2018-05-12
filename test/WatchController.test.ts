@@ -96,7 +96,7 @@ describe("WatchController", () => {
             "Good evening, I'm taking responsibility of a few exchange students."
           );
           should.not.exist(res.body[0].endMessage);
-          res.body[0].startTime.should.equal(1530478680000);
+          Date.parse(res.body[0].startTime).should.equal(1530478680000);
           should.not.exist(res.body[0].endTime);
           done();
         });
@@ -123,8 +123,8 @@ describe("WatchController", () => {
           res.body[0].endMessage.should.equal(
             "I have left the building. Moved people under my supervision to another keyholder."
           );
-          res.body[0].startTime.should.equal(1498856400000);
-          res.body[0].endTime.should.equal(1498857000000);
+          Date.parse(res.body[0].startTime).should.equal(1498856400000);
+          Date.parse(res.body[0].endTime).should.equal(1498857000000);
 
           // Second
           res.body[1].watchId.should.equal(2);
@@ -133,7 +133,7 @@ describe("WatchController", () => {
             "Good evening, I'm taking responsibility of a few exchange students."
           );
           should.not.exist(res.body[1].endMessage);
-          res.body[1].startTime.should.equal(1530478680000);
+          Date.parse(res.body[1].startTime).should.equal(1530478680000);
           should.not.exist(res.body[1].endTime);
 
           done();
@@ -159,7 +159,7 @@ describe("WatchController", () => {
             "Good evening, I'm taking responsibility of a few exchange students."
           );
           should.not.exist(res.body[0].endMessage);
-          res.body[0].startTime.should.equal(1530478680000);
+          Date.parse(res.body[0].startTime).should.equal(1530478680000);
           should.not.exist(res.body[0].endTime);
 
           done();

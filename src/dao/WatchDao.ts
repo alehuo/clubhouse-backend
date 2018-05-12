@@ -17,7 +17,7 @@ export default class WatchDao implements IDao<IWatch> {
   public findAllOngoing(): Promise<IWatch[]> {
     return this.knex(TABLE_NAME)
       .select()
-      .where("endTime", "IS", null);
+      .where("ended", "=", 0);
   }
   public findOne(watchId: number): Promise<IWatch> {
     return this.knex(TABLE_NAME)
@@ -29,7 +29,7 @@ export default class WatchDao implements IDao<IWatch> {
     return this.knex(TABLE_NAME)
       .select()
       .where({ userId })
-      .andWhere("endTime", "IS", null);
+      .andWhere("ended", "=", 0);
   }
   public findByUser(userId: number): Promise<IWatch[]> {
     return this.knex(TABLE_NAME)
@@ -45,7 +45,8 @@ export default class WatchDao implements IDao<IWatch> {
     return this.knex(TABLE_NAME)
       .update({
         endTime: watch.endTime,
-        endMessage: watch.endMessage
+        endMessage: watch.endMessage,
+        ended: 1
       })
       .where({ watchId });
   }

@@ -115,6 +115,10 @@ This project is meant to solve this problem by providing:
 6.  `knex seed:run` to seed the database
 7.  `yarn start` to start the server or `yarn watch` to watch for code changes
 
+### MySQL
+
+To set up a MySQL server, run `docker run -p 3306:3306 --name clubhouse -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql/mysql-server:latest`
+
 ### With docker
 
 1.  Clone the repo

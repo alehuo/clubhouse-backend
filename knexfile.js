@@ -1,51 +1,81 @@
 // Update with your config settings.
+require("dotenv").config();
 
 module.exports = {
   development: {
-    client: "sqlite3",
+    client: "mysql2",
     connection: {
-      filename: "./database.dev.sqlite3"
+      host: process.env.MYSQL_HOST,
+      port: process.env.MYSQL_PORT,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DEV_DB_NAME
     },
     seeds: {
       directory: "./seeds/dev"
     },
-    useNullAsDefault: true
+    pool: {
+      min: 2,
+      max: 10,
+      afterCreate: function(conn, cb) {
+        conn.query('SET sql_mode="NO_ENGINE_SUBSTITUTION";', function(err) {
+          cb(err, conn);
+        });
+      }
+    }
   },
 
   test: {
-    client: "sqlite3",
+    client: "mysql2",
     connection: {
-      filename: "./database.test.sqlite3"
+      host: process.env.MYSQL_HOST,
+      port: process.env.MYSQL_PORT,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_TEST_DB_NAME
     },
     seeds: {
       directory: "./seeds/test"
     },
-    useNullAsDefault: true
+    pool: {
+      min: 2,
+      max: 10,
+      afterCreate: function(conn, cb) {
+        conn.query('SET sql_mode="NO_ENGINE_SUBSTITUTION";', function(err) {
+          cb(err, conn);
+        });
+      }
+    }
   },
 
   production: {
-    client: "postgresql",
+    client: "mysql2",
     connection: {
-      host: "localhost",
-      database: "clubhouse",
-      user: "postgres",
-      password: ""
+      host: process.env.MYSQL_HOST,
+      port: process.env.MYSQL_PORT,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_PROD_DB_NAME
     },
     seeds: {
       directory: "./seeds/production"
     },
     pool: {
-      afterCreate: function(connection, callback) {
-        connection.query("SET TIME ZONE 'Europe/Helsinki';", function(err) {
-          callback(err, connection);
-        });
-      },
       min: 2,
-      max: 10
+      max: 10,
+      afterCreate: function(conn, cb) {
+        conn.query('SET sql_mode="NO_ENGINE_SUBSTITUTION";', function(err) {
+          cb(err, conn);
+        });
+      }
     },
     migrations: {
       tableName: "knex_migrations"
     },
-    useNullAsDefault: true
+    afterCreate: function(conn, cb) {
+      conn.query('SET sql_mode="NO_ENGINE_SUBSTITUTION";', function(err) {
+        cb(err, conn);
+      });
+    }
   }
 };

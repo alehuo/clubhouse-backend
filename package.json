@@ -50,6 +50,7 @@
     "jsonwebtoken": "8.2.1",
     "knex": "^0.14.4",
     "moment": "^2.22.1",
+    "mysql2": "^1.5.3",
     "sqlite3": "^4.0.0",
     "winston": "^2.4.1"
   },

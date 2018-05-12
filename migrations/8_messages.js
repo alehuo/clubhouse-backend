@@ -6,10 +6,10 @@ exports.up = function(knex, Promise) {
         // Timestamp
         table.timestamps(true, true);
         // User id
-        table.integer("userId").notNullable();
+        table.integer("userId").unsigned().notNullable();
         // Message
         table.string("message", 4096).notNullable();
-
+        
         // FK in users table
         table
           .foreign("userId")

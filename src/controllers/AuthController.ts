@@ -66,18 +66,20 @@ export default class AuthController extends Controller {
                     );
                 }
               } catch (ex) {
-                console.error(ex);
                 return res
                   .status(500)
-                  .json(MessageFactory.createError("Internal server error"));
+                  .json(MessageFactory.createError("Internal server error: Cannot authenticate user (hash)"));
               }
             }
           }
         } catch (err) {
-          console.error(err);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot authenticate user"
+              )
+            );
         }
       }
     );

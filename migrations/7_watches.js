@@ -5,15 +5,31 @@ exports.up = function(knex, Promise) {
         table.increments("watchId");
 
         // User id
-        table.integer("userId").notNullable();
+        table
+          .integer("userId")
+          .unsigned()
+          .notNullable();
 
         // Messages
         table.string("startMessage", 4096);
         table.string("endMessage", 4096);
 
         // Start & end times of the watch
-        table.timestamp("startTime").notNullable();
-        table.timestamp("endTime");
+        table
+          .timestamp("startTime")
+          .notNullable()
+          .defaultTo(knex.fn.now());
+        table.timestamp("endTime").defaultTo(knex.fn.now());
+
+        table
+          .integer("started", 1)
+          .notNullable()
+          .defaultTo(1);
+
+        table
+          .integer("ended", 1)
+          .notNullable()
+          .defaultTo(0);
 
         // FK in users table
         table

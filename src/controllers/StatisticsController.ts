@@ -30,7 +30,7 @@ export default class StatisticsController extends Controller {
           console.error(err);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get statistics"));
         }
       }
     );
@@ -59,7 +59,7 @@ export default class StatisticsController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(MessageFactory.createError("Internal server error: Cannot get statistics from a user"));
         }
       }
     );

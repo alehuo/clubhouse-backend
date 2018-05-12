@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
     if (!exists) {
       return knex.schema.createTable("permissions", table => {
         // Primary key
-        table.increments("permissionId");
+        table.increments("permissionId").unsigned();
         // Role id
         table.string("name");
         table.integer("value");
