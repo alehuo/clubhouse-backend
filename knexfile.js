@@ -9,7 +9,7 @@ module.exports = {
       port: process.env.MYSQL_PORT,
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DEV_DB_NAME
+      database: process.env.MYSQL_DB_NAME + "_dev"
     },
     seeds: {
       directory: "./seeds/dev"
@@ -32,7 +32,7 @@ module.exports = {
       port: process.env.MYSQL_PORT,
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_TEST_DB_NAME
+      database: process.env.MYSQL_DB_NAME + "_test"
     },
     seeds: {
       directory: "./seeds/test"
@@ -55,7 +55,7 @@ module.exports = {
       port: process.env.MYSQL_PORT,
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_PROD_DB_NAME
+      database: process.env.MYSQL_DB_NAME
     },
     seeds: {
       directory: "./seeds/production"

@@ -107,23 +107,25 @@ This project is meant to solve this problem by providing:
 
 ### Without Docker
 
-1.  Clone the repo
-2.  Install yarn if not yet installed
-3.  Run `yarn` to install dependencies
-4.  Create `.env` file and define environment variables. See `.env.example` file.
-5.  `knex migrate:latest` to run migrations
-6.  `knex seed:run` to seed the database
-7.  `yarn start` to start the server or `yarn watch` to watch for code changes
+1. Clone the repo
+2. Install yarn if not yet installed
+3. Run `yarn` to install dependencies
+4. Create `.env` file and define environment variables. See `.env.example` file.
+5. `knex migrate:latest` to run migrations
+6. `knex seed:run` to seed the database
+7. `yarn start` to start the server or `yarn watch` to watch for code changes
 
 ### MySQL
 
-To set up a MySQL server, run `docker run -p 3306:3306 --name clubhouse -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql/mysql-server:latest`
+To set up a MySQL server, run `docker run -p 3306:3306 --name clubhouse -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:8.0 --default-authentication-plugin=mysql_native_password`
+
+Next, create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where `DB_NAME` is the database you want to use with your setup.
 
 ### With docker
 
-1.  Clone the repo
-2.  Run `docker build -t clubhousebackend .` to build the image
-3.  Run `docker run --env-file=.env clubhousebackend:latest` to run the image
+1. Clone the repo
+2. Run `docker build -t clubhousebackend .` to build the image
+3. Run `docker run --env-file=.env clubhousebackend:latest` to run the image
 
 ## Running tests & calculating code coverage
 
