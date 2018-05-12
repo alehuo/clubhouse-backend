@@ -14,75 +14,72 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
 ## Table of contents <!-- DOCTOC SKIP -->
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-* [Introduction](#introduction)
-* [Installation instructions](#installation-instructions)
-* [MySQL](#mysql)
-  * [Without Docker](#without-docker)
-  * [With docker](#with-docker)
-* [Running tests & calculating code coverage](#running-tests--calculating-code-coverage)
-* [API routes](#api-routes)
-  * [/api/v1/authenticate](#apiv1authenticate)
-    * [POST /api/v1/authenticate](#post-apiv1authenticate)
-  * [/api/v1/user](#apiv1user)
-    * [GET /api/v1/user](#get-apiv1user)
-    * [GET /api/v1/user/:userId](#get-apiv1useruserid)
-    * [POST /api/v1/user](#post-apiv1user)
-    * [DELETE /api/v1/user/:userId](#delete-apiv1useruserid)
-    * [PUT /api/v1/user/:userId](#put-apiv1useruserid)
-  * [/api/v1/studentunion](#apiv1studentunion)
-    * [GET /api/v1/studentunion](#get-apiv1studentunion)
-    * [GET /api/v1/studentunion/:unionId](#get-apiv1studentunionunionid)
-    * [POST /api/v1/studentunion](#post-apiv1studentunion)
-    * [DELETE /api/v1/studentunion/:unionId](#delete-apiv1studentunionunionid)
-    * [PUT /api/v1/studentunion/:unionId](#put-apiv1studentunionunionid)
-  * [/api/v1/calendar](#apiv1calendar)
-    * [GET /api/v1/calendar](#get-apiv1calendar)
-    * [GET /api/v1/calendar/:eventId](#get-apiv1calendareventid)
-    * [POST /api/v1/calendar](#post-apiv1calendar)
-    * [GET /api/v1/calendar/:eventId/ical](#get-apiv1calendareventidical)
-    * [DELETE /api/v1/calendar/:eventId](#delete-apiv1calendareventid)
-    * [PUT /api/v1/calendar/:eventId](#put-apiv1calendareventid)
-  * [/api/v1/location](#apiv1location)
-    * [GET /api/v1/location](#get-apiv1location)
-    * [GET /api/v1/location/:locationId](#get-apiv1locationlocationid)
-    * [POST /api/v1/location](#post-apiv1location)
-    * [DELETE /api/v1/location/:locationId](#delete-apiv1locationlocationid)
-    * [PUT /api/v1/location/:locationId](#put-apiv1locationlocationid)
-  * [/api/v1/permission](#apiv1permission)
-    * [GET /api/v1/permission](#get-apiv1permission)
-    * [GET /api/v1/permission/:permissionId](#get-apiv1permissionpermissionid)
-  * [/api/v1/watch](#apiv1watch)
-    * [GET /api/v1/watch/ongoing](#get-apiv1watchongoing)
-    * [GET /api/v1/watch/user/:userId](#get-apiv1watchuseruserid)
-    * [GET /api/v1/watch/ongoing/user/:userId](#get-apiv1watchongoinguseruserid)
-    * [POST /api/v1/watch/begin](#post-apiv1watchbegin)
-    * [POST /api/v1/watch/end](#post-apiv1watchend)
-  * [/api/v1/message](#apiv1message)
-    * [GET /api/v1/message](#get-apiv1message)
-    * [GET /api/v1/message/:messageId](#get-apiv1messagemessageid)
-    * [POST /api/v1/message](#post-apiv1message)
-    * [DELETE /api/v1/message/:messageId](#delete-apiv1messagemessageid)
-    * [PUT /api/v1/message/:messageId](#put-apiv1messagemessageid)
-  * [/api/v1/newspost](#apiv1newspost)
-    * [GET /api/v1/newspost](#get-apiv1newspost)
-    * [GET /api/v1/newspost/:postId](#get-apiv1newspostpostid)
-    * [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
-    * [POST /api/v1/newspost](#post-apiv1newspost)
-    * [DELETE /api/v1/newspost/:postId](#delete-apiv1newspostpostid)
-    * [PUT /api/v1/newspost/:postId](#put-apiv1newspostpostid)
-  * [/api/v1/statistics](#apiv1statistics)
-    * [GET /api/v1/statistics](#get-apiv1statistics)
-    * [GET /api/v1/statistics/:userId](#get-apiv1statisticsuserid)
-* [Permissions](#permissions)
-  * [List of permissions](#list-of-permissions)
-  * [Combining permissions](#combining-permissions)
-  * [Checking permissions](#checking-permissions)
-* [License](#license)
+- [Introduction](#introduction)
+- [Database setup](#database-setup)
+  - [Creating databases manually](#creating-databases-manually)
+- [Installation instructions](#installation-instructions)
+- [Running tests & calculating code coverage](#running-tests--calculating-code-coverage)
+- [API routes](#api-routes)
+  - [/api/v1/authenticate](#apiv1authenticate)
+    - [POST /api/v1/authenticate](#post-apiv1authenticate)
+  - [/api/v1/user](#apiv1user)
+    - [GET /api/v1/user](#get-apiv1user)
+    - [GET /api/v1/user/:userId](#get-apiv1useruserid)
+    - [POST /api/v1/user](#post-apiv1user)
+    - [DELETE /api/v1/user/:userId](#delete-apiv1useruserid)
+    - [PUT /api/v1/user/:userId](#put-apiv1useruserid)
+  - [/api/v1/studentunion](#apiv1studentunion)
+    - [GET /api/v1/studentunion](#get-apiv1studentunion)
+    - [GET /api/v1/studentunion/:unionId](#get-apiv1studentunionunionid)
+    - [POST /api/v1/studentunion](#post-apiv1studentunion)
+    - [DELETE /api/v1/studentunion/:unionId](#delete-apiv1studentunionunionid)
+    - [PUT /api/v1/studentunion/:unionId](#put-apiv1studentunionunionid)
+  - [/api/v1/calendar](#apiv1calendar)
+    - [GET /api/v1/calendar](#get-apiv1calendar)
+    - [GET /api/v1/calendar/:eventId](#get-apiv1calendareventid)
+    - [POST /api/v1/calendar](#post-apiv1calendar)
+    - [GET /api/v1/calendar/:eventId/ical](#get-apiv1calendareventidical)
+    - [DELETE /api/v1/calendar/:eventId](#delete-apiv1calendareventid)
+    - [PUT /api/v1/calendar/:eventId](#put-apiv1calendareventid)
+  - [/api/v1/location](#apiv1location)
+    - [GET /api/v1/location](#get-apiv1location)
+    - [GET /api/v1/location/:locationId](#get-apiv1locationlocationid)
+    - [POST /api/v1/location](#post-apiv1location)
+    - [DELETE /api/v1/location/:locationId](#delete-apiv1locationlocationid)
+    - [PUT /api/v1/location/:locationId](#put-apiv1locationlocationid)
+  - [/api/v1/permission](#apiv1permission)
+    - [GET /api/v1/permission](#get-apiv1permission)
+    - [GET /api/v1/permission/:permissionId](#get-apiv1permissionpermissionid)
+  - [/api/v1/watch](#apiv1watch)
+    - [GET /api/v1/watch/ongoing](#get-apiv1watchongoing)
+    - [GET /api/v1/watch/user/:userId](#get-apiv1watchuseruserid)
+    - [GET /api/v1/watch/ongoing/user/:userId](#get-apiv1watchongoinguseruserid)
+    - [POST /api/v1/watch/begin](#post-apiv1watchbegin)
+    - [POST /api/v1/watch/end](#post-apiv1watchend)
+  - [/api/v1/message](#apiv1message)
+    - [GET /api/v1/message](#get-apiv1message)
+    - [GET /api/v1/message/:messageId](#get-apiv1messagemessageid)
+    - [POST /api/v1/message](#post-apiv1message)
+    - [DELETE /api/v1/message/:messageId](#delete-apiv1messagemessageid)
+    - [PUT /api/v1/message/:messageId](#put-apiv1messagemessageid)
+  - [/api/v1/newspost](#apiv1newspost)
+    - [GET /api/v1/newspost](#get-apiv1newspost)
+    - [GET /api/v1/newspost/:postId](#get-apiv1newspostpostid)
+    - [GET /api/v1/newspost/user/:userId](#get-apiv1newspostuseruserid)
+    - [POST /api/v1/newspost](#post-apiv1newspost)
+    - [DELETE /api/v1/newspost/:postId](#delete-apiv1newspostpostid)
+    - [PUT /api/v1/newspost/:postId](#put-apiv1newspostpostid)
+  - [/api/v1/statistics](#apiv1statistics)
+    - [GET /api/v1/statistics](#get-apiv1statistics)
+    - [GET /api/v1/statistics/:userId](#get-apiv1statisticsuserid)
+- [Permissions](#permissions)
+  - [List of permissions](#list-of-permissions)
+  - [Combining permissions](#combining-permissions)
+  - [Checking permissions](#checking-permissions)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -104,29 +101,24 @@ This project is meant to solve this problem by providing:
 * Comprehensive admin interface for administrators to be constantly up to date of whats happening.
 * Very flexible permissions system. You can add roles and customize their permissions as you wish.
 
+## Database setup
+
+To set up a MySQL server, run `docker run -p 3306:3306 --name clubhouse -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:8.0 --default-authentication-plugin=mysql_native_password` where `MYSQL_ROOT_PASSWORD` is your preferred mysql root password.
+
+### Creating databases manually
+
+You need to create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where `DB_NAME` is the database you want to use with your setup. This can be done manually, or by executing `yarn create-tables` when `.env` file is configured.
+
 ## Installation instructions
-
-## MySQL
-
-To set up a MySQL server, run `docker run -p 3306:3306 --name clubhouse -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:8.0 --default-authentication-plugin=mysql_native_password`
-
-Next, create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where `DB_NAME` is the database you want to use with your setup.
-
-### Without Docker
 
 1.  Clone the repo
 2.  Install yarn if not yet installed
 3.  Run `yarn` to install dependencies
 4.  Create `.env` file and define environment variables. See `.env.example` file.
-5.  `knex migrate:latest` to run migrations
-6.  `knex seed:run` to seed the database
-7.  `yarn start` to start the server or `yarn watch` to watch for code changes
-
-### With docker
-
-1.  Clone the repo
-2.  Run `docker build -t clubhousebackend .` to build the image
-3.  Run `docker run --env-file=.env clubhousebackend:latest` to run the image
+5.  `yarn create-tables` to create necessary database tables (optionally, you can create the database tables manually.)
+6.  `knex migrate:latest` to run migrations
+7.  `knex seed:run` to seed the database
+8.  `yarn start` to start the server or `yarn watch` to watch for code changes
 
 ## Running tests & calculating code coverage
 
