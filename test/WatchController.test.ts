@@ -172,7 +172,7 @@ describe("WatchController", () => {
       // Start the watch
       chai
         .request(app)
-        .post(url + "/begin")
+        .post(url + "/start")
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ startMessage: "Let's rock and roll!" })
         .end((err, res) => {
@@ -183,7 +183,7 @@ describe("WatchController", () => {
           // End the watch
           chai
             .request(app)
-            .post(url + "/end")
+            .post(url + "/stop")
             .set("Authorization", generateToken({ userId: 2 }))
             .send({ endMessage: "Good night all!" })
             .end((err2, res2) => {
@@ -202,7 +202,7 @@ describe("WatchController", () => {
       // Start the watch
       chai
         .request(app)
-        .post(url + "/begin")
+        .post(url + "/start")
         .set("Authorization", generateToken())
         .send({ startMessage: "Let's rock and roll!" })
         .end((err, res) => {
@@ -218,7 +218,7 @@ describe("WatchController", () => {
       // Start the watch
       chai
         .request(app)
-        .post(url + "/end")
+        .post(url + "/stop")
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ endMessage: "Let's rock and roll!" })
         .end((err, res) => {
