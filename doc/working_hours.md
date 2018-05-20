@@ -35,5 +35,6 @@
 | 4.5.2018  | 1h    |  Upgraded dependencies to latest version                                                                                                                                                                                                                                                   |
 | 9.5.2018  | 1h    | Hook up permission system to routes & improve tests for Student union controller                                                                                                                                                                                                           |
 | 12.5.2018 | 5h    | Moved from SQLite to MySQL. Fixed tests, migrations, seeds and Knexfile as SQLite was initially used in the development process. Created WatchFilter to fix the GET route return schema. Added instructions to README.md on how to start a MySQL server. Created database creation script. |
+| 20.5.2018 | 0.5h  | Created additional routes for checking watches and updated REST files.                                                                                                                                                                                                                     |
 
-Total: 58 h
+Total: 58.5 h

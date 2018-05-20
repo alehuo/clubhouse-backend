@@ -67,9 +67,9 @@ export default class WatchController extends Controller {
         }
       }
     );
-    // Begin a watch.
+    // Start a watch.
     this.router.post(
-      "/begin",
+      "/start",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -110,9 +110,9 @@ export default class WatchController extends Controller {
         }
       }
     );
-    // End a watch.
+    // Stop a watch.
     this.router.post(
-      "/end",
+      "/stop",
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -173,6 +173,33 @@ export default class WatchController extends Controller {
             .json(
               MessageFactory.createError(
                 "Internal server error: Can't end a watch"
+              )
+            );
+        }
+      }
+    );
+    this.router.get(
+      "/ownstatus",
+      JwtMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const userId: number = res.locals.token.data.userId;
+          const watches: IWatch[] = await this.watchDao.findOngoingByUser(
+            userId
+          );
+          const otherWatches: IWatch[] = await this.watchDao.findAllOngoing();
+          const peopleCount: number = otherWatches.filter(
+            (watch: IWatch) => watch.userId !== userId
+          ).length;
+          return res
+            .status(200)
+            .json({ running: watches && watches.length !== 0, peopleCount });
+        } catch (err) {
+          return res
+            .status(500)
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Can't return if current user has a watch running"
               )
             );
         }

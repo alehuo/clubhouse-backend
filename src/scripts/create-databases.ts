@@ -1,4 +1,4 @@
-// This script creates database tables that are needed by the back-end.
+// This script creates databases that are needed by the back-end.
 
 require("dotenv").config();
 

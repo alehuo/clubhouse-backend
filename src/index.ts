@@ -10,7 +10,6 @@ import * as Database from "./Database";
 import UserDao from "./dao/UserDao";
 import AuthController from "./controllers/AuthController";
 import * as winston from "winston";
-import * as expressWinston from "express-winston";
 import StudentUnionDao from "./dao/StudentUnionDao";
 import StudentUnionController from "./controllers/StudentUnionController";
 import CalendarEventController from "./controllers/CalendarEventController";
@@ -145,26 +144,6 @@ app.use(
   apiUrl("statistics"),
   apiHeader("statistics"),
   new StatisticsController(new StatisticsDao(knex), new UserDao(knex)).routes()
-);
-
-app.use(
-  expressWinston.logger({
-    transports: [
-      new winston.transports.Console({
-        colorize: true
-      }),
-      new winston.transports.File({
-        json: true,
-        filename: "app.log",
-        maxsize: 100000
-      })
-    ],
-    msg:
-      "HTTP {{req.method}} {{res.statusCode}} {{res.responseTime}}ms {{req.url}}",
-    expressFormat: true,
-    colorize: true,
-    ignoreRoute: (req, res) => false
-  })
 );
 
 app.use(
