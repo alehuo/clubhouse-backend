@@ -229,7 +229,7 @@ describe("UserController", () => {
           res.body.password.should.equal("JohnDoe123");
           done();
         });
-    });
+    }).timeout(5000);
 
     it("Can't register a new user with too short password", done => {
       chai
