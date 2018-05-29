@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/v1/watch/start HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{clubhouse_token}}
+
+{
+    "startMessage" : "Hello world. Lets rock n roll!"
+}

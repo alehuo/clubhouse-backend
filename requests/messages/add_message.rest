@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/v1/message HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{clubhouse_token}}
+
+{
+    "message": "Hello world, second time!"
+}

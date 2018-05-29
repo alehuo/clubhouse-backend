@@ -1,9 +1,15 @@
 node_modules/
 storage/**/*
+coverage
 **/*.sqlite3
 .env
 .DS_Store
+<<<<<<< HEAD
 yarn-error.log
 app.log
 coverage
+=======
+app.log
+yarn-error.log
+>>>>>>> e2f0886baf0b1326efec302258f16e481d3785b2
 .nyc_output
