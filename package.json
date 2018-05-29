@@ -25,7 +25,7 @@
     "seed": "node_modules/.bin/knex seed:run",
     "build": "node_modules/.bin/tsc",
     "heroku-postbuild":
-      "yarn build && node_modules/.bin/knex migrate:latest --env=production && node_modules/.bin/knex seed:run --env=production"
+      "yarn build && yarn migrate && yarn seed"
   },
   "devDependencies": {
     "@types/bcrypt": "2.0.0",
