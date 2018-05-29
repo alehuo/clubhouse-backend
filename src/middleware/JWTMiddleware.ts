@@ -1,6 +1,6 @@
 import * as express from "express";
-import MessageFactory from "../Utils/MessageFactory";
-import { VerifyToken } from "../Utils/JwtUtils";
+import MessageFactory from "./../Utils/MessageFactory";
+import { VerifyToken } from "./../Utils/JwtUtils";
 /**
  * Express middleware for verifying JWT's.
  * @param req Express request.
