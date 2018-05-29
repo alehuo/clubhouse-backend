@@ -6,6 +6,8 @@ import PermissionDao from "../dao/PermissionDao";
 import JwtMiddleware from "../middleware/JWTMiddleware";
 import MessageFactory from "../Utils/MessageFactory";
 
+import { getPermissions } from "../utils/PermissionUtils";
+
 export default class PermissionController extends Controller {
   constructor(private permissionDao: PermissionDao) {
     super();
@@ -22,7 +24,11 @@ export default class PermissionController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get permissions"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get permissions"
+              )
+            );
         }
       }
     );
@@ -33,7 +39,16 @@ export default class PermissionController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         const permissions: number = res.locals.token.data.permissions;
-        return res.status(200).json({ permissions });
+        const permlist: IPermission[] = await getPermissions(permissions);
+        return res.status(200).json({
+          permissions,
+          permission_list: permlist.map((permission: IPermission) => {
+            delete permission.created_at;
+            delete permission.updated_at;
+            delete permission.permissionId;
+            return permission;
+          })
+        });
       }
     );
 
@@ -56,7 +71,11 @@ export default class PermissionController extends Controller {
           console.error(ex);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get single permission"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get single permission"
+              )
+            );
         }
       }
     );
@@ -99,7 +118,11 @@ export default class PermissionController extends Controller {
           console.error(err);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot add new permission"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot add new permission"
+              )
+            );
         }
       }
     );
