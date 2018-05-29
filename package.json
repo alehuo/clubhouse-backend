@@ -1,23 +1,29 @@
-
 {
   "name": "clubhouse-backend",
   "version": "1.0.0",
-  "description": "Node.js back-end for for Full-stack software development project course",
+  "description":
+    "Node.js back-end for for Full-stack software development project course",
   "repository": "https://github.com/alehuo/clubhouse-backend.git",
   "author": "alehuo",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=8.9"
+  },
   "scripts": {
     "start": "node_modules/.bin/ts-node src/index.ts",
     "watch": "node_modules/.bin/nodemon start",
     "lint-ts": "node_modules/.bin/tslint -c tslint.json 'src/**/*.ts'",
     "test": "nyc mocha -r ts-node/register test/**/*.test.ts --exit",
-    "coverage": "nyc report --reporter=html --reporter=json mocha -r ts-node/register test/**/*.test.ts --exit",
+    "coverage":
+      "nyc report --reporter=html --reporter=json mocha -r ts-node/register test/**/*.test.ts --exit",
     "view-coverage": "node_modules/.bin/serve coverage -o",
-    "create-databases": "node_modules/.bin/ts-node src/scripts/create-databases.ts",
+    "create-databases":
+      "node_modules/.bin/ts-node src/scripts/create-databases.ts",
     "migrate": "node_modules/.bin/knex migrate:latest",
     "seed": "node_modules/.bin/knex seed:run",
-    "heroku-postbuild": "yarn test && node_modules/.bin/knex migrate:latest --env=production && node_modules/.bin/knex seed:run --env=production"
+    "heroku-postbuild":
+      "yarn test && node_modules/.bin/knex migrate:latest --env=production && node_modules/.bin/knex seed:run --env=production"
   },
   "devDependencies": {
     "@types/bcrypt": "2.0.0",
@@ -59,10 +65,7 @@
     "winston": "^2.4.1"
   },
   "nyc": {
-    "extension": [
-      ".ts",
-      ".tsx"
-    ],
+    "extension": [".ts", ".tsx"],
     "exclude": [
       "**/*.d.ts",
       "test/**/*.ts",
@@ -71,9 +74,7 @@
       "coverage/**/*.js",
       "**/*.js"
     ],
-    "reporter": [
-      "html"
-    ],
+    "reporter": ["html"],
     "all": true
   }
 }
