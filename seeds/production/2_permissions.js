@@ -1,4 +1,4 @@
-const userPerms = require("./../../src/Permissions.js");
+const userPerms = require("../../src/Permissions.js");
 
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
