@@ -103,11 +103,11 @@ This project is meant to solve this problem by providing:
 
 ## Database setup
 
-To set up a MySQL server, run `docker run -p 3306:3306 --name clubhouse -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:8.0 --default-authentication-plugin=mysql_native_password` where `MYSQL_ROOT_PASSWORD` is your preferred mysql root password.
+To quickly set up a MySQL server, run `docker run -p 3306:3306 --name clubhouse -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:8.0 --default-authentication-plugin=mysql_native_password` where `MYSQL_ROOT_PASSWORD` is your preferred mysql root password.
 
 ### Creating databases manually
 
-You need to create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where `DB_NAME` is the database you want to use with your setup. This can be done manually, or by executing `yarn create-tables` when `.env` file is configured.
+You need to create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where `DB_NAME` is the database you want to use with your setup. This can be done manually, or by executing `yarn create-databases` when `.env` file is configured.
 
 ## Installation instructions
 
@@ -115,7 +115,7 @@ You need to create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where 
 2.  Install yarn if not yet installed
 3.  Run `yarn` to install dependencies
 4.  Create `.env` file and define environment variables. See `.env.example` file.
-5.  `yarn create-databases` to create necessary database tables (optionally, you can create the database tables manually.)
+5.  `yarn create-databases` to create necessary databases (optionally, you can create the databases manually.)
 6.  `knex migrate:latest` to run migrations
 7.  `knex seed:run` to seed the database
 8.  `yarn start` to start the server or `yarn watch` to watch for code changes

@@ -16,18 +16,18 @@ async function createTables() {
   try {
     // Create databases
     await con.execute(
-      "CREATE DATABASE IF NOT EXISTS " +
+      "CREATE DATABASE " +
         process.env.MYSQL_DB_NAME +
         " DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_unicode_ci"
     );
     await con.execute(
-      "CREATE DATABASE IF NOT EXISTS " +
+      "CREATE DATABASE " +
         process.env.MYSQL_DB_NAME +
         "_dev" +
         " DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_unicode_ci"
     );
     await con.execute(
-      "CREATE DATABASE IF NOT EXISTS " +
+      "CREATE DATABASE " +
         process.env.MYSQL_DB_NAME +
         "_test" +
         " DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_unicode_ci"
@@ -35,7 +35,8 @@ async function createTables() {
     console.log("Created development, test and production databases.");
     process.exit(0);
   } catch (err) {
-    console.error(err);
+    console.log("Error: %s", err.message)
+    process.exit(0);
   }
 }
 
