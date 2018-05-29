@@ -1,12 +1,11 @@
-import { Router } from "express";
 import * as Express from "express";
 
 export default abstract class Controller {
-  public router: Router;
+  public router: Express.Router;
 
   constructor() {
     this.router = Express.Router();
   }
 
-  public abstract routes(): Router;
+  public abstract routes(): Express.Router;
 }

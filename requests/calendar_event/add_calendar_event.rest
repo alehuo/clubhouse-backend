@@ -1,0 +1,14 @@
+POST http://localhost:8080/api/v1/calendar HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{clubhouse_token}}
+
+{
+    "eventId": 1,
+    "name": "Test event",
+    "description": "Test event",
+    "restricted": 0,
+    "startTime": 1524495600000,
+    "endTime": 1524524400000,
+    "unionId": 1,
+    "locationId": 2
+  }

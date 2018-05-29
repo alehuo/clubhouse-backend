@@ -6,8 +6,11 @@
     "no-var-requires": false,
     "ordered-imports": false,
     "no-console": false,
-    "no-magic-numbers": true,
-    "trailing-comma": false
+    "trailing-comma": false,
+    "object-literal-sort-keys": false,
+    "semicolon": false,
+    "no-bitwise": false,
+    "arrow-parens": false
   },
   "rulesDirectory": []
 }

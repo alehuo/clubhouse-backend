@@ -1,5 +1,9 @@
 node_modules/
 storage/**/*
+coverage
 **/*.sqlite3
 .env
 .DS_Store
+app.log
+yarn-error.log
+.nyc_output
