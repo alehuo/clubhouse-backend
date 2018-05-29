@@ -37,5 +37,6 @@
 | 12.5.2018 | 5h    | Moved from SQLite to MySQL. Fixed tests, migrations, seeds and Knexfile as SQLite was initially used in the development process. Created WatchFilter to fix the GET route return schema. Added instructions to README.md on how to start a MySQL server. Created database creation script. |
 | 20.5.2018 | 0.5h  | Created additional routes for checking watches and updated REST files.                                                                                                                                                                                                                     |
 | 29.5.2018 | 1.5h  | Added list of permissions to be returned from the permission route. Improved permission seed. Preparing application for deployment to Heroku.                                                                                                                                              |
+| 29.5.2018 | 1h    | Updating project dependices, configuring Heroku                                                                                                                                                                                                                                            |
 
-Total: 59.0 h
+Total: 60.0 h
