@@ -8,7 +8,8 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": ">=8.9"
+    "node": ">=8.9",
+    "yarn": ">=1.6.0"
   },
   "scripts": {
     "start": "node_modules/.bin/ts-node src/index.ts",
@@ -22,6 +23,7 @@
       "node_modules/.bin/ts-node src/scripts/create-databases.ts",
     "migrate": "node_modules/.bin/knex migrate:latest",
     "seed": "node_modules/.bin/knex seed:run",
+    "build": "node_modules/.bin/tsc",
     "heroku-postbuild":
       "yarn test && node_modules/.bin/knex migrate:latest --env=production && node_modules/.bin/knex seed:run --env=production"
   },

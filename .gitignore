@@ -7,3 +7,4 @@ coverage
 yarn-error.log
 app.log
 .nyc_output
+dist
