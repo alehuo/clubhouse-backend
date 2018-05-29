@@ -3,3 +3,7 @@ storage/**/*
 **/*.sqlite3
 .env
 .DS_Store
+yarn-error.log
+app.log
+coverage
+.nyc_output
