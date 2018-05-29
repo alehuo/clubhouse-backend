@@ -165,8 +165,8 @@ app.use(
 );
 
 // Listen
-app.listen(process.env.SERVER_PORT, () => {
-  console.log("Server running at ::%d", process.env.SERVER_PORT);
+app.listen(process.env.PORT, () => {
+  console.log("Server running at ::%d", process.env.PORT);
 });
 
 export default app;
