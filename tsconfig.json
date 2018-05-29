@@ -3,6 +3,7 @@
     "target": "es6",
     "allowJs": true,
     "module": "commonjs",
+    "moduleResolution": "node",
     "sourceMap": true,
     "removeComments": true,
     "listFiles": true,
