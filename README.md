@@ -9,6 +9,7 @@ Back-end for Full-stack software development project course.
 The back-end has been coded with TypeScript. A Dockerfile is also provided if you wish to deploy the app easily. Knex is used to handle DB migrations and seeding.
 
 * [Production application at Heroku](https://clubhouse-backend.herokuapp.com)
+* [Front-end repository](https://github.com/alehuo/clubhouse-frontend)
 
 ## Table of contents <!-- DOCTOC SKIP -->
 
