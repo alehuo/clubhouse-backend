@@ -4,6 +4,7 @@ coverage
 **/*.sqlite3
 .env
 .DS_Store
-app.log
 yarn-error.log
+app.log
 .nyc_output
+dist
