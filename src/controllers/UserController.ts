@@ -1,25 +1,25 @@
-import * as express from "express";
 import * as bcrypt from "bcrypt";
+import * as express from "express";
 import IUser, { userFilter } from "../models/IUser";
 
-import Controller from "./Controller";
-import UserDao from "../dao/UserDao";
 import PermissionDao from "../dao/PermissionDao";
+import UserDao from "../dao/UserDao";
 import JwtMiddleware from "./../middleware/JWTMiddleware";
+import Controller from "./Controller";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
 import ICalendarEvent from "../models/ICalendarEvent";
 
-import Validator from "./../utils/Validator";
-import MessageFactory from "../Utils/MessageFactory";
-import IStudentUnion from "../models/IStudentUnion";
-import StudentUnionDao from "../dao/StudentUnionDao";
-import IMessage from "../models/IMessage";
 import MessageDao from "../dao/MessageDao";
-import INewsPost from "../models/INewsPost";
 import NewsPostDao from "../dao/NewsPostDao";
+import StudentUnionDao from "../dao/StudentUnionDao";
 import WatchDao from "../dao/WatchDao";
+import IMessage from "../models/IMessage";
+import INewsPost from "../models/INewsPost";
+import IStudentUnion from "../models/IStudentUnion";
 import IWatch from "../models/IWatch";
+import MessageFactory from "../Utils/MessageFactory";
+import Validator from "./../utils/Validator";
 
 export default class UserController extends Controller {
   constructor(

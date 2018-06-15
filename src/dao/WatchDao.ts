@@ -1,7 +1,7 @@
-import IDao from "./Dao";
 import * as Promise from "bluebird";
 import * as Knex from "knex";
 import IWatch from "../models/IWatch";
+import IDao from "./Dao";
 
 const TABLE_NAME = "watches";
 

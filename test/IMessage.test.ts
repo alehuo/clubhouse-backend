@@ -1,6 +1,6 @@
-import IMessage from "./../src/models/IMessage";
 import { expect } from "chai";
 import "mocha";
+import IMessage from "./../src/models/IMessage";
 
 describe("IMessage", () => {
   it("should get and set message correctly", () => {

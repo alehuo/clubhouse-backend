@@ -1,10 +1,10 @@
-import * as express from "express";
 import * as bcrypt from "bcrypt";
+import * as express from "express";
 import Controller from "./Controller";
 
 import NewsPostDao from "../dao/NewsPostDao";
-import INewsPost from "../models/INewsPost";
 import JwtMiddleware from "../middleware/JWTMiddleware";
+import INewsPost from "../models/INewsPost";
 import MessageFactory from "../Utils/MessageFactory";
 
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";

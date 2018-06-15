@@ -1,7 +1,7 @@
-import IDao from "./Dao";
-import IUser, { userFilter } from "../models/IUser";
 import * as Promise from "bluebird";
 import * as Knex from "knex";
+import IUser, { userFilter } from "../models/IUser";
+import IDao from "./Dao";
 
 const TABLE_NAME = "users";
 

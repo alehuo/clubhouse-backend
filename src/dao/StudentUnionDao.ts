@@ -1,7 +1,7 @@
-import IDao from "./Dao";
 import * as Promise from "bluebird";
 import * as Knex from "knex";
 import IStudentUnion from "../models/IStudentUnion";
+import IDao from "./Dao";
 
 const TABLE_NAME = "studentUnions";
 

@@ -1,10 +1,10 @@
-import * as express from "express";
 import * as bcrypt from "bcrypt";
+import * as express from "express";
 import Controller from "./Controller";
 
-import IMessage from "../models/IMessage";
 import MessageDao from "../dao/MessageDao";
 import JwtMiddleware from "../middleware/JWTMiddleware";
+import IMessage from "../models/IMessage";
 import MessageFactory from "../Utils/MessageFactory";
 
 export default class MessageController extends Controller {

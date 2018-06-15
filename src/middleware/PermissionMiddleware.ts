@@ -1,7 +1,7 @@
 import * as express from "express";
-import { hasPermissions } from "./../utils/PermissionUtils";
 import IPermission from "./../models/IPermission";
 import MessageFactory from "./../utils/MessageFactory";
+import { hasPermissions } from "./../utils/PermissionUtils";
 
 /**
  * Permission middleware.

@@ -1,10 +1,10 @@
 import * as express from "express";
 import IPermission from "../models/IPermission";
 
-import Controller from "./Controller";
 import PermissionDao from "../dao/PermissionDao";
 import JwtMiddleware from "../middleware/JWTMiddleware";
 import MessageFactory from "../Utils/MessageFactory";
+import Controller from "./Controller";
 
 import { getPermissions } from "../utils/PermissionUtils";
 

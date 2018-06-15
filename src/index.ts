@@ -1,37 +1,35 @@
 require("dotenv").config();
 
 import * as express from "express";
+import * as helmet from "helmet";
 import * as Knex from "knex";
 import * as morgan from "morgan";
-// import * as compression from "compression";
-// const apicache = require("apicache");
-import UserController from "./controllers/UserController";
-import * as Database from "./Database";
-import UserDao from "./dao/UserDao";
 import AuthController from "./controllers/AuthController";
-import * as winston from "winston";
-import StudentUnionDao from "./dao/StudentUnionDao";
-import StudentUnionController from "./controllers/StudentUnionController";
 import CalendarEventController from "./controllers/CalendarEventController";
+import LocationController from "./controllers/LocationController";
+import MessageController from "./controllers/MessageController";
+import NewsPostController from "./controllers/NewsPostController";
+import PermissionController from "./controllers/PermissionController";
+import StatisticsController from "./controllers/StatisticsController";
+import StudentUnionController from "./controllers/StudentUnionController";
+import UserController from "./controllers/UserController";
+import WatchController from "./controllers/WatchController";
 import CalendarEventDao from "./dao/CalendarEventDao";
 import LocationDao from "./dao/LocationDao";
-import LocationController from "./controllers/LocationController";
-import PermissionDao from "./dao/PermissionDao";
-import PermissionController from "./controllers/PermissionController";
-import WatchDao from "./dao/WatchDao";
-import WatchController from "./controllers/WatchController";
-import MessageController from "./controllers/MessageController";
 import MessageDao from "./dao/MessageDao";
-import NewsPostController from "./controllers/NewsPostController";
 import NewsPostDao from "./dao/NewsPostDao";
+import PermissionDao from "./dao/PermissionDao";
 import StatisticsDao from "./dao/StatisticsDao";
-import StatisticsController from "./controllers/StatisticsController";
+import StudentUnionDao from "./dao/StudentUnionDao";
+import UserDao from "./dao/UserDao";
+import WatchDao from "./dao/WatchDao";
+import * as Database from "./Database";
 
 // Express instance
 const app: express.Application = express();
 
-// Disable X-Powered-By header
-app.disable("x-powered-by");
+// Use Helmet
+app.use(helmet());
 
 // Knex instance
 const knex: Knex = Database.connect();
@@ -68,10 +66,6 @@ app.use(
     next();
   }
 );
-
-// API cache
-/*const cache = apicache.middleware;
-app.use(cache("5 minutes"));*/
 
 // Users route
 app.use(

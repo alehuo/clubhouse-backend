@@ -1,10 +1,10 @@
 import * as express from "express";
 
-import Controller from "./Controller";
-import IStudentUnion, { studentUnionFilter } from "../models/IStudentUnion";
 import StudentUnionDao from "../dao/StudentUnionDao";
-import JwtMiddleware from "./../Middleware/JWTMiddleware";
+import IStudentUnion, { studentUnionFilter } from "../models/IStudentUnion";
 import MessageFactory from "../Utils/MessageFactory";
+import JwtMiddleware from "./../Middleware/JWTMiddleware";
+import Controller from "./Controller";
 
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import permissions = require("./../Permissions");

@@ -2,7 +2,7 @@
 
 require("dotenv").config();
 
-import { createConnection, QueryError } from "mysql2/promise";
+import { createConnection } from "mysql2/promise";
 
 async function createTables() {
   // Create connection

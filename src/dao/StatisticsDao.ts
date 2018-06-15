@@ -1,8 +1,8 @@
-import IDao from "./Dao";
 import * as Promise from "bluebird";
 import * as Knex from "knex";
 import IStatistics from "../models/IStatistics";
 import IUserStatistics from "../models/IUserStatistics";
+import IDao from "./Dao";
 
 export default class StatisticsDao implements IDao<IStatistics> {
   constructor(private readonly knex: Knex) {}

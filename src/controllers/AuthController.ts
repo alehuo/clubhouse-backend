@@ -1,11 +1,11 @@
-import * as express from "express";
 import * as bcrypt from "bcrypt";
+import * as express from "express";
 import IUser from "../models/IUser";
 
-import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
 import JwtMiddleware from "./../middleware/JWTMiddleware";
 import { SignToken } from "./../Utils/JwtUtils";
+import Controller from "./Controller";
 
 import MessageFactory from "./../Utils/MessageFactory";
 

@@ -1,4 +1,3 @@
-import * as Promise from "bluebird";
 import * as Knex from "knex";
 import * as path from "path";
 const knexfile = require(path.resolve(__dirname + "./../knexfile.js"));

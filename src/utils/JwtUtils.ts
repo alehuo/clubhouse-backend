@@ -1,5 +1,4 @@
 import * as jwt from "jsonwebtoken";
-import MessageFactory from "./MessageFactory";
 
 /**
  * Signs and returns a JWT.

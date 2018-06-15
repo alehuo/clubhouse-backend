@@ -1,14 +1,14 @@
 import * as express from "express";
 
-import Controller from "./Controller";
-import IStudentUnion, { studentUnionFilter } from "../models/IStudentUnion";
-import StatisticsDao from "./../dao/StatisticsDao";
-import IStatistics from "../models/IStatistics";
-import IUserStatistics from "../models/IUserStatistics";
 import UserDao from "../dao/UserDao";
-import IUser from "../models/IUser";
 import JwtMiddleware from "../middleware/JWTMiddleware";
+import IStatistics from "../models/IStatistics";
+import IStudentUnion, { studentUnionFilter } from "../models/IStudentUnion";
+import IUser from "../models/IUser";
+import IUserStatistics from "../models/IUserStatistics";
 import MessageFactory from "../Utils/MessageFactory";
+import StatisticsDao from "./../dao/StatisticsDao";
+import Controller from "./Controller";
 
 /**
  * Statistics controller.

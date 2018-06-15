@@ -2,17 +2,13 @@ process.env.NODE_ENV = "test";
 process.env.JWT_SECRET = "HelloWorld";
 process.env.DEBUG = "knex:query";
 
-import * as Chai from "chai";
+import * as Knex from "knex";
 import "mocha";
 import * as Database from "./../src/Database";
-import * as Knex from "knex";
 import app from "./../src/index";
 
-import { SignToken } from "./../src/utils/JwtUtils";
 import IStudentUnion from "../src/models/IStudentUnion";
-import { bodyBlacklist } from "express-winston";
-
-import permissions = require("./../src/Permissions");
+import { SignToken } from "./../src/utils/JwtUtils";
 
 const generateToken = (userData?: any) => {
   if (userData) {

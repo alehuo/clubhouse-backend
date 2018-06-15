@@ -1,10 +1,10 @@
-import * as express from "express";
 import * as bcrypt from "bcrypt";
-import Controller from "./Controller";
+import * as express from "express";
 import WatchDao from "../dao/WatchDao";
+import Controller from "./Controller";
 
-import IWatch from "../models/IWatch";
 import JwtMiddleware from "../middleware/JWTMiddleware";
+import IWatch from "../models/IWatch";
 import MessageFactory from "../Utils/MessageFactory";
 
 import { watchFilter } from "./../models/IWatch";

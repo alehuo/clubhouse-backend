@@ -1,16 +1,16 @@
-import * as express from "express";
 import * as bcrypt from "bcrypt";
+import * as express from "express";
 import IUser from "../models/IUser";
 
-import Controller from "./Controller";
 import CalendarEventDao from "../dao/CalendarEventDao";
 import ICalendarEvent from "../models/ICalendarEvent";
-import { createICal } from "./../utils/iCalUtils";
 import JwtMiddleware from "./../Middleware/JWTMiddleware";
+import { createICal } from "./../utils/iCalUtils";
+import Controller from "./Controller";
 
-import MessageFactory from "./../Utils/MessageFactory";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import permissions = require("./../Permissions");
+import MessageFactory from "./../Utils/MessageFactory";
 
 export default class CalendarEventController extends Controller {
   constructor(private calendarEventDao: CalendarEventDao) {

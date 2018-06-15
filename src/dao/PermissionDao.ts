@@ -1,7 +1,7 @@
-import IDao from "./Dao";
-import IPermission from "../models/IPermission";
 import * as Promise from "bluebird";
 import * as Knex from "knex";
+import IPermission from "../models/IPermission";
+import IDao from "./Dao";
 
 const TABLE_NAME = "permissions";
 

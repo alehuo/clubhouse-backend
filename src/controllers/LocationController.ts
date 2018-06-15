@@ -1,11 +1,11 @@
-import * as express from "express";
 import * as bcrypt from "bcrypt";
+import * as express from "express";
 import ILocation, { locationFilter } from "../models/ILocation";
 
-import Controller from "./Controller";
-import JwtMiddleware from "./../middleware/JwtMiddleware";
 import LocationDao from "../dao/LocationDao";
 import MessageFactory from "../Utils/MessageFactory";
+import JwtMiddleware from "./../middleware/JwtMiddleware";
+import Controller from "./Controller";
 
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import permissions = require("./../Permissions");
