@@ -3,10 +3,10 @@
 ![Maintainer](https://img.shields.io/badge/maintainer-alehuo-yellow.svg) ![license](https://img.shields.io/github/license/alehuo/clubhouse-backend.svg)
 
 Staging (develop) [![Build status (develop)](https://api.travis-ci.org/alehuo/clubhouse-backend.svg?branch=develop)](https://travis-ci.org/alehuo/clubhouse-backend)
-![Code coverage (develop)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/develop/graph/badge.svg)
+[![Code coverage (develop)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/develop/graph/badge.svg)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/develop)
 
 Production (master) [![Build status (develop)](https://api.travis-ci.org/alehuo/clubhouse-backend.svg?branch=master)](https://travis-ci.org/alehuo/clubhouse-backend)
-![Code coverage (develop)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/master/graph/badge.svg)
+[![Code coverage (develop)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/master)
 
 [![devDependencies](https://david-dm.org/alehuo/clubhouse-backend/dev-status.svg)](https://david-dm.org/alehuo/clubhouse-backend)
 [![dependencies](https://david-dm.org/alehuo/clubhouse-backend/status.svg)](https://david-dm.org/alehuo/clubhouse-backend)
@@ -16,8 +16,8 @@ Production (master) [![Build status (develop)](https://api.travis-ci.org/alehuo/
 ![GitHub top language](https://img.shields.io/github/languages/top/alehuo/clubhouse-backend.svg)
 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/alehuo/clubhouse-backend/issues)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/alehuo/clubhouse-backend.svg)
-![GitHub issues](https://img.shields.io/github/issues/alehuo/clubhouse-backend.svg)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/alehuo/clubhouse-backend.svg)](https://github.com/alehuo/clubhouse-backend/pulls)
+[![GitHub issues](https://img.shields.io/github/issues/alehuo/clubhouse-backend.svg)]((https://github.com/alehuo/clubhouse-backend/issues))
 
 Back-end for Full-stack software development project course.
 
