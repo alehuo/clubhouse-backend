@@ -1,15 +1,30 @@
 # clubhouse-backend <!-- DOCTOC SKIP -->
 
-[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+![Maintainer](https://img.shields.io/badge/maintainer-alehuo-yellow.svg) ![license](https://img.shields.io/github/license/alehuo/clubhouse-backend.svg)
+
+Staging (develop) [![Build status (develop)](https://api.travis-ci.org/alehuo/clubhouse-backend.svg?branch=develop)](https://travis-ci.org/alehuo/clubhouse-backend)
 ![Code coverage (develop)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/develop/graph/badge.svg)
+
+Production (master) [![Build status (develop)](https://api.travis-ci.org/alehuo/clubhouse-backend.svg?branch=master)](https://travis-ci.org/alehuo/clubhouse-backend)
+![Code coverage (develop)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/master/graph/badge.svg)
+
+[![devDependencies](https://david-dm.org/alehuo/clubhouse-backend/dev-status.svg)](https://david-dm.org/alehuo/clubhouse-backend)
+[![dependencies](https://david-dm.org/alehuo/clubhouse-backend/status.svg)](https://david-dm.org/alehuo/clubhouse-backend)
+
+[![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
+![GitHub top language](https://img.shields.io/github/languages/top/alehuo/clubhouse-backend.svg)
+
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/alehuo/clubhouse-backend/issues)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/alehuo/clubhouse-backend.svg)
+![GitHub issues](https://img.shields.io/github/issues/alehuo/clubhouse-backend.svg)
 
 Back-end for Full-stack software development project course.
 
 The back-end has been coded with TypeScript. A Dockerfile is also provided if you wish to deploy the app easily. Knex is used to handle DB migrations and seeding.
 
-* [Production application at Heroku](https://clubhouse-backend.herokuapp.com)
-* [Front-end repository](https://github.com/alehuo/clubhouse-frontend)
+- [Production application at Heroku](https://clubhouse-backend.herokuapp.com)
+- [Front-end repository](https://github.com/alehuo/clubhouse-frontend)
 
 ## Table of contents <!-- DOCTOC SKIP -->
 
@@ -91,15 +106,15 @@ It is not always clear what events are kept there, who has the permission to use
 
 This project is meant to solve this problem by providing:
 
-* List of student unions
-* List of students that have access to clubhouses (night / day keys etc..)
-* An Event calendar to look for events (Available also as iCal / RSS)
-* Rules of the clubhouse easily available
-* Cleaning schedules of the clubhouse
-* A "newsboard" system for posting announcements
-* Management interface for easy responsibility taking of other people
-* Comprehensive admin interface for administrators to be constantly up to date of whats happening.
-* Very flexible permissions system. You can add roles and customize their permissions as you wish.
+- List of student unions
+- List of students that have access to clubhouses (night / day keys etc..)
+- An Event calendar to look for events (Available also as iCal / RSS)
+- Rules of the clubhouse easily available
+- Cleaning schedules of the clubhouse
+- A "newsboard" system for posting announcements
+- Management interface for easy responsibility taking of other people
+- Comprehensive admin interface for administrators to be constantly up to date of whats happening.
+- Very flexible permissions system. You can add roles and customize their permissions as you wish.
 
 ## Database setup
 
