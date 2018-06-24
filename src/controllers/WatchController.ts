@@ -24,9 +24,14 @@ export default class WatchController extends Controller {
           const watches: IWatch[] = await this.watchDao.findAllOngoing();
           return res.status(200).json(watches.map(watchFilter));
         } catch (err) {
-          return res.status(500).json({
-            error: "Internal server error: Cannot get ongoing watches"
-          });
+          return res
+            .status(500)
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get ongoing watches",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -41,10 +46,14 @@ export default class WatchController extends Controller {
           );
           return res.status(200).json(watches.map(watchFilter));
         } catch (err) {
-          return res.status(500).json({
-            error:
-              "Internal server error: Cannot get watches from a single user"
-          });
+          return res
+            .status(500)
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get watches from a single user",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -59,11 +68,15 @@ export default class WatchController extends Controller {
           );
           return res.status(200).json(watches.map(watchFilter));
         } catch (err) {
-          return res.status(500).json({
-            error:
-              "Internal server error:" +
-              " Cannot get current running watches from a single user"
-          });
+          return res
+            .status(500)
+            .json(
+              MessageFactory.createError(
+                "Internal server error:" +
+                  " Cannot get current running watches from a single user",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -90,7 +103,9 @@ export default class WatchController extends Controller {
               startMessage: req.body.startMessage,
               startTime: new Date()
             };
-            const savedWatch: number[] = await this.watchDao.save(watch);
+
+            await this.watchDao.save(watch);
+
             return res
               .status(201)
               .json(MessageFactory.createMessage("Watch started"));
@@ -104,7 +119,8 @@ export default class WatchController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot start a watch"
+                "Internal server error: Cannot start a watch",
+                err as Error
               )
             );
         }
@@ -151,10 +167,9 @@ export default class WatchController extends Controller {
                 .status(400)
                 .json(MessageFactory.createError("Invalid watch id"));
             }
-            const endedWatch = await this.watchDao.endWatch(
-              currentWatch.watchId,
-              watch
-            );
+
+            await this.watchDao.endWatch(currentWatch.watchId, watch);
+
             return res
               .status(200)
               .json(
@@ -172,7 +187,8 @@ export default class WatchController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Can't end a watch"
+                "Internal server error: Can't end a watch",
+                err as Error
               )
             );
         }
@@ -198,9 +214,7 @@ export default class WatchController extends Controller {
           return res
             .status(500)
             .json(
-              MessageFactory.createError(
-                "Internal server error: Can't return if current user has a watch running"
-              )
+              MessageFactory.createError("Internal server error", err as Error)
             );
         }
       }

@@ -1,5 +1,4 @@
 import * as express from "express";
-import * as bcrypt from "bcrypt";
 import ILocation, { locationFilter } from "../models/ILocation";
 
 import Controller from "./Controller";
@@ -29,7 +28,8 @@ export default class LocationController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get all posts"
+                "Internal server error: Cannot get all locations",
+                err as Error
               )
             );
         }

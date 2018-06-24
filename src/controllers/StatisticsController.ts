@@ -1,7 +1,6 @@
 import * as express from "express";
 
 import Controller from "./Controller";
-import IStudentUnion, { studentUnionFilter } from "../models/IStudentUnion";
 import StatisticsDao from "./../dao/StatisticsDao";
 import IStatistics from "../models/IStatistics";
 import IUserStatistics from "../models/IUserStatistics";
@@ -27,10 +26,14 @@ export default class StatisticsController extends Controller {
           const result: IStatistics[] = await this.statisticsDao.findStatistics();
           return res.json(result[0]);
         } catch (err) {
-          console.error(err);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get statistics"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get statistics",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -59,7 +62,12 @@ export default class StatisticsController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get statistics from a user"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get statistics from a user",
+                err as Error
+              )
+            );
         }
       }
     );

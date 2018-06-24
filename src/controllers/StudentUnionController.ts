@@ -30,7 +30,9 @@ export default class StudentUnionController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(
+              MessageFactory.createError("Internal server error", err as Error)
+            );
         }
       }
     );
@@ -40,15 +42,23 @@ export default class StudentUnionController extends Controller {
       JwtMiddleware,
       PermissionMiddleware([permissions.ALLOW_VIEW_STUDENT_UNIONS]),
       async (req: express.Request, res: express.Response) => {
-        const studentUnion: IStudentUnion = await this.studentUnionDao.findOne(
-          req.params.studentUnionId
-        );
-        if (studentUnion) {
-          return res.status(200).json(studentUnionFilter(studentUnion));
-        } else {
+        try {
+          const studentUnion: IStudentUnion = await this.studentUnionDao.findOne(
+            req.params.studentUnionId
+          );
+          if (studentUnion) {
+            return res.status(200).json(studentUnionFilter(studentUnion));
+          } else {
+            return res
+              .status(404)
+              .json(MessageFactory.createError("Student union not found"));
+          }
+        } catch (ex) {
           return res
-            .status(404)
-            .json(MessageFactory.createError("Student union not found"));
+            .status(500)
+            .json(
+              MessageFactory.createError("Internal server error", ex as Error)
+            );
         }
       }
     );
@@ -106,10 +116,11 @@ export default class StudentUnionController extends Controller {
             }
           }
         } catch (err) {
-          console.error(err);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error"));
+            .json(
+              MessageFactory.createError("Internal server error", err as Error)
+            );
         }
       }
     );
@@ -143,7 +154,8 @@ export default class StudentUnionController extends Controller {
               .status(500)
               .json(
                 MessageFactory.createError(
-                  "Internal server error: Cannot remove student union"
+                  "Internal server error: Cannot remove student union",
+                  err as Error
                 )
               );
           }

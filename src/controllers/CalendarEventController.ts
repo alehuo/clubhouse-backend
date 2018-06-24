@@ -1,6 +1,4 @@
 import * as express from "express";
-import * as bcrypt from "bcrypt";
-import IUser from "../models/IUser";
 
 import Controller from "./Controller";
 import CalendarEventDao from "../dao/CalendarEventDao";
@@ -43,7 +41,8 @@ export default class CalendarEventController extends Controller {
           } catch (ex) {
             return res
               .status(500)
-              .json(MessageFactory.createError("Internal server error: Cannot add a new event"));
+              .json(MessageFactory.createError("Internal server error: Cannot add a new event",
+              ex as Error));
           }
         }
       }
@@ -60,7 +59,8 @@ export default class CalendarEventController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get all events"));
+            .json(MessageFactory.createError("Internal server error: Cannot get all events",
+            ex as Error));
         }
       }
     );
@@ -84,7 +84,8 @@ export default class CalendarEventController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get a single event"));
+            .json(MessageFactory.createError("Internal server error: Cannot get a single event",
+            ex as Error));
         }
       }
     );
@@ -121,7 +122,8 @@ export default class CalendarEventController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot delete a single event"));
+            .json(MessageFactory.createError("Internal server error: Cannot delete a single event",
+            ex as Error));
         }
       }
     );
@@ -147,13 +149,14 @@ export default class CalendarEventController extends Controller {
               "attachment; filename=event_" + event.eventId + ".ics"
             );
             res.setHeader("Content-type", "text/calendar");
-            res.send(calData);
+            return res.send(calData);
           }
+
         } catch (ex) {
-          console.error(ex);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server erro: Cannot get a single event as iCal"));
+            .json(MessageFactory.createError("Internal server erro: Cannot get a single event as iCal",
+            ex as Error));
         }
       }
     );

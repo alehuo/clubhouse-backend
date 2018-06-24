@@ -1,5 +1,4 @@
 import * as express from "express";
-import * as bcrypt from "bcrypt";
 import Controller from "./Controller";
 
 import NewsPostDao from "../dao/NewsPostDao";
@@ -28,7 +27,12 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get all newsposts"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get all newsposts",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -52,7 +56,12 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get a single newspost"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get a single newspost",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -70,7 +79,12 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get newspost from a single user"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get newspost from a single user",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -109,7 +123,12 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot add a newspost"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot add a newspost",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -147,7 +166,12 @@ export default class NewsPostController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot delete newspost"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot delete newspost",
+                err as Error
+              )
+            );
         }
       }
     );
