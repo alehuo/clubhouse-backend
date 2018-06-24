@@ -4,7 +4,7 @@
 
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-* [Working hours (Back-end)](#working-hours-back-end)
+- [Working hours (Back-end)](#working-hours-back-end)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -38,5 +38,6 @@
 | 20.5.2018 | 0.5h  | Created additional routes for checking watches and updated REST files.                                                                                                                                                                                                                     |
 | 29.5.2018 | 1.5h  | Added list of permissions to be returned from the permission route. Improved permission seed. Preparing application for deployment to Heroku.                                                                                                                                              |
 | 29.5.2018 | 1h    | Updating project dependices, configuring Heroku                                                                                                                                                                                                                                            |
+| 24.6.2018 | 2h    | Implemented functionality for MessageFactory to pass an exception for easier debugging. Visible only in dev and test environments.                                                                                                                                                         |
 
-Total: 60.0 h
+Total: 62.0 h

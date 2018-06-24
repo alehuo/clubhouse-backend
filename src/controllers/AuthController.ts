@@ -3,7 +3,6 @@ import * as express from "express";
 import IUser from "../models/IUser";
 
 import UserDao from "../dao/UserDao";
-import JwtMiddleware from "./../middleware/JWTMiddleware";
 import { SignToken } from "./../Utils/JwtUtils";
 import Controller from "./Controller";
 
@@ -68,7 +67,12 @@ export default class AuthController extends Controller {
               } catch (ex) {
                 return res
                   .status(500)
-                  .json(MessageFactory.createError("Internal server error: Cannot authenticate user (hash)"));
+                  .json(
+                    MessageFactory.createError(
+                      "Internal server error: Cannot authenticate user (hash)",
+                      ex as Error
+                    )
+                  );
               }
             }
           }
@@ -77,7 +81,8 @@ export default class AuthController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot authenticate user"
+                "Internal server error: Cannot authenticate user",
+                err as Error
               )
             );
         }

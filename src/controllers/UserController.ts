@@ -2,7 +2,6 @@ import * as bcrypt from "bcrypt";
 import * as express from "express";
 import IUser, { userFilter } from "../models/IUser";
 
-import PermissionDao from "../dao/PermissionDao";
 import UserDao from "../dao/UserDao";
 import JwtMiddleware from "./../middleware/JWTMiddleware";
 import Controller from "./Controller";
@@ -44,7 +43,12 @@ export default class UserController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get all users"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get all users",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -65,7 +69,12 @@ export default class UserController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get a single user"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get a single user",
+                ex as Error
+              )
+            );
         }
       }
     );
@@ -160,6 +169,7 @@ export default class UserController extends Controller {
                 .json(
                   MessageFactory.createError(
                     "Error editing user information",
+                    null,
                     errors
                   )
                 );
@@ -168,7 +178,12 @@ export default class UserController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot edit user"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot edit user",
+                ex as Error
+              )
+            );
         }
       }
     );
@@ -256,7 +271,11 @@ export default class UserController extends Controller {
                 return res
                   .status(400)
                   .json(
-                    MessageFactory.createError("Error registering user", errors)
+                    MessageFactory.createError(
+                      "Error registering user",
+                      null,
+                      errors
+                    )
                   );
               }
 
@@ -280,7 +299,12 @@ export default class UserController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot add user"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot add user",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -349,10 +373,14 @@ export default class UserController extends Controller {
               );
           }
         } catch (ex) {
-          console.log(ex);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot delete user"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot delete user",
+                ex as Error
+              )
+            );
         }
       }
     );

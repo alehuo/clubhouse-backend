@@ -1,4 +1,3 @@
-import * as bcrypt from "bcrypt";
 import * as express from "express";
 import Controller from "./Controller";
 
@@ -24,7 +23,12 @@ export default class MessageController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get all messages"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get all messages",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -47,7 +51,12 @@ export default class MessageController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get a single message"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get a single message",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -79,7 +88,12 @@ export default class MessageController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot add a message"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot add a message",
+                err as Error
+              )
+            );
         }
       }
     );
@@ -113,7 +127,12 @@ export default class MessageController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot delete a message"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot delete a message",
+                err as Error
+              )
+            );
         }
       }
     );

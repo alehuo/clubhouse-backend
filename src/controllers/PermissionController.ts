@@ -26,7 +26,8 @@ export default class PermissionController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get permissions"
+                "Internal server error: Cannot get permissions",
+                err as Error
               )
             );
         }
@@ -68,12 +69,12 @@ export default class PermissionController extends Controller {
             return res.status(200).json(permission);
           }
         } catch (ex) {
-          console.error(ex);
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get single permission"
+                "Internal server error: Cannot get single permission",
+                ex as Error
               )
             );
         }
@@ -115,12 +116,12 @@ export default class PermissionController extends Controller {
             }
           }
         } catch (err) {
-          console.error(err);
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot add new permission"
+                "Internal server error: Cannot add new permission",
+                err as Error
               )
             );
         }

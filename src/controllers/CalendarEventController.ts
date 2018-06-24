@@ -1,6 +1,4 @@
-import * as bcrypt from "bcrypt";
 import * as express from "express";
-import IUser from "../models/IUser";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
 import ICalendarEvent from "../models/ICalendarEvent";
@@ -43,7 +41,12 @@ export default class CalendarEventController extends Controller {
           } catch (ex) {
             return res
               .status(500)
-              .json(MessageFactory.createError("Internal server error: Cannot add a new event"));
+              .json(
+                MessageFactory.createError(
+                  "Internal server error: Cannot add a new event",
+                  ex as Error
+                )
+              );
           }
         }
       }
@@ -60,7 +63,12 @@ export default class CalendarEventController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get all events"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get all events",
+                ex as Error
+              )
+            );
         }
       }
     );
@@ -84,7 +92,12 @@ export default class CalendarEventController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot get a single event"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get a single event",
+                ex as Error
+              )
+            );
         }
       }
     );
@@ -121,7 +134,12 @@ export default class CalendarEventController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server error: Cannot delete a single event"));
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot delete a single event",
+                ex as Error
+              )
+            );
         }
       }
     );
@@ -147,13 +165,17 @@ export default class CalendarEventController extends Controller {
               "attachment; filename=event_" + event.eventId + ".ics"
             );
             res.setHeader("Content-type", "text/calendar");
-            res.send(calData);
+            return res.send(calData);
           }
         } catch (ex) {
-          console.error(ex);
           return res
             .status(500)
-            .json(MessageFactory.createError("Internal server erro: Cannot get a single event as iCal"));
+            .json(
+              MessageFactory.createError(
+                "Internal server erro: Cannot get a single event as iCal",
+                ex as Error
+              )
+            );
         }
       }
     );
