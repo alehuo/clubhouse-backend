@@ -17,7 +17,7 @@ Production (master) [![Build status (develop)](https://api.travis-ci.org/alehuo/
 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/alehuo/clubhouse-backend/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/alehuo/clubhouse-backend.svg)](https://github.com/alehuo/clubhouse-backend/pulls)
-[![GitHub issues](https://img.shields.io/github/issues/alehuo/clubhouse-backend.svg)]((https://github.com/alehuo/clubhouse-backend/issues))
+[![GitHub issues](https://img.shields.io/github/issues/alehuo/clubhouse-backend.svg)](https://github.com/alehuo/clubhouse-backend/issues)
 
 Back-end for Full-stack software development project course.
 
