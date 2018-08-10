@@ -4,6 +4,8 @@ export default interface ILocation {
   address: string;
   created_at?: Date;
   updated_at?: Date;
-};
+}
 
-export const locationFilter = (location: ILocation) => location;
+export const locationFilter: (location: ILocation) => ILocation = (
+  location: ILocation
+): ILocation => location;

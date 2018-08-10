@@ -9,37 +9,45 @@ export default class PermissionDao implements IDao<IPermission> {
   constructor(private readonly knex: Knex) {}
 
   public findAll(): Promise<IPermission[]> {
-    return this.knex(TABLE_NAME).select();
+    return Promise.resolve(this.knex(TABLE_NAME).select());
   }
 
   public findOne(permissionId: number): Promise<IPermission> {
-    return this.knex(TABLE_NAME)
-      .select()
-      .where({ permissionId })
-      .first();
+    return Promise.resolve(
+      this.knex(TABLE_NAME)
+        .select()
+        .where({ permissionId })
+        .first()
+    );
   }
 
   public findByValue(value: number): Promise<IPermission> {
-    return this.knex(TABLE_NAME)
-      .select()
-      .where({ value })
-      .first();
+    return Promise.resolve(
+      this.knex(TABLE_NAME)
+        .select()
+        .where({ value })
+        .first()
+    );
   }
 
   public findByName(name: string): Promise<IPermission> {
-    return this.knex(TABLE_NAME)
-      .select()
-      .where({ name })
-      .first();
+    return Promise.resolve(
+      this.knex(TABLE_NAME)
+        .select()
+        .where({ name })
+        .first()
+    );
   }
 
   public save(permissions: IPermission): Promise<number[]> {
-    return this.knex(TABLE_NAME).insert(permissions);
+    return Promise.resolve(this.knex(TABLE_NAME).insert(permissions));
   }
 
   public remove(permissionId: number): Promise<boolean> {
-    return this.knex(TABLE_NAME)
-      .delete()
-      .where({ permissionId });
+    return Promise.resolve(
+      this.knex(TABLE_NAME)
+        .delete()
+        .where({ permissionId })
+    );
   }
 }

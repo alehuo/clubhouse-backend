@@ -9,7 +9,7 @@ import app from "./../src/index";
 
 import { SignToken } from "./../src/utils/JwtUtils";
 
-const validUser = {
+const validUser: any = {
   userId: 1,
   email: "testuser@email.com",
   firstName: "Test",
@@ -18,7 +18,7 @@ const validUser = {
   permissions: 67108863
 };
 
-const generateToken = (userData?: any) => {
+const generateToken: (userData?: any) => string = (userData?: any): string => {
   if (userData) {
     return "Bearer " + SignToken(Object.assign({}, validUser, userData));
   } else {
@@ -28,15 +28,15 @@ const generateToken = (userData?: any) => {
 
 const knex: Knex = Database.connect();
 const chai: Chai.ChaiStatic = require("chai");
-const should = chai.should();
-const chaiHttp = require("chai-http");
+const should: Chai.Should = chai.should();
+const chaiHttp: Chai.ChaiHttpRequest = require("chai-http");
 chai.use(chaiHttp);
 
-const url = "/api/v1/watch";
+const url: string = "/api/v1/watch";
 
 describe("WatchController", () => {
   // Roll back
-  beforeEach(done => {
+  beforeEach((done: Mocha.Done) => {
     knex.migrate.rollback().then(() => {
       knex.migrate.latest().then(() => {
         knex.seed.run().then(() => {
@@ -47,18 +47,18 @@ describe("WatchController", () => {
   });
 
   // After each
-  afterEach(done => {
+  afterEach((done: Mocha.Done) => {
     knex.migrate.rollback().then(() => {
       done();
     });
   });
 
   describe("API endpoint protection", () => {
-    it("Missing Authorization header should throw an error", done => {
+    it("Missing Authorization header should throw an error", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url + "/ongoing")
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(403);
           should.exist(res.body.error);
           res.body.error.should.equal("Missing Authorization header");
@@ -66,12 +66,12 @@ describe("WatchController", () => {
         });
     });
 
-    it("Malformed Authorization header should throw an error", done => {
+    it("Malformed Authorization header should throw an error", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url + "/ongoing")
         .set("Authorization", "Bearer HelloWorld")
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(403);
           should.exist(res.body.error);
           res.body.error.should.equal("Malformed Authorization header");
@@ -81,12 +81,12 @@ describe("WatchController", () => {
   });
 
   describe("GET /api/v1/watch/ongoing", () => {
-    it("Returns all ongoing watches", done => {
+    it("Returns all ongoing watches", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url + "/ongoing")
         .set("Authorization", generateToken())
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(200);
           res.body.length.should.equal(1);
           res.body[0].watchId.should.equal(2);
@@ -103,12 +103,12 @@ describe("WatchController", () => {
   });
 
   describe("GET /api/v1/watch/user/:userId", () => {
-    it("Returns watches (old and ongoing) by a single user", done => {
+    it("Returns watches (old and ongoing) by a single user", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url + "/user/1")
         .set("Authorization", generateToken())
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(200);
           should.not.exist(res.body.error);
           res.body.length.should.equal(2);
@@ -141,12 +141,12 @@ describe("WatchController", () => {
   });
 
   describe("GET /api/v1/watch/ongoing/user/:userId", () => {
-    it("Returns all ongoing watches by a single user.", done => {
+    it("Returns all ongoing watches by a single user.", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url + "/ongoing/user/1")
         .set("Authorization", generateToken())
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(200);
           should.not.exist(res.body.error);
           res.body.length.should.equal(1);
@@ -167,14 +167,14 @@ describe("WatchController", () => {
   });
 
   describe("POST /api/v1/watch/begin & POST /api/v1/watch/end", () => {
-    it("User can start and stop a watch.", done => {
+    it("User can start and stop a watch.", (done: Mocha.Done) => {
       // Start the watch
       chai
         .request(app)
         .post(url + "/start")
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ startMessage: "Let's rock and roll!" })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(201);
           should.not.exist(res.body.error);
           should.exist(res.body.message);
@@ -185,7 +185,7 @@ describe("WatchController", () => {
             .post(url + "/stop")
             .set("Authorization", generateToken({ userId: 2 }))
             .send({ endMessage: "Good night all!" })
-            .end((err2, res2) => {
+            .end((err2: any, res2: ChaiHttp.Response) => {
               res2.status.should.equal(200);
               should.not.exist(res2.body.error);
               should.exist(res2.body.message);
@@ -197,14 +197,14 @@ describe("WatchController", () => {
         });
     });
 
-    it("User can not start a watch if he/she already has an ongoing watch.", done => {
+    it("User can not start a watch if he/she already has an ongoing watch.", (done: Mocha.Done) => {
       // Start the watch
       chai
         .request(app)
         .post(url + "/start")
         .set("Authorization", generateToken())
         .send({ startMessage: "Let's rock and roll!" })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(400);
           should.exist(res.body.error);
           should.not.exist(res.body.message);
@@ -213,14 +213,14 @@ describe("WatchController", () => {
         });
     });
 
-    it("User can not stop a watch if he/she doesn't have an ongoing watch.", done => {
+    it("User can not stop a watch if he/she doesn't have an ongoing watch.", (done: Mocha.Done) => {
       // Start the watch
       chai
         .request(app)
         .post(url + "/stop")
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ endMessage: "Let's rock and roll!" })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(400);
           should.exist(res.body.error);
           should.not.exist(res.body.message);

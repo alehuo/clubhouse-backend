@@ -85,7 +85,7 @@ export default class WatchController extends Controller {
       JwtMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const userId = res.locals.token.data.userId;
+          const userId: number = res.locals.token.data.userId;
           const watches: IWatch[] = await this.watchDao.findOngoingByUser(
             userId
           );
@@ -154,7 +154,7 @@ export default class WatchController extends Controller {
             }
           }
           if (req.body.endMessage) {
-            const currentWatch = watches[0];
+            const currentWatch: IWatch = watches[0];
             const watch: IWatch = {
               userId,
               endMessage: req.body.endMessage,

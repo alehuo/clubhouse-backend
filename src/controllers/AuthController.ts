@@ -48,7 +48,7 @@ export default class AuthController extends Controller {
               try {
                 const match: boolean = await bcrypt.compare(inputPwd, dbPwd);
                 if (match) {
-                  const token = SignToken({
+                  const token: string = SignToken({
                     userId: user.userId,
                     unionId: user.unionId,
                     email: user.email,

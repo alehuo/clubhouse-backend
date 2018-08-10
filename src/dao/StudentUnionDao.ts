@@ -9,26 +9,34 @@ export default class StudentUnionDao implements IDao<IStudentUnion> {
   constructor(private readonly knex: Knex) {}
 
   public findAll(): Promise<IStudentUnion[]> {
-    return this.knex(TABLE_NAME).select();
+    return Promise.resolve(this.knex(TABLE_NAME).select());
   }
   public findOne(unionId: number): Promise<IStudentUnion> {
-    return this.knex(TABLE_NAME)
-      .select()
-      .where({ unionId }).first();
+    return Promise.resolve(
+      this.knex(TABLE_NAME)
+        .select()
+        .where({ unionId })
+        .first()
+    );
   }
   public findByName(name: string): Promise<IStudentUnion> {
-    return this.knex(TABLE_NAME)
-      .select()
-      .where({ name }).first();
+    return Promise.resolve(
+      this.knex(TABLE_NAME)
+        .select()
+        .where({ name })
+        .first()
+    );
   }
 
   public save(stdu: IStudentUnion): Promise<number[]> {
-    return this.knex(TABLE_NAME).insert(stdu);
+    return Promise.resolve(this.knex(TABLE_NAME).insert(stdu));
   }
 
   public remove(id: number): Promise<boolean> {
-    return this.knex(TABLE_NAME)
-      .delete()
-      .where({ unionId: id });
+    return Promise.resolve(
+      this.knex(TABLE_NAME)
+        .delete()
+        .where({ unionId: id })
+    );
   }
 }

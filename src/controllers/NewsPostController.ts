@@ -96,7 +96,7 @@ export default class NewsPostController extends Controller {
       PermissionMiddleware([permissions.ALLOW_ADD_POSTS]),
       async (req: express.Request, res: express.Response) => {
         try {
-          const userId = res.locals.token.data.userId;
+          const userId: number = res.locals.token.data.userId;
           if (!(req.body.title && req.body.message)) {
             return res
               .status(400)

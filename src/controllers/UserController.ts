@@ -334,7 +334,7 @@ export default class UserController extends Controller {
               res.locals.token.data.userId
             );
             await Promise.all(
-              calendarEvents.map(event =>
+              calendarEvents.map((event: ICalendarEvent) =>
                 this.calendarEventDao.remove(event.eventId)
               )
             );
@@ -343,14 +343,16 @@ export default class UserController extends Controller {
               res.locals.token.data.userId
             );
             await Promise.all(
-              messages.map(msg => this.messageDao.remove(msg.messageId))
+              messages.map((msg: IMessage) =>
+                this.messageDao.remove(msg.messageId)
+              )
             );
             // Remove newsposts
             const newsPosts: INewsPost[] = await this.newsPostDao.findByAuthor(
               res.locals.token.data.userId
             );
             await Promise.all(
-              newsPosts.map(newsPost =>
+              newsPosts.map((newsPost: INewsPost) =>
                 this.newsPostDao.remove(newsPost.postId)
               )
             );
@@ -359,7 +361,9 @@ export default class UserController extends Controller {
               res.locals.token.data.userId
             );
             await Promise.all(
-              watches.map(watch => this.watchDao.remove(watch.watchId))
+              watches.map((watch: IWatch) =>
+                this.watchDao.remove(watch.watchId)
+              )
             );
             // Remove user
             await this.userDao.remove(res.locals.token.data.userId);

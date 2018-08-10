@@ -4,9 +4,9 @@ require("dotenv").config();
 
 import { createConnection } from "mysql2/promise";
 
-async function createTables() {
+async function createTables(): Promise<void> {
   // Create connection
-  const con = await createConnection({
+  const con: any = await createConnection({
     host: process.env.MYSQL_HOST,
     port: process.env.MYSQL_POST,
     user: process.env.MYSQL_USER,
@@ -35,7 +35,7 @@ async function createTables() {
     console.log("Created development, test and production databases.");
     process.exit(0);
   } catch (err) {
-    console.log("Error: %s", err.message)
+    console.log("Error: %s", err.message);
     process.exit(0);
   }
 }

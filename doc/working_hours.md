@@ -40,4 +40,6 @@
 | 29.5.2018 | 1h    | Updating project dependices, configuring Heroku                                                                                                                                                                                                                                            |
 | 24.6.2018 | 2h    | Implemented functionality for MessageFactory to pass an exception for easier debugging. Visible only in dev and test environments.                                                                                                                                                         |
 
-Total: 62.0 h
+| 10.8.2018 | 1h | Upgraded dependencies. Added additional TSLint rules and linted code. |
+
+Total: 61.0 h (part 1) + 3.0 h (part 2)

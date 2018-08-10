@@ -9,7 +9,19 @@
     "object-literal-sort-keys": false,
     "semicolon": false,
     "no-bitwise": false,
-    "arrow-parens": false
+    "arrow-parens": false,
+    "typedef": [
+      true,
+      "call-signature",
+      "arrow-call-signature",
+      "parameter",
+      "arrow-parameter",
+      "property-declaration",
+      "variable-declaration",
+      "member-variable-declaration",
+      "object-destructuring",
+      "array-destructuring"
+    ]
   },
   "rulesDirectory": []
 }
