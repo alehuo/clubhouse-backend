@@ -40,6 +40,7 @@
     "dotenv": "^6.0.0",
     "eslint": "^5.2.0",
     "gulp": "^3.9.1",
+    "husky": "^1.0.0-rc.13",
     "mocha": "^5.2.0",
     "morgan": "^1.9.0",
     "nodemon": "^1.17.5",
@@ -81,5 +82,10 @@
       "html"
     ],
     "all": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn test"
+    }
   }
 }
