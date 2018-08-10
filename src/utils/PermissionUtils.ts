@@ -38,7 +38,7 @@ export const getPermissions: (
   const allowed: IPermission[] = [];
   const allPerms: IPermission[] = await permissionDao.findAll();
   allPerms.map((k: IPermission) => {
-    const permissionName: string = k.name;
+    // const permissionName: string = k.name;
     const permissionValue: number = k.value;
     if ((userPerms & permissionValue) === permissionValue) {
       allowed.push(k);

@@ -3,7 +3,7 @@ import * as Knex from "knex";
 import ICalendarEvent from "../models/ICalendarEvent";
 import IDao from "./Dao";
 
-const TABLE_NAME = "calendarEvents";
+const TABLE_NAME: string = "calendarEvents";
 
 export default class CalendarEventDao implements IDao<ICalendarEvent> {
   constructor(private readonly knex: Knex) {}

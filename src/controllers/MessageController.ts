@@ -73,7 +73,7 @@ export default class MessageController extends Controller {
           }
 
           const userId: number = res.locals.token.data.userId;
-          const currentTimestamp: Date = new Date();
+          // const currentTimestamp: Date = new Date();
 
           const msg: IMessage = {
             message: req.body.message,

@@ -3,7 +3,7 @@ import * as Knex from "knex";
 import IMessage from "../models/IMessage";
 import IDao from "./Dao";
 
-const TABLE_NAME = "messages";
+const TABLE_NAME: string = "messages";
 
 /**
  * DAO used to handle messages that people send to the system.

@@ -3,10 +3,10 @@ import * as express from "express";
 import IUser from "../models/IUser";
 
 import UserDao from "../dao/UserDao";
-import { SignToken } from "./../Utils/JwtUtils";
+import { SignToken } from "./../utils/JwtUtils";
 import Controller from "./Controller";
 
-import MessageFactory from "./../Utils/MessageFactory";
+import MessageFactory from "./../utils/MessageFactory";
 
 export default class AuthController extends Controller {
   constructor(private userDao: UserDao) {

@@ -1,9 +1,9 @@
 import * as Promise from "bluebird";
 import * as Knex from "knex";
-import IUser, { userFilter } from "../models/IUser";
+import IUser from "../models/IUser";
 import IDao from "./Dao";
 
-const TABLE_NAME = "users";
+const TABLE_NAME: string = "users";
 
 export default class UserDao implements IDao<IUser> {
   constructor(private readonly knex: Knex) {}

@@ -9,8 +9,8 @@ import { hasPermissions } from "./../utils/PermissionUtils";
  * @param res Express response.
  * @param next Express NextFunction
  */
-export const PermissionMiddleware = (
-  requiredPermissions: IPermission[]
+export const PermissionMiddleware: any = (
+  ...requiredPermissions: IPermission[]
 ) => async (
   req: express.Request,
   res: express.Response,
@@ -19,7 +19,7 @@ export const PermissionMiddleware = (
   // Handle required permissions here.
   const token: any = res.locals.token;
   if (token) {
-    const userData: object = token.data;
+    // const userData: object = token.data;
     const userPerms: number = token.data.permissions;
     if (hasPermissions(userPerms, requiredPermissions)) {
       next();

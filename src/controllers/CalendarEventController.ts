@@ -1,14 +1,14 @@
 import * as express from "express";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
+import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import ICalendarEvent from "../models/ICalendarEvent";
-import JwtMiddleware from "./../Middleware/JWTMiddleware";
+import JwtMiddleware from "./../middleware/JWTMiddleware";
 import { createICal } from "./../utils/iCalUtils";
+import MessageFactory from "./../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
-import permissions = require("./../Permissions");
-import MessageFactory from "./../Utils/MessageFactory";
+import { Permissions } from "@alehuo/clubhouse-shared";
 
 export default class CalendarEventController extends Controller {
   constructor(private calendarEventDao: CalendarEventDao) {
@@ -19,7 +19,7 @@ export default class CalendarEventController extends Controller {
     this.router.post(
       "",
       JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_ADD_EVENT]),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EVENT),
       async (req: express.Request, res: express.Response) => {
         const calendarEventData: ICalendarEvent = req.body;
         if (!calendarEventData) {
@@ -55,7 +55,7 @@ export default class CalendarEventController extends Controller {
     this.router.get(
       "",
       JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_VIEW_EVENTS]),
+      PermissionMiddleware(Permissions.ALLOW_VIEW_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const events: ICalendarEvent[] = await this.calendarEventDao.findAll();
@@ -76,7 +76,7 @@ export default class CalendarEventController extends Controller {
     this.router.get(
       "/:eventId(\\d+)",
       JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_VIEW_EVENTS]),
+      PermissionMiddleware(Permissions.ALLOW_VIEW_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(
@@ -105,7 +105,7 @@ export default class CalendarEventController extends Controller {
     this.router.delete(
       "/:eventId(\\d+)",
       JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_REMOVE_EVENT]),
+      PermissionMiddleware(Permissions.ALLOW_REMOVE_EVENT),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(
@@ -148,7 +148,7 @@ export default class CalendarEventController extends Controller {
     this.router.get(
       "/:eventId(\\d+)/ical",
       JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_VIEW_EVENTS]),
+      PermissionMiddleware(Permissions.ALLOW_VIEW_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(

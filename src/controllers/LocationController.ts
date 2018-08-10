@@ -6,8 +6,8 @@ import MessageFactory from "../Utils/MessageFactory";
 import JwtMiddleware from "./../middleware/JwtMiddleware";
 import Controller from "./Controller";
 
+import { Permissions } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
-import permissions = require("./../Permissions");
 
 export default class LocationController extends Controller {
   constructor(private locationDao: LocationDao) {
@@ -18,7 +18,7 @@ export default class LocationController extends Controller {
     this.router.get(
       "",
       JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_VIEW_LOCATIONS]),
+      PermissionMiddleware(Permissions.ALLOW_VIEW_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const result: ILocation[] = await this.locationDao.findAll();
@@ -39,7 +39,7 @@ export default class LocationController extends Controller {
     this.router.get(
       "/:locationId(\\d+)",
       JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_VIEW_LOCATIONS]),
+      PermissionMiddleware(Permissions.ALLOW_VIEW_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const location: ILocation = await this.locationDao.findOne(
@@ -67,7 +67,7 @@ export default class LocationController extends Controller {
     this.router.post(
       "",
       JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_ADD_LOCATION]),
+      PermissionMiddleware(Permissions.ALLOW_ADD_LOCATION),
       async (req: express.Request, res: express.Response) => {
         try {
           const locationData: ILocation = req.body;
@@ -114,7 +114,7 @@ export default class LocationController extends Controller {
     this.router.delete(
       "/:locationId(\\d+)",
       JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_DELETE_LOCATION]),
+      PermissionMiddleware(Permissions.ALLOW_DELETE_LOCATION),
       async (req: express.Request, res: express.Response) => {
         try {
           const locations: any = await this.locationDao.findOne(

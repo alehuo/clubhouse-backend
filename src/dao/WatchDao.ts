@@ -3,7 +3,7 @@ import * as Knex from "knex";
 import IWatch from "../models/IWatch";
 import IDao from "./Dao";
 
-const TABLE_NAME = "watches";
+const TABLE_NAME: string = "watches";
 
 /**
  * DAO used to handle watches.

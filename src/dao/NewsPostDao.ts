@@ -3,7 +3,7 @@ import * as Knex from "knex";
 import INewsPost from "../models/INewsPost";
 import IDao from "./Dao";
 
-const TABLE_NAME = "newsposts";
+const TABLE_NAME: string = "newsposts";
 
 export default class NewsPostDao implements IDao<INewsPost> {
   constructor(private readonly knex: Knex) {}

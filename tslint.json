@@ -1,5 +1,5 @@
 {
-  "defaultSeverity": "error",
+  "defaultSeverity": "warn",
   "extends": ["tslint:recommended"],
   "jsRules": {},
   "rules": {
@@ -13,7 +13,6 @@
     "typedef": [
       true,
       "call-signature",
-      "arrow-call-signature",
       "parameter",
       "arrow-parameter",
       "property-declaration",
@@ -21,7 +20,10 @@
       "member-variable-declaration",
       "object-destructuring",
       "array-destructuring"
-    ]
+    ],
+    "only-arrow-functions": false,
+    "interface-name": false,
+    "no-string-literal": false
   },
   "rulesDirectory": []
 }

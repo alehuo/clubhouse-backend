@@ -16,7 +16,7 @@ export const SignToken: (data: string | object | Buffer) => string = (
  */
 export const VerifyToken: (
   token: string,
-  secret: string | Buffer
+  secret?: string | Buffer
 ) => string | object = (
   token: string,
   secret: string | Buffer = process.env.JWT_SECRET

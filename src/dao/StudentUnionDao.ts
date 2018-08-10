@@ -3,7 +3,7 @@ import * as Knex from "knex";
 import IStudentUnion from "../models/IStudentUnion";
 import IDao from "./Dao";
 
-const TABLE_NAME = "studentUnions";
+const TABLE_NAME: string = "studentUnions";
 
 export default class StudentUnionDao implements IDao<IStudentUnion> {
   constructor(private readonly knex: Knex) {}

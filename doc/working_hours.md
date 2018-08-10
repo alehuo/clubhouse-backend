@@ -37,9 +37,12 @@
 | 12.5.2018 | 5h    | Moved from SQLite to MySQL. Fixed tests, migrations, seeds and Knexfile as SQLite was initially used in the development process. Created WatchFilter to fix the GET route return schema. Added instructions to README.md on how to start a MySQL server. Created database creation script. |
 | 20.5.2018 | 0.5h  | Created additional routes for checking watches and updated REST files.                                                                                                                                                                                                                     |
 | 29.5.2018 | 1.5h  | Added list of permissions to be returned from the permission route. Improved permission seed. Preparing application for deployment to Heroku.                                                                                                                                              |
-| 29.5.2018 | 1h    | Updating project dependices, configuring Heroku                                                                                                                                                                                                                                            |
+| 29.5.2018 | 1h    | **Part 1 returned.** Updating project dependices, configuring Heroku                                                                                                                                                                                                                                            |
 | 24.6.2018 | 2h    | Implemented functionality for MessageFactory to pass an exception for easier debugging. Visible only in dev and test environments.                                                                                                                                                         |
+| 10.8.2018 | 4h | Upgraded dependencies. Added additional TSLint rules and linted code. Moved permission values to an external NPM package to be used by the front- and back-ends. |
 
-| 10.8.2018 | 1h | Upgraded dependencies. Added additional TSLint rules and linted code. |
+Total:
 
-Total: 61.0 h (part 1) + 3.0 h (part 2)
+61.0 h (part 1)
+
+6.0 h (part 2)
