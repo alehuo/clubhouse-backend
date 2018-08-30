@@ -1,0 +1,24 @@
+language: node_js
+
+node_js:
+  - '9.10'
+
+services:
+  - mysql
+
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS `clubhouse`;'
+  - npm install -g yarn
+  - npm install -g codecov
+
+install:
+  - yarn install --dev
+  - yarn migrate
+  - yarn seed
+
+script:
+  - yarn lint
+  - yarn test
+
+after_success:
+  - codecov
