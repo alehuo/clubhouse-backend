@@ -18,7 +18,6 @@ describe("IUserStatistics", () => {
     should.exist(post.hoursOnWatch);
     should.exist(post.messageCount);
     should.exist(post.newspostCount);
-    should.exist(post.newspostCount);
     should.exist(post.watchCount);
 
     post.eventCount.should.equal(55);
