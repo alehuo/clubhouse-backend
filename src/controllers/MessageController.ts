@@ -2,9 +2,9 @@ import * as express from "express";
 import Controller from "./Controller";
 
 import MessageDao from "../dao/MessageDao";
-import JwtMiddleware from "../middleware/JWTMiddleware";
-import IMessage from "../models/IMessage";
-import MessageFactory from "../Utils/MessageFactory";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { IMessage } from "../models/IMessage";
+import { MessageFactory } from "../utils/MessageFactory";
 
 export default class MessageController extends Controller {
   constructor(private messageDao: MessageDao) {
@@ -15,7 +15,7 @@ export default class MessageController extends Controller {
     // All messages
     this.router.get(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const messages: IMessage[] = await this.messageDao.findAll();
@@ -35,7 +35,7 @@ export default class MessageController extends Controller {
     // A single message
     this.router.get(
       "/:messageId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const message: IMessage = await this.messageDao.findOne(
@@ -63,7 +63,7 @@ export default class MessageController extends Controller {
     // Add a message
     this.router.post(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           if (!req.body.message) {
@@ -100,7 +100,7 @@ export default class MessageController extends Controller {
 
     this.router.delete(
       "/:messageId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const message: IMessage = await this.messageDao.findOne(

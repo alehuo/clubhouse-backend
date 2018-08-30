@@ -1,6 +1,6 @@
 import * as Promise from "bluebird";
 import * as Knex from "knex";
-import IStudentUnion from "../models/IStudentUnion";
+import { IStudentUnion } from "../models/IStudentUnion";
 import IDao from "./Dao";
 
 const TABLE_NAME: string = "studentUnions";

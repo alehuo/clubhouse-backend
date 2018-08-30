@@ -2,11 +2,11 @@ import * as express from "express";
 import WatchDao from "../dao/WatchDao";
 import Controller from "./Controller";
 
-import JwtMiddleware from "../middleware/JWTMiddleware";
-import IWatch from "../models/IWatch";
-import MessageFactory from "../Utils/MessageFactory";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { IWatch } from "../models/IWatch";
+import { MessageFactory } from "../utils/MessageFactory";
 
-import { watchFilter } from "./../models/IWatch";
+import { watchFilter } from "../models/IWatch";
 
 export default class WatchController extends Controller {
   constructor(private watchDao: WatchDao) {
@@ -17,7 +17,7 @@ export default class WatchController extends Controller {
     // All watches that are currently running
     this.router.get(
       "/ongoing",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const watches: IWatch[] = await this.watchDao.findAllOngoing();
@@ -37,7 +37,7 @@ export default class WatchController extends Controller {
     // All watches from a single user
     this.router.get(
       "/user/:userId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const watches: IWatch[] = await this.watchDao.findByUser(
@@ -59,7 +59,7 @@ export default class WatchController extends Controller {
     // All watches from a single user that are currently running
     this.router.get(
       "/ongoing/user/:userId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const watches: IWatch[] = await this.watchDao.findOngoingByUser(
@@ -82,7 +82,7 @@ export default class WatchController extends Controller {
     // Start a watch.
     this.router.post(
       "/start",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
@@ -128,7 +128,7 @@ export default class WatchController extends Controller {
     // Stop a watch.
     this.router.post(
       "/stop",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
@@ -195,7 +195,7 @@ export default class WatchController extends Controller {
     );
     this.router.get(
       "/ownstatus",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;

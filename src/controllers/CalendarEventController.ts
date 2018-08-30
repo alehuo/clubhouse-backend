@@ -1,11 +1,11 @@
 import * as express from "express";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
-import ICalendarEvent from "../models/ICalendarEvent";
-import JwtMiddleware from "./../middleware/JWTMiddleware";
-import { createICal } from "./../utils/iCalUtils";
-import MessageFactory from "./../utils/MessageFactory";
+import { ICalendarEvent } from "../models/ICalendarEvent";
+import { createICal } from "../utils/iCalUtils";
+import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
@@ -18,7 +18,7 @@ export default class CalendarEventController extends Controller {
   public routes(): express.Router {
     this.router.post(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_EVENT),
       async (req: express.Request, res: express.Response) => {
         const calendarEventData: ICalendarEvent = req.body;
@@ -54,7 +54,7 @@ export default class CalendarEventController extends Controller {
 
     this.router.get(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -75,7 +75,7 @@ export default class CalendarEventController extends Controller {
 
     this.router.get(
       "/:eventId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -104,7 +104,7 @@ export default class CalendarEventController extends Controller {
 
     this.router.delete(
       "/:eventId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_REMOVE_EVENT),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -147,7 +147,7 @@ export default class CalendarEventController extends Controller {
     // iCal
     this.router.get(
       "/:eventId(\\d+)/ical",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {

@@ -1,10 +1,10 @@
-interface IError {
+export interface IError {
   error: string;
   exception?: Error;
   errors?: string[];
 }
 
-interface IMessage {
+export interface IMessage {
   message: string;
 }
 
@@ -33,7 +33,12 @@ const createMessage: (message: string) => IMessage = (
   };
 };
 
-export default {
+interface MsgFactory {
+  createError: (error: string, exception?: Error, errors?: string[]) => IError;
+  createMessage: (message: string) => IMessage;
+}
+
+export const MessageFactory: MsgFactory = {
   createError,
   createMessage
 };

@@ -1,6 +1,6 @@
 import * as Promise from "bluebird";
 import * as Knex from "knex";
-import IUser from "../models/IUser";
+import { IUser } from "../models/IUser";
 import IDao from "./Dao";
 
 const TABLE_NAME: string = "users";

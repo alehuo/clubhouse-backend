@@ -1,4 +1,4 @@
-export default interface ICalendarEvent {
+export interface ICalendarEvent {
   eventId?: number;
   name: string;
   description: string;

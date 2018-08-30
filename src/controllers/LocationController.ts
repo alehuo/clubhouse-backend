@@ -1,9 +1,9 @@
 import * as express from "express";
-import ILocation, { locationFilter } from "../models/ILocation";
+import { ILocation, locationFilter } from "../models/ILocation";
 
 import LocationDao from "../dao/LocationDao";
-import MessageFactory from "../Utils/MessageFactory";
-import JwtMiddleware from "./../middleware/JwtMiddleware";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
@@ -17,7 +17,7 @@ export default class LocationController extends Controller {
   public routes(): express.Router {
     this.router.get(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -38,7 +38,7 @@ export default class LocationController extends Controller {
 
     this.router.get(
       "/:locationId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -66,7 +66,7 @@ export default class LocationController extends Controller {
 
     this.router.post(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_LOCATION),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -113,7 +113,7 @@ export default class LocationController extends Controller {
 
     this.router.delete(
       "/:locationId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_DELETE_LOCATION),
       async (req: express.Request, res: express.Response) => {
         try {

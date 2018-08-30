@@ -1,9 +1,9 @@
 import * as express from "express";
-import IPermission from "../models/IPermission";
+import { IPermission } from "../models/IPermission";
 
 import PermissionDao from "../dao/PermissionDao";
-import JwtMiddleware from "../middleware/JWTMiddleware";
-import MessageFactory from "../Utils/MessageFactory";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { getPermissions } from "../utils/PermissionUtils";
@@ -16,7 +16,7 @@ export default class PermissionController extends Controller {
   public routes(): express.Router {
     this.router.get(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const result: IPermission[] = await this.permissionDao.findAll();
@@ -37,7 +37,7 @@ export default class PermissionController extends Controller {
     // Return permissions of the logged in user.
     this.router.get(
       "/user",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         const permissions: number = res.locals.token.data.permissions;
         const permlist: IPermission[] = await getPermissions(permissions);
@@ -55,7 +55,7 @@ export default class PermissionController extends Controller {
 
     this.router.get(
       "/:permissionId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const permission: IPermission = await this.permissionDao.findOne(
@@ -83,7 +83,7 @@ export default class PermissionController extends Controller {
 
     this.router.post(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const permissionData: IPermission = req.body;

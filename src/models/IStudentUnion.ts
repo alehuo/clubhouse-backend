@@ -1,4 +1,4 @@
-export default interface IStudentUnion {
+export interface IStudentUnion {
   unionId?: number;
   name: string;
   description: string;

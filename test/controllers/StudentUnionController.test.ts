@@ -4,45 +4,11 @@ process.env.DEBUG = "knex:query";
 
 import * as Knex from "knex";
 import "mocha";
-import * as Database from "./../src/Database";
-import app from "./../src/index";
+import * as Database from "../../src/Database";
+import app from "../../src/index";
 
-import IStudentUnion from "../src/models/IStudentUnion";
-import { SignToken } from "./../src/utils/JwtUtils";
-
-const generateToken: (userData?: any) => string = (userData?: any): string => {
-  if (userData) {
-    return (
-      "Bearer " +
-      SignToken(
-        Object.assign(
-          {},
-          {
-            userId: 1,
-            email: "testuser@email.com",
-            firstName: "Test",
-            lastName: "User",
-            unionId: 1,
-            permissions: 67108863
-          },
-          userData
-        )
-      )
-    );
-  } else {
-    return (
-      "Bearer " +
-      SignToken({
-        userId: 1,
-        email: "testuser@email.com",
-        firstName: "Test",
-        lastName: "User",
-        unionId: 1,
-        permissions: 67108863
-      })
-    );
-  }
-};
+import IStudentUnion from "../../src/models/IStudentUnion";
+import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
 const chai: Chai.ChaiStatic = require("chai");

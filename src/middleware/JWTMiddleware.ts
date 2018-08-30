@@ -1,13 +1,13 @@
 import * as express from "express";
 import { VerifyToken } from "../utils/JwtUtils";
-import MessageFactory from "../utils/MessageFactory";
+import { MessageFactory } from "../utils/MessageFactory";
 /**
  * Express middleware for verifying JWT's.
  * @param req Express request.
  * @param res Express response.
  * @param next Express NextFunction
  */
-const JwtMiddleware: any = async (
+export const JWTMiddleware: any = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
@@ -40,5 +40,3 @@ const JwtMiddleware: any = async (
       .json(MessageFactory.createError("Malformed Authorization header"));
   }
 };
-
-export default JwtMiddleware;

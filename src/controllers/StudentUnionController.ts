@@ -1,9 +1,9 @@
 import * as express from "express";
 
 import StudentUnionDao from "../dao/StudentUnionDao";
-import IStudentUnion, { studentUnionFilter } from "../models/IStudentUnion";
-import MessageFactory from "../Utils/MessageFactory";
-import JwtMiddleware from "./../Middleware/JWTMiddleware";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { IStudentUnion, studentUnionFilter } from "../models/IStudentUnion";
+import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
@@ -20,7 +20,7 @@ export default class StudentUnionController extends Controller {
   public routes(): express.Router {
     this.router.get(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -39,7 +39,7 @@ export default class StudentUnionController extends Controller {
 
     this.router.get(
       "/:studentUnionId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -65,7 +65,7 @@ export default class StudentUnionController extends Controller {
 
     this.router.post(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_STUDENT_UNION),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -127,7 +127,7 @@ export default class StudentUnionController extends Controller {
 
     this.router.delete(
       "/:studentUnionId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_REMOVE_STUDENT_UNION),
       async (req: express.Request, res: express.Response) => {
         const studentUnion: IStudentUnion = await this.studentUnionDao.findOne(

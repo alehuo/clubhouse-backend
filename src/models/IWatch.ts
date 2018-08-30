@@ -1,4 +1,4 @@
-export default interface IWatch {
+export  interface IWatch {
   watchId?: number;
   userId?: number;
   startTime?: Date;

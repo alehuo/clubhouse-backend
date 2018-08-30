@@ -1,9 +1,11 @@
 require("dotenv").config();
 
 import * as express from "express";
+import * as fs from "fs";
 import * as helmet from "helmet";
 import * as Knex from "knex";
 import * as morgan from "morgan";
+import * as path from "path";
 import AuthController from "./controllers/AuthController";
 import CalendarEventController from "./controllers/CalendarEventController";
 import LocationController from "./controllers/LocationController";
@@ -42,10 +44,20 @@ const API_VERSION: string = "v1";
 app.use(express.json());
 
 // Morgan
-app.use(morgan("tiny"));
-
-// Compression
-// app.use(compression());
+app.use(
+  morgan("dev", {
+    skip(req: express.Request, res: express.Response): boolean {
+      return res.statusCode < 400;
+    }
+  })
+);
+app.use(
+  morgan("common", {
+    stream: fs.createWriteStream(path.join(__dirname, "..", "access.log"), {
+      flags: "a"
+    }),
+  })
+);
 
 // API version header
 app.use(
@@ -70,7 +82,10 @@ app.use(
 );
 
 // Auth route
-app.use(apiUrl("authenticate", API_VERSION), new AuthController(new UserDao(knex)).routes());
+app.use(
+  apiUrl("authenticate", API_VERSION),
+  new AuthController(new UserDao(knex)).routes()
+);
 
 // Student unions route
 app.use(

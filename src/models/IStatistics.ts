@@ -1,4 +1,4 @@
-export default interface IStatistics {
+export interface IStatistics {
   newspostCount: number;
   messageCount: number;
   watchCount: number;

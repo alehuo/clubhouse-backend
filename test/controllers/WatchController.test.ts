@@ -4,10 +4,10 @@ process.env.DEBUG = "knex:query";
 
 import * as Knex from "knex";
 import "mocha";
-import * as Database from "./../src/Database";
-import app from "./../src/index";
+import app from "../../src";
+import * as Database from "../../src/Database";
 
-import { SignToken } from "./../src/utils/JwtUtils";
+import { SignToken } from "../../src/utils/JwtUtils";
 
 const validUser: any = {
   userId: 1,

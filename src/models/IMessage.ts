@@ -1,4 +1,4 @@
-export default interface IMessage {
+export interface IMessage {
   messageId?: number;
   userId: number;
   message: string;

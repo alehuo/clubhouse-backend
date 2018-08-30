@@ -1,6 +1,6 @@
 import * as Promise from "bluebird";
 import * as Knex from "knex";
-import INewsPost from "../models/INewsPost";
+import { INewsPost } from "../models/INewsPost";
 import IDao from "./Dao";
 
 const TABLE_NAME: string = "newsposts";

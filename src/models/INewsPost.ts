@@ -1,4 +1,4 @@
-export default interface INewsPost {
+export interface INewsPost {
   postId?: number;
   author: number;
   title: string;

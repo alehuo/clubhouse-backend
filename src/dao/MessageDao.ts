@@ -1,6 +1,6 @@
 import * as Promise from "bluebird";
 import * as Knex from "knex";
-import IMessage from "../models/IMessage";
+import { IMessage } from "../models/IMessage";
 import IDao from "./Dao";
 
 const TABLE_NAME: string = "messages";

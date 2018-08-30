@@ -1,7 +1,7 @@
 import * as Knex from "knex";
-import PermissionDao from "./../dao/PermissionDao";
-import * as Database from "./../Database";
-import IPermission from "./../models/IPermission";
+import PermissionDao from "../dao/PermissionDao";
+import * as Database from "../Database";
+import { IPermission } from "../models/IPermission";
 
 // Knex instance
 const knex: Knex = Database.connect();

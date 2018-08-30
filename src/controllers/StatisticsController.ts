@@ -1,12 +1,12 @@
 import * as express from "express";
 
+import StatisticsDao from "../dao/StatisticsDao";
 import UserDao from "../dao/UserDao";
-import JwtMiddleware from "../middleware/JWTMiddleware";
-import IStatistics from "../models/IStatistics";
-import IUser from "../models/IUser";
-import IUserStatistics from "../models/IUserStatistics";
-import MessageFactory from "../Utils/MessageFactory";
-import StatisticsDao from "./../dao/StatisticsDao";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { IStatistics } from "../models/IStatistics";
+import { IUser } from "../models/IUser";
+import { IUserStatistics } from "../models/IUserStatistics";
+import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 /**
@@ -20,7 +20,7 @@ export default class StatisticsController extends Controller {
   public routes(): express.Router {
     this.router.get(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const result: IStatistics[] = await this.statisticsDao.findStatistics();
@@ -40,7 +40,7 @@ export default class StatisticsController extends Controller {
 
     this.router.get(
       "/:userId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const user: IUser = await this.userDao.findOne(req.params.userId);

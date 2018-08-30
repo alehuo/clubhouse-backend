@@ -2,9 +2,9 @@ import * as express from "express";
 import Controller from "./Controller";
 
 import NewsPostDao from "../dao/NewsPostDao";
-import JwtMiddleware from "../middleware/JWTMiddleware";
-import INewsPost from "../models/INewsPost";
-import MessageFactory from "../Utils/MessageFactory";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { INewsPost } from "../models/INewsPost";
+import { MessageFactory } from "../utils/MessageFactory";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
@@ -18,7 +18,7 @@ export default class NewsPostController extends Controller {
     // All newsposts
     this.router.get(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -39,7 +39,7 @@ export default class NewsPostController extends Controller {
     // A single newspost
     this.router.get(
       "/:newsPostId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -68,7 +68,7 @@ export default class NewsPostController extends Controller {
     // All newsposts by a single user
     this.router.get(
       "/user/:userId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -92,7 +92,7 @@ export default class NewsPostController extends Controller {
     // Add a newspost
     this.router.post(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
@@ -136,7 +136,7 @@ export default class NewsPostController extends Controller {
     // Delete a newspost
     this.router.delete(
       "/:newsPostId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_REMOVE_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {

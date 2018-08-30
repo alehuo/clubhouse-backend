@@ -1,4 +1,4 @@
-export default interface IPermission {
+export interface IPermission {
   permissionId?: number;
   name: string;
   value: number;

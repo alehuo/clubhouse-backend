@@ -1,5 +1,5 @@
 import * as moment from "moment";
-import ICalendarEvent from "../models/ICalendarEvent";
+import { ICalendarEvent } from "../models/ICalendarEvent";
 
 export const createICal: (data: ICalendarEvent) => string = (data: ICalendarEvent): string => {
   const dStart: string = moment(new Date(data.startTime)).format(

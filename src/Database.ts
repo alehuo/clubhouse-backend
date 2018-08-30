@@ -1,5 +1,5 @@
 import * as Knex from "knex";
-import * as knexfile from "./../knexfile";
+import * as knexfile from "../knexfile";
 
 export function connect(): Knex {
   if (process.env.NODE_ENV === undefined) {

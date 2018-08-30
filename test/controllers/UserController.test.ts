@@ -4,44 +4,9 @@ process.env.DEBUG = "knex:query";
 
 import * as Knex from "knex";
 import "mocha";
-import * as Database from "./../src/Database";
-import app from "./../src/index";
-
-import { SignToken } from "./../src/utils/JwtUtils";
-
-const generateToken: (usserData?: any) => string = (userData?: any): string => {
-  if (userData) {
-    return (
-      "Bearer " +
-      SignToken(
-        Object.assign(
-          {},
-          {
-            userId: 1,
-            email: "testuser@email.com",
-            firstName: "Test",
-            lastName: "User",
-            unionId: 1,
-            permissions: 67108863
-          },
-          userData
-        )
-      )
-    );
-  } else {
-    return (
-      "Bearer " +
-      SignToken({
-        userId: 1,
-        email: "testuser@email.com",
-        firstName: "Test",
-        lastName: "User",
-        unionId: 1,
-        permissions: 67108863
-      })
-    );
-  }
-};
+import * as Database from "../../src/Database";
+import app from "../../src/index";
+import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
 const chai: Chai.ChaiStatic = require("chai");
@@ -315,41 +280,33 @@ describe("UserController", () => {
   });
 
   describe("DELETE /api/v1/users", () => {
-    it("User can delete him/herself", (done: Mocha.Done) => {
+    it("User can't delete him/herself", (done: Mocha.Done) => {
       chai
         .request(app)
         .del(url + "/1")
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
-          res.status.should.equal(200);
-          should.not.exist(res.body.error);
-          should.exist(res.body.message);
-          res.body.message.should.equal(
-            "User deleted from the server (including his calendar events, messages, watches and newsposts.)"
+          res.status.should.equal(400);
+          should.exist(res.body.error);
+          should.not.exist(res.body.message);
+          res.body.error.should.equal(
+            "You cannot delete yourself. Please contact a server admin to do this operation."
           );
-          chai
-            .request(app)
-            .get(url + "/1")
-            .set("Authorization", generateToken())
-            .end((err2: any, res2: ChaiHttp.Response) => {
-              should.exist(res2.body.error);
-              res2.body.error.should.equal("User not found");
-              res2.status.should.equal(404);
-              done();
-            });
+          done();
         });
     });
 
-    it("Another user can't delete another user", (done: Mocha.Done) => {
+    it("Administrator can delete another user", (done: Mocha.Done) => {
       chai
         .request(app)
         .del(url + "/1")
         .set("Authorization", generateToken({ userId: 2 }))
         .end((err: any, res: ChaiHttp.Response) => {
-          res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.error.should.equal(
-            "You can only delete your own user account"
+          res.status.should.equal(200);
+          should.not.exist(res.body.error);
+          should.exist(res.body.message);
+          res.body.message.should.equal(
+            "User deleted from the server (including his/her created calendar events, messages, watches and newsposts.)"
           );
           done();
         });

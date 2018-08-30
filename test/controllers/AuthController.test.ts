@@ -2,8 +2,8 @@ process.env.NODE_ENV = "test";
 
 import * as Knex from "knex";
 import "mocha";
-import * as Database from "./../src/Database";
-import app from "./../src/index";
+import * as Database from "./../../src/Database";
+import app from "./../../src/index";
 
 const knex: Knex = Database.connect();
 const chai: Chai.ChaiStatic = require("chai");
