@@ -1,6 +1,5 @@
 process.env.NODE_ENV = "test";
 
-import { expect } from "chai";
 import "mocha";
 import { IUserStatistics } from "../../src/models/IUserStatistics";
 const chai: Chai.ChaiStatic = require("chai");
@@ -22,11 +21,11 @@ describe("IUserStatistics", () => {
     should.exist(post.newspostCount);
     should.exist(post.watchCount);
 
-    expect(post.eventCount).to.equal(55);
-    expect(post.hoursOnWatch).to.equal(225);
-    expect(post.messageCount).to.equal(2);
-    expect(post.newspostCount).to.equal(42);
-    expect(post.watchCount).to.equal(1);
+    post.eventCount.should.equal(55);
+    post.hoursOnWatch.should.equal(225);
+    post.messageCount.should.equal(2);
+    post.newspostCount.should.equal(42);
+    post.watchCount.should.equal(1);
     done();
   });
 });

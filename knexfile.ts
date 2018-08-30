@@ -3,7 +3,8 @@ dotenv.config();
 import * as Knex from "knex";
 
 const development: Knex.Config = {
-  client: "mysql2",
+  dialect: "mysql2",
+  version: "5.6",
   connection: process.env.MYSQL_CONNECTION_STRING
     ? process.env.MYSQL_CONNECTION_STRING
     : "mysql://" +
@@ -27,7 +28,8 @@ const development: Knex.Config = {
 };
 
 const test: Knex.Config = {
-  client: "mysql2",
+  dialect: "mysql2",
+  version: "5.6",
   connection: process.env.MYSQL_CONNECTION_STRING
     ? process.env.MYSQL_CONNECTION_STRING
     : "mysql://" +
@@ -51,7 +53,8 @@ const test: Knex.Config = {
 };
 
 const production: Knex.Config = {
-  client: "mysql2",
+  dialect: "mysql2",
+  version: "5.6",
   connection: process.env.MYSQL_CONNECTION_STRING
     ? process.env.MYSQL_CONNECTION_STRING
     : "mysql://" +

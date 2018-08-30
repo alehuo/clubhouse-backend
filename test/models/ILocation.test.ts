@@ -17,21 +17,21 @@ describe("ILocation", () => {
     };
 
     should.exist(location.address);
-    expect(location.address).to.equal("Test Address");
+    location.address.should.equal("Test Address");
 
     should.exist(location.created_at);
-    expect(location.created_at.toISOString()).to.equal(
+    location.created_at.toISOString().should.equal(
       new Date(2017, 2, 12, 23, 55).toISOString()
     );
 
     should.exist(location.locationId);
-    expect(location.locationId).to.equal(2);
+    location.locationId.should.equal(2);
 
     should.exist(location.name);
-    expect(location.name).to.equal("Test");
+    location.name.should.equal("Test");
 
     should.exist(location.updated_at.toISOString());
-    expect(location.updated_at.toISOString()).to.equal(
+    location.updated_at.toISOString().should.equal(
       new Date(2018, 1, 2, 11, 28).toISOString()
     );
 

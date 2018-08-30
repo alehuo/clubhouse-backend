@@ -51,7 +51,7 @@ describe("AuthController", () => {
         should.exist(res.body.token);
         done();
       });
-  });
+  }).timeout(10000);
 
   it("Does not authenticate with incorrect credentials", (done: Mocha.Done) => {
     chai
@@ -64,5 +64,5 @@ describe("AuthController", () => {
         res.status.should.equal(400);
         done();
       });
-  });
+  }).timeout(10000);
 });
