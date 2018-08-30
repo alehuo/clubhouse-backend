@@ -6,3 +6,7 @@ export interface IStatistics {
   hoursOnWatch: number;
   eventCount: number;
 }
+
+export const statisticsFilter: (stats: IStatistics) => IStatistics = (
+  stats: IStatistics
+): IStatistics => stats;

@@ -6,3 +6,7 @@ export interface INewsPost {
   created_at?: Date;
   updated_at?: Date;
 }
+
+export const newsPostFilter: (post: INewsPost) => INewsPost = (
+  post: INewsPost
+): INewsPost => post;

@@ -2,7 +2,7 @@ export interface ICalendarEvent {
   eventId?: number;
   name: string;
   description: string;
-  locationId: number | null;
+  locationId: number | null;
   restricted: boolean;
   startTime: Date;
   endTime: Date;
@@ -10,4 +10,8 @@ export interface ICalendarEvent {
   unionId: number;
   created_at?: Date;
   updated_at?: Date;
-};
+}
+
+export const calendarEventFilter: (event: ICalendarEvent) => ICalendarEvent = (
+  event: ICalendarEvent
+): ICalendarEvent => event;

@@ -5,3 +5,7 @@ export interface IMessage {
   created_at?: Date;
   updated_at?: Date;
 }
+
+export const messageFilter: (message: IMessage) => IMessage = (
+  message: IMessage
+): IMessage => message;
