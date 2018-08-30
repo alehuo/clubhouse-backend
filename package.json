@@ -14,7 +14,7 @@
     "start": "ts-node src/index.ts",
     "watch": "nodemon start",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test": "nyc mocha",
+    "test": "nyc mocha test/**/*.test.ts --exit",
     "view-coverage": "serve coverage -s",
     "create-databases": "ts-node src/scripts/create-databases.ts",
     "migrate": "knex migrate:latest",
@@ -73,20 +73,28 @@
     "exclude": [
       "**/*.d.ts",
       "test/**/*.ts",
+      "dist/**/*.js",
       "migrations/**/*.js",
       "migrations/**/*.ts",
       "seeds/**/*.js",
       "seeds/**/*.ts",
       "coverage/**/*.js",
-      "scripts/*.ts",
-      "scripts/*.js"
+      "src/scripts/**/*.ts",
+      "src/scripts/**/*.js",
+      "knexfile.ts",
+      "src/index.ts",
+      "src/Database.ts"
     ],
     "reporter": [
       "html",
       "text",
       "lcov"
     ],
-    "all": true
+    "all": true,
+    "require": [
+      "ts-node/register",
+      "source-map-support/register"
+    ]
   },
   "husky": {
     "hooks": {

@@ -82,7 +82,7 @@ describe("PermissionMiddleware", () => {
         permissions: Math.pow(2, 4)
       }).replace("Bearer ", "")
     );
-    
+
     const request: httpMocks.MockRequest<any> = httpMocks.createRequest({
       method: "GET",
       url: "/user/42",
