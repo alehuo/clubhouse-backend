@@ -2,10 +2,10 @@
 
 ![Maintainer](https://img.shields.io/badge/maintainer-alehuo-yellow.svg) ![license](https://img.shields.io/github/license/alehuo/clubhouse-backend.svg)
 
-Staging (develop) [![Build status (develop)](https://api.travis-ci.org/alehuo/clubhouse-backend.svg?branch=develop)](https://travis-ci.org/alehuo/clubhouse-backend)
+Staging (develop) [![Build Status](https://travis-ci.org/alehuo/clubhouse-backend.svg?branch=develop)](https://travis-ci.org/alehuo/clubhouse-backend)
 [![Code coverage (develop)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/develop/graph/badge.svg)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/develop)
 
-Production (master) [![Build status (develop)](https://api.travis-ci.org/alehuo/clubhouse-backend.svg?branch=master)](https://travis-ci.org/alehuo/clubhouse-backend)
+Production (master) [![Build Status](https://travis-ci.org/alehuo/clubhouse-backend.svg?branch=master)](https://travis-ci.org/alehuo/clubhouse-backend)
 [![Code coverage (develop)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/alehuo/clubhouse-backend/branch/master)
 
 [![devDependencies](https://david-dm.org/alehuo/clubhouse-backend/dev-status.svg)](https://david-dm.org/alehuo/clubhouse-backend)
