@@ -1,4 +1,4 @@
-export default interface IWatch {
+export  interface IWatch {
   watchId?: number;
   userId?: number;
   startTime?: Date;
@@ -11,7 +11,9 @@ export default interface IWatch {
   updated_at?: Date;
 }
 
-export const watchFilter = (watch: IWatch) => {
+export const watchFilter: (watch: IWatch) => IWatch = (
+  watch: IWatch
+): IWatch => {
   if (!watch.ended) {
     watch.endTime = null;
   }

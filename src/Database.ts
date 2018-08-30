@@ -1,12 +1,10 @@
-import * as Promise from "bluebird";
 import * as Knex from "knex";
-import * as path from "path";
-const knexfile = require(path.resolve(__dirname + "./../knexfile.js"));
+import * as knexfile from "../knexfile";
 
 export function connect(): Knex {
   if (process.env.NODE_ENV === undefined) {
     throw new Error("NODE_ENV is not defined!");
   }
-  const knexConfig = knexfile[process.env.NODE_ENV!];
+  const knexConfig: Knex.Config = knexfile[process.env.NODE_ENV!];
   return Knex(knexConfig);
 }

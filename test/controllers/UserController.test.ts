@@ -2,59 +2,23 @@ process.env.NODE_ENV = "test";
 process.env.JWT_SECRET = "HelloWorld";
 process.env.DEBUG = "knex:query";
 
-import * as Chai from "chai";
-import "mocha";
-import * as Database from "./../src/Database";
 import * as Knex from "knex";
-import app from "./../src/index";
-
-import { SignToken } from "./../src/utils/JwtUtils";
-
-const generateToken = (userData?: any) => {
-  if (userData) {
-    return (
-      "Bearer " +
-      SignToken(
-        Object.assign(
-          {},
-          {
-            userId: 1,
-            email: "testuser@email.com",
-            firstName: "Test",
-            lastName: "User",
-            unionId: 1,
-            permissions: 67108863
-          },
-          userData
-        )
-      )
-    );
-  } else {
-    return (
-      "Bearer " +
-      SignToken({
-        userId: 1,
-        email: "testuser@email.com",
-        firstName: "Test",
-        lastName: "User",
-        unionId: 1,
-        permissions: 67108863
-      })
-    );
-  }
-};
+import "mocha";
+import * as Database from "../../src/Database";
+import app from "../../src/index";
+import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
 const chai: Chai.ChaiStatic = require("chai");
-const should = chai.should();
-const chaiHttp = require("chai-http");
+const should: Chai.Should = chai.should();
+const chaiHttp: Chai.ChaiHttpRequest = require("chai-http");
 chai.use(chaiHttp);
 
-const url = "/api/v1/users";
+const url: string = "/api/v1/users";
 
 describe("UserController", () => {
   // Roll back
-  beforeEach(done => {
+  beforeEach((done: Mocha.Done) => {
     knex.migrate.rollback().then(() => {
       knex.migrate.latest().then(() => {
         knex.seed.run().then(() => {
@@ -65,18 +29,18 @@ describe("UserController", () => {
   });
 
   // After each
-  afterEach(done => {
+  afterEach((done: Mocha.Done) => {
     knex.migrate.rollback().then(() => {
       done();
     });
   });
 
   describe("API endpoint protection", () => {
-    it("Missing Authorization header should throw an error", done => {
+    it("Missing Authorization header should throw an error", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url)
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(403);
           should.exist(res.body.error);
           res.body.error.should.equal("Missing Authorization header");
@@ -84,12 +48,12 @@ describe("UserController", () => {
         });
     });
 
-    it("Malformed Authorization header should throw an error", done => {
+    it("Malformed Authorization header should throw an error", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url)
         .set("Authorization", "Bearer HelloWorld")
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(403);
           should.exist(res.body.error);
           res.body.error.should.equal("Malformed Authorization header");
@@ -99,12 +63,12 @@ describe("UserController", () => {
   });
 
   describe("GET /api/v1/users", () => {
-    it("Returns all users", done => {
+    it("Returns all users", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url)
         .set("Authorization", generateToken())
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(200);
           // Number of users returned
           res.body.length.should.equal(2);
@@ -126,12 +90,12 @@ describe("UserController", () => {
         });
     });
 
-    it("Returns a single user", done => {
+    it("Returns a single user", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url + "/1")
         .set("Authorization", generateToken())
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(200);
           should.exist(res.body.userId);
           res.body.userId.should.equal(1);
@@ -149,12 +113,12 @@ describe("UserController", () => {
         });
     });
 
-    it("Returns an error if a user does not exist", done => {
+    it("Returns an error if a user does not exist", (done: Mocha.Done) => {
       chai
         .request(app)
         .get(url + "/100")
         .set("Authorization", generateToken())
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(404);
           should.exist(res.body.error);
           res.body.error.should.equal("User not found");
@@ -164,7 +128,7 @@ describe("UserController", () => {
   });
 
   describe("PUT /api/v1/users", () => {
-    it("User can not edit his/her email to something that already exists", done => {
+    it("User can not edit his/her email to something that already exists", (done: Mocha.Done) => {
       chai
         .request(app)
         .put(url + "/1")
@@ -172,7 +136,7 @@ describe("UserController", () => {
         .send({
           email: "testuser2@email.com"
         })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(400);
           should.exist(res.body.error);
           res.body.error.should.equal("Email address is already in use");
@@ -180,7 +144,7 @@ describe("UserController", () => {
         });
     });
 
-    it("User can edit his/her information", done => {
+    it("User can edit his/her information", (done: Mocha.Done) => {
       chai
         .request(app)
         .put(url + "/1")
@@ -188,7 +152,7 @@ describe("UserController", () => {
         .send({
           email: "testemail@email.com"
         })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(200);
           res.body.userId.should.equal(1);
           res.body.email.should.equal("testemail@email.com");
@@ -202,7 +166,7 @@ describe("UserController", () => {
   });
 
   describe("POST /api/v1/users", () => {
-    it("Can register a new user", done => {
+    it("Can register a new user", (done: Mocha.Done) => {
       chai
         .request(app)
         .post(url)
@@ -213,7 +177,7 @@ describe("UserController", () => {
           unionId: 1,
           password: "JohnDoe123"
         })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(201);
           should.exist(res.body.email);
           res.body.email.should.equal("test@test.com");
@@ -231,7 +195,7 @@ describe("UserController", () => {
         });
     }).timeout(5000);
 
-    it("Can't register a new user with too short password", done => {
+    it("Can't register a new user with too short password", (done: Mocha.Done) => {
       chai
         .request(app)
         .post(url)
@@ -242,7 +206,7 @@ describe("UserController", () => {
           unionId: 1,
           password: "JohnDoe"
         })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(400);
           should.exist(res.body.error);
           res.body.errors.length.should.equal(1);
@@ -253,7 +217,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Can't register a new user with an unknown student union", done => {
+    it("Can't register a new user with an unknown student union", (done: Mocha.Done) => {
       chai
         .request(app)
         .post(url)
@@ -264,7 +228,7 @@ describe("UserController", () => {
           unionId: 42,
           password: "JohnDoe123"
         })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(400);
           should.exist(res.body.error);
           res.body.errors.length.should.equal(1);
@@ -274,7 +238,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Can't register a new user with an invalid email address", done => {
+    it("Can't register a new user with an invalid email address", (done: Mocha.Done) => {
       chai
         .request(app)
         .post(url)
@@ -285,7 +249,7 @@ describe("UserController", () => {
           unionId: 1,
           password: "JohnDoe123"
         })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(400);
           should.exist(res.body.error);
           res.body.errors.length.should.equal(1);
@@ -298,7 +262,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Can't register a new user with missing request params", done => {
+    it("Can't register a new user with missing request params", (done: Mocha.Done) => {
       chai
         .request(app)
         .post(url)
@@ -306,7 +270,7 @@ describe("UserController", () => {
           email: "test@test.com",
           firstName: "John"
         })
-        .end((err, res) => {
+        .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(500);
           res.body.error.should.equal("Missing request body parameters");
           should.exist(res.body.error);
@@ -316,41 +280,33 @@ describe("UserController", () => {
   });
 
   describe("DELETE /api/v1/users", () => {
-    it("User can delete him/herself", done => {
+    it("User can't delete him/herself", (done: Mocha.Done) => {
       chai
         .request(app)
         .del(url + "/1")
         .set("Authorization", generateToken())
-        .end((err, res) => {
-          res.status.should.equal(200);
-          should.not.exist(res.body.error);
-          should.exist(res.body.message);
-          res.body.message.should.equal(
-            "User deleted from the server (including his calendar events, messages, watches and newsposts.)"
+        .end((err: any, res: ChaiHttp.Response) => {
+          res.status.should.equal(400);
+          should.exist(res.body.error);
+          should.not.exist(res.body.message);
+          res.body.error.should.equal(
+            "You cannot delete yourself. Please contact a server admin to do this operation."
           );
-          chai
-            .request(app)
-            .get(url + "/1")
-            .set("Authorization", generateToken())
-            .end((err2, res2) => {
-              should.exist(res2.body.error);
-              res2.body.error.should.equal("User not found");
-              res2.status.should.equal(404);
-              done();
-            });
+          done();
         });
     });
 
-    it("Another user can't delete another user", done => {
+    it("Administrator can delete another user", (done: Mocha.Done) => {
       chai
         .request(app)
         .del(url + "/1")
         .set("Authorization", generateToken({ userId: 2 }))
-        .end((err, res) => {
-          res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.error.should.equal(
-            "You can only delete your own user account"
+        .end((err: any, res: ChaiHttp.Response) => {
+          res.status.should.equal(200);
+          should.not.exist(res.body.error);
+          should.exist(res.body.message);
+          res.body.message.should.equal(
+            "User deleted from the server (including his/her created calendar events, messages, watches and newsposts.)"
           );
           done();
         });

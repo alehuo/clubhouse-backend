@@ -1,13 +1,13 @@
 import * as express from "express";
 
-import Controller from "./Controller";
-import StatisticsDao from "./../dao/StatisticsDao";
-import IStatistics from "../models/IStatistics";
-import IUserStatistics from "../models/IUserStatistics";
+import StatisticsDao from "../dao/StatisticsDao";
 import UserDao from "../dao/UserDao";
-import IUser from "../models/IUser";
-import JwtMiddleware from "../middleware/JWTMiddleware";
-import MessageFactory from "../Utils/MessageFactory";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { IStatistics } from "../models/IStatistics";
+import { IUser } from "../models/IUser";
+import { IUserStatistics } from "../models/IUserStatistics";
+import { MessageFactory } from "../utils/MessageFactory";
+import Controller from "./Controller";
 
 /**
  * Statistics controller.
@@ -20,7 +20,7 @@ export default class StatisticsController extends Controller {
   public routes(): express.Router {
     this.router.get(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const result: IStatistics[] = await this.statisticsDao.findStatistics();
@@ -40,7 +40,7 @@ export default class StatisticsController extends Controller {
 
     this.router.get(
       "/:userId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const user: IUser = await this.userDao.findOne(req.params.userId);

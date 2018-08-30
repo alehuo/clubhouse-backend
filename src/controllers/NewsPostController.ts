@@ -2,12 +2,12 @@ import * as express from "express";
 import Controller from "./Controller";
 
 import NewsPostDao from "../dao/NewsPostDao";
-import INewsPost from "../models/INewsPost";
-import JwtMiddleware from "../middleware/JWTMiddleware";
-import MessageFactory from "../Utils/MessageFactory";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { INewsPost } from "../models/INewsPost";
+import { MessageFactory } from "../utils/MessageFactory";
 
+import { Permissions } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
-import permissions = require("./../Permissions");
 
 export default class NewsPostController extends Controller {
   constructor(private newsPostDao: NewsPostDao) {
@@ -18,8 +18,8 @@ export default class NewsPostController extends Controller {
     // All newsposts
     this.router.get(
       "",
-      JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_VIEW_POSTS]),
+      JWTMiddleware,
+      PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPosts: INewsPost[] = await this.newsPostDao.findAll();
@@ -39,8 +39,8 @@ export default class NewsPostController extends Controller {
     // A single newspost
     this.router.get(
       "/:newsPostId(\\d+)",
-      JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_VIEW_POSTS]),
+      JWTMiddleware,
+      PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPost: INewsPost = await this.newsPostDao.findOne(
@@ -68,8 +68,8 @@ export default class NewsPostController extends Controller {
     // All newsposts by a single user
     this.router.get(
       "/user/:userId(\\d+)",
-      JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_VIEW_POSTS]),
+      JWTMiddleware,
+      PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPost: INewsPost[] = await this.newsPostDao.findByAuthor(
@@ -92,11 +92,11 @@ export default class NewsPostController extends Controller {
     // Add a newspost
     this.router.post(
       "",
-      JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_ADD_POSTS]),
+      JWTMiddleware,
+      PermissionMiddleware(Permissions.ALLOW_ADD_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const userId = res.locals.token.data.userId;
+          const userId: number = res.locals.token.data.userId;
           if (!(req.body.title && req.body.message)) {
             return res
               .status(400)
@@ -136,8 +136,8 @@ export default class NewsPostController extends Controller {
     // Delete a newspost
     this.router.delete(
       "/:newsPostId(\\d+)",
-      JwtMiddleware,
-      PermissionMiddleware([permissions.ALLOW_REMOVE_POSTS]),
+      JWTMiddleware,
+      PermissionMiddleware(Permissions.ALLOW_REMOVE_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPost: INewsPost = await this.newsPostDao.findOne(

@@ -1,37 +1,38 @@
 require("dotenv").config();
 
 import * as express from "express";
+import * as fs from "fs";
+import * as helmet from "helmet";
 import * as Knex from "knex";
 import * as morgan from "morgan";
-// import * as compression from "compression";
-// const apicache = require("apicache");
-import UserController from "./controllers/UserController";
-import * as Database from "./Database";
-import UserDao from "./dao/UserDao";
+import * as path from "path";
 import AuthController from "./controllers/AuthController";
-import * as winston from "winston";
-import StudentUnionDao from "./dao/StudentUnionDao";
-import StudentUnionController from "./controllers/StudentUnionController";
 import CalendarEventController from "./controllers/CalendarEventController";
+import LocationController from "./controllers/LocationController";
+import MessageController from "./controllers/MessageController";
+import NewsPostController from "./controllers/NewsPostController";
+import PermissionController from "./controllers/PermissionController";
+import StatisticsController from "./controllers/StatisticsController";
+import StudentUnionController from "./controllers/StudentUnionController";
+import UserController from "./controllers/UserController";
+import WatchController from "./controllers/WatchController";
 import CalendarEventDao from "./dao/CalendarEventDao";
 import LocationDao from "./dao/LocationDao";
-import LocationController from "./controllers/LocationController";
-import PermissionDao from "./dao/PermissionDao";
-import PermissionController from "./controllers/PermissionController";
-import WatchDao from "./dao/WatchDao";
-import WatchController from "./controllers/WatchController";
-import MessageController from "./controllers/MessageController";
 import MessageDao from "./dao/MessageDao";
-import NewsPostController from "./controllers/NewsPostController";
 import NewsPostDao from "./dao/NewsPostDao";
+import PermissionDao from "./dao/PermissionDao";
 import StatisticsDao from "./dao/StatisticsDao";
-import StatisticsController from "./controllers/StatisticsController";
+import StudentUnionDao from "./dao/StudentUnionDao";
+import UserDao from "./dao/UserDao";
+import WatchDao from "./dao/WatchDao";
+import * as Database from "./Database";
+import { apiHeader, apiUrl } from "./utils/ApiUtils";
 
 // Express instance
 const app: express.Application = express();
 
-// Disable X-Powered-By header
-app.disable("x-powered-by");
+// Use Helmet
+app.use(helmet());
 
 // Knex instance
 const knex: Knex = Database.connect();
@@ -39,27 +40,24 @@ const knex: Knex = Database.connect();
 // API version
 const API_VERSION: string = "v1";
 
-// Generates an API url. API version defaults to API_VERSION constant.
-const apiUrl = (path: string, apiVersion: string = API_VERSION) =>
-  "/api/" + apiVersion + "/" + path;
-
-const apiHeader = (path: string, apiVersion: string = API_VERSION) => (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  res.setHeader("X-Route-API-Version", apiVersion);
-  next();
-};
-
 // JSON parser
 app.use(express.json());
 
 // Morgan
-app.use(morgan("tiny"));
-
-// Compression
-// app.use(compression());
+app.use(
+  morgan("dev", {
+    skip(req: express.Request, res: express.Response): boolean {
+      return res.statusCode < 400;
+    }
+  })
+);
+app.use(
+  morgan("common", {
+    stream: fs.createWriteStream(path.join(__dirname, "..", "access.log"), {
+      flags: "a"
+    }),
+  })
+);
 
 // API version header
 app.use(
@@ -69,14 +67,10 @@ app.use(
   }
 );
 
-// API cache
-/*const cache = apicache.middleware;
-app.use(cache("5 minutes"));*/
-
 // Users route
 app.use(
-  apiUrl("users"),
-  apiHeader("users"),
+  apiUrl("users", API_VERSION),
+  apiHeader("users", API_VERSION),
   new UserController(
     new UserDao(knex),
     new CalendarEventDao(knex),
@@ -88,61 +82,64 @@ app.use(
 );
 
 // Auth route
-app.use(apiUrl("authenticate"), new AuthController(new UserDao(knex)).routes());
+app.use(
+  apiUrl("authenticate", API_VERSION),
+  new AuthController(new UserDao(knex)).routes()
+);
 
 // Student unions route
 app.use(
-  apiUrl("studentunion"),
-  apiHeader("studentunion"),
+  apiUrl("studentunion", API_VERSION),
+  apiHeader("studentunion", API_VERSION),
   new StudentUnionController(new StudentUnionDao(knex)).routes()
 );
 
 // Calendar route
 app.use(
-  apiUrl("calendar"),
-  apiHeader("calendar"),
+  apiUrl("calendar", API_VERSION),
+  apiHeader("calendar", API_VERSION),
   new CalendarEventController(new CalendarEventDao(knex)).routes()
 );
 
 // Location route
 app.use(
-  apiUrl("location"),
-  apiHeader("location"),
+  apiUrl("location", API_VERSION),
+  apiHeader("location", API_VERSION),
   new LocationController(new LocationDao(knex)).routes()
 );
 
 // Permission route
 app.use(
-  apiUrl("permission"),
-  apiHeader("permission"),
+  apiUrl("permission", API_VERSION),
+  apiHeader("permission", API_VERSION),
   new PermissionController(new PermissionDao(knex)).routes()
 );
 
 // Watch route
 app.use(
-  apiUrl("watch"),
-  apiHeader("watch"),
+  apiUrl("watch", API_VERSION),
+  apiHeader("watch", API_VERSION),
   new WatchController(new WatchDao(knex)).routes()
 );
 
 // Message route
 app.use(
-  apiUrl("message"),
-  apiHeader("message"),
+  apiUrl("message", API_VERSION),
+  apiHeader("message", API_VERSION),
   new MessageController(new MessageDao(knex)).routes()
 );
 
 // Newspost route
 app.use(
-  apiUrl("newspost"),
-  apiHeader("newspost"),
+  apiUrl("newspost", API_VERSION),
+  apiHeader("newspost", API_VERSION),
   new NewsPostController(new NewsPostDao(knex)).routes()
 );
 
 // Statistics route
 app.use(
-  apiUrl("statistics"),
-  apiHeader("statistics"),
+  apiUrl("statistics", API_VERSION),
+  apiHeader("statistics", API_VERSION),
   new StatisticsController(new StatisticsDao(knex), new UserDao(knex)).routes()
 );
 
@@ -154,7 +151,7 @@ app.use(
 
 app.use(
   (
-    err,
+    err: any,
     req: express.Request,
     res: express.Response,
     next: express.NextFunction

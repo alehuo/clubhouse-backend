@@ -1,4 +1,4 @@
-export default interface IStatistics {
+export interface IStatistics {
   newspostCount: number;
   messageCount: number;
   watchCount: number;
@@ -6,3 +6,7 @@ export default interface IStatistics {
   hoursOnWatch: number;
   eventCount: number;
 }
+
+export const statisticsFilter: (stats: IStatistics) => IStatistics = (
+  stats: IStatistics
+): IStatistics => stats;

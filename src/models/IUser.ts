@@ -1,4 +1,4 @@
-export default interface IUser {
+export interface IUser {
   userId?: number;
   email: string;
   firstName: string;
@@ -15,7 +15,7 @@ export default interface IUser {
  * Filters an user object and removes its "hidden" & "password" fields.
  * @param user User object
  */
-export const userFilter = (user: IUser) => {
+export const userFilter: (user: IUser) => object = (user: IUser): object => {
   return {
     userId: user.userId,
     email: user.email,

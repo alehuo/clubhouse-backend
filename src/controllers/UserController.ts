@@ -1,24 +1,26 @@
-import * as express from "express";
 import * as bcrypt from "bcrypt";
-import IUser, { userFilter } from "../models/IUser";
+import * as express from "express";
+import { IUser, userFilter } from "../models/IUser";
 
-import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
-import JwtMiddleware from "./../middleware/JWTMiddleware";
+import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import Controller from "./Controller";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
-import ICalendarEvent from "../models/ICalendarEvent";
+import { ICalendarEvent } from "../models/ICalendarEvent";
 
-import Validator from "./../utils/Validator";
-import MessageFactory from "../Utils/MessageFactory";
-import IStudentUnion from "../models/IStudentUnion";
-import StudentUnionDao from "../dao/StudentUnionDao";
-import IMessage from "../models/IMessage";
+import { Permissions } from "@alehuo/clubhouse-shared";
 import MessageDao from "../dao/MessageDao";
-import INewsPost from "../models/INewsPost";
 import NewsPostDao from "../dao/NewsPostDao";
+import StudentUnionDao from "../dao/StudentUnionDao";
 import WatchDao from "../dao/WatchDao";
-import IWatch from "../models/IWatch";
+import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
+import { IMessage } from "../models/IMessage";
+import { INewsPost } from "../models/INewsPost";
+import { IStudentUnion } from "../models/IStudentUnion";
+import { IWatch } from "../models/IWatch";
+import { MessageFactory } from "../utils/MessageFactory";
+import Validator from "../utils/Validator";
 
 export default class UserController extends Controller {
   constructor(
@@ -35,7 +37,7 @@ export default class UserController extends Controller {
   public routes(): express.Router {
     this.router.get(
       "",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const result: IUser[] = await this.userDao.findAll();
@@ -55,7 +57,7 @@ export default class UserController extends Controller {
 
     this.router.get(
       "/:userId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const user: IUser = await this.userDao.findOne(req.params.userId);
@@ -81,7 +83,7 @@ export default class UserController extends Controller {
 
     this.router.put(
       "/:userId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
@@ -199,8 +201,7 @@ export default class UserController extends Controller {
             lastName: string;
             unionId: number;
             password: string;
-          } =
-            req.body;
+          } = req.body;
           if (
             !(
               userData.email &&
@@ -311,7 +312,8 @@ export default class UserController extends Controller {
 
     this.router.delete(
       "/:userId(\\d+)",
-      JwtMiddleware,
+      JWTMiddleware,
+      PermissionMiddleware(Permissions.ALLOW_DELETE_USER),
       async (req: express.Request, res: express.Response) => {
         try {
           const user: IUser = await this.userDao.findOne(req.params.userId);
@@ -320,55 +322,61 @@ export default class UserController extends Controller {
               .status(404)
               .json(MessageFactory.createError("User not found"));
           } else {
-            if (Number(res.locals.token.data.userId) !== Number(user.userId)) {
+            if (Number(res.locals.token.data.userId) === Number(user.userId)) {
               return res
                 .status(400)
                 .json(
                   MessageFactory.createError(
-                    "You can only delete your own user account"
+                    "You cannot delete yourself. Please contact a server admin to do this operation."
                   )
                 );
             }
-            // Remove calendar events
+            const userId: number = user.userId;
             const calendarEvents: ICalendarEvent[] = await this.calendarEventDao.findCalendarEventsByUser(
-              res.locals.token.data.userId
+              userId
             );
             await Promise.all(
-              calendarEvents.map(event =>
+              calendarEvents.map((event: ICalendarEvent) =>
                 this.calendarEventDao.remove(event.eventId)
               )
             );
             // Remove messages
             const messages: IMessage[] = await this.messageDao.findByUser(
-              res.locals.token.data.userId
+              userId
             );
             await Promise.all(
-              messages.map(msg => this.messageDao.remove(msg.messageId))
+              messages.map((msg: IMessage) =>
+                this.messageDao.remove(msg.messageId)
+              )
             );
             // Remove newsposts
             const newsPosts: INewsPost[] = await this.newsPostDao.findByAuthor(
-              res.locals.token.data.userId
+              userId
             );
             await Promise.all(
-              newsPosts.map(newsPost =>
+              newsPosts.map((newsPost: INewsPost) =>
                 this.newsPostDao.remove(newsPost.postId)
               )
             );
             // Remove watches
+            // Watches should be only anonymized..
             const watches: IWatch[] = await this.watchDao.findByUser(
-              res.locals.token.data.userId
+              userId
             );
             await Promise.all(
-              watches.map(watch => this.watchDao.remove(watch.watchId))
+              watches.map((watch: IWatch) =>
+                this.watchDao.remove(watch.watchId)
+              )
             );
-            // Remove user
-            await this.userDao.remove(res.locals.token.data.userId);
+            // Remove user data
+            await this.userDao.remove(userId);
 
             return res
               .status(200)
               .json(
                 MessageFactory.createMessage(
-                  "User deleted from the server (including his calendar events, messages, watches and newsposts.)"
+                  "User deleted from the server (including his/her created calendar events" +
+                    ", messages, watches and newsposts.)"
                 )
               );
           }

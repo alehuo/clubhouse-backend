@@ -1,16 +1,29 @@
 {
-  "defaultSeverity": "error",
+  "defaultSeverity": "warn",
   "extends": ["tslint:recommended"],
   "jsRules": {},
   "rules": {
     "no-var-requires": false,
-    "ordered-imports": false,
     "no-console": false,
     "trailing-comma": false,
     "object-literal-sort-keys": false,
     "semicolon": false,
     "no-bitwise": false,
-    "arrow-parens": false
+    "arrow-parens": false,
+    "typedef": [
+      true,
+      "call-signature",
+      "parameter",
+      "arrow-parameter",
+      "property-declaration",
+      "variable-declaration",
+      "member-variable-declaration",
+      "object-destructuring",
+      "array-destructuring"
+    ],
+    "only-arrow-functions": false,
+    "interface-name": false,
+    "no-string-literal": false
   },
   "rulesDirectory": []
 }

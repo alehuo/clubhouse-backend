@@ -1,12 +1,12 @@
-import * as express from "express";
 import * as bcrypt from "bcrypt";
-import IUser from "../models/IUser";
+import * as express from "express";
+import { IUser } from "../models/IUser";
 
-import Controller from "./Controller";
 import UserDao from "../dao/UserDao";
-import { SignToken } from "./../Utils/JwtUtils";
+import { SignToken } from "../utils/JwtUtils";
+import Controller from "./Controller";
 
-import MessageFactory from "./../Utils/MessageFactory";
+import { MessageFactory } from "../utils/MessageFactory";
 
 export default class AuthController extends Controller {
   constructor(private userDao: UserDao) {
@@ -48,7 +48,7 @@ export default class AuthController extends Controller {
               try {
                 const match: boolean = await bcrypt.compare(inputPwd, dbPwd);
                 if (match) {
-                  const token = SignToken({
+                  const token: string = SignToken({
                     userId: user.userId,
                     unionId: user.unionId,
                     email: user.email,
