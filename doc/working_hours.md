@@ -41,10 +41,10 @@
 | 24.6.2018 | 2h    | Implemented functionality for MessageFactory to pass an exception for easier debugging. Visible only in dev and test environments.                                                                                                                                                         |
 | 10.8.2018 | 4h    | Upgraded dependencies. Added additional TSLint rules and linted code. Moved permission values to an external NPM package to be used by the front- and back-ends.                                                                                                                           |
 
-| 30.8.2018 | 4h | Converting default imports to typed imports to reduce chance of error. Removed apicache. Improved test script. Added additional Winston logging. Modified test folder structure. Created many additional tests. Updated Dockerfile. Added scripts to build, start and stop the docker container. |
+| 30.8.2018 | 5h | Converting default imports to typed imports to reduce chance of error. Removed apicache. Improved test script. Added additional Winston logging. Modified test folder structure. Created many additional tests. Updated Dockerfile. Added scripts to build, start and stop the docker container. |
 
 Total:
 
 61.0 h (part 1)
 
-10.0 h (part 2)
+11.0 h (part 2)
