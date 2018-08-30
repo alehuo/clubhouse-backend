@@ -14,6 +14,6 @@
     "rootDirs": ["src"],
     "lib": ["es6", "dom", "esnext"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
