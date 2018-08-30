@@ -7,7 +7,7 @@ import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 
-import IStudentUnion from "../../src/models/IStudentUnion";
+import { IStudentUnion } from "../../src/models/IStudentUnion";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
