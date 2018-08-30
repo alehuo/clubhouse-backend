@@ -7,7 +7,7 @@ services:
   - mysql
 
 before_install:
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS `clubhouse`;'
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS `clubhouse_test`;'
   - npm install -g yarn
   - npm install -g codecov
 
