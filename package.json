@@ -14,7 +14,7 @@
     "start": "ts-node src/index.ts",
     "watch": "nodemon start",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test": "nyc mocha test/**/*.test.ts --exit",
+    "test": "nyc mocha test/**/*.test.ts --exit --timeout 10000",
     "view-coverage": "serve coverage -s",
     "create-databases": "ts-node src/scripts/create-databases.ts",
     "migrate": "knex migrate:latest",
