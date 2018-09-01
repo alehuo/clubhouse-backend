@@ -21,18 +21,15 @@ export default class AuthController extends Controller {
           const authData: {
             email: string;
             password: string;
-          } =
-            req.body;
+          } = req.body;
           if (!(authData.email && authData.password)) {
             return res
-              .status(500)
+              .status(400)
               .json(
                 MessageFactory.createError("Missing request body parameters")
               );
           } else {
-            const user: IUser | undefined = await this.userDao.findByEmail(
-              authData.email
-            );
+            const user: IUser = await this.userDao.findByEmail(authData.email);
 
             if (!user) {
               return res
@@ -69,7 +66,7 @@ export default class AuthController extends Controller {
                   .status(500)
                   .json(
                     MessageFactory.createError(
-                      "Internal server error: Cannot authenticate user (hash)",
+                      "Internal server error: Cannot authenticate user",
                       ex as Error
                     )
                   );

@@ -1,6 +1,5 @@
 process.env.NODE_ENV = "test";
 process.env.JWT_SECRET = "HelloWorld";
-process.env.DEBUG = "knex:query";
 
 import * as Knex from "knex";
 import "mocha";
@@ -182,6 +181,46 @@ describe("StudentUnionController", () => {
         });
     });
 
+    it("Can't add a new student union with an empty name", (done: Mocha.Done) => {
+      chai
+        .request(app)
+        .post(url)
+        .set("Authorization", generateToken())
+        .send({
+          name: "",
+          description: "Union description"
+        })
+        .end((err: any, res: ChaiHttp.Response) => {
+          should.exist(res.body.error);
+          res.status.should.equal(400);
+          should.not.exist(res.body.name);
+          should.not.exist(res.body.description);
+          should.not.exist(res.body.unionId);
+          res.body.error.should.equal("Name or description cannot be empty");
+          done();
+        });
+    });
+
+    it("Can't add a new student union with an empty description", (done: Mocha.Done) => {
+      chai
+        .request(app)
+        .post(url)
+        .set("Authorization", generateToken())
+        .send({
+          name: "Union title",
+          description: ""
+        })
+        .end((err: any, res: ChaiHttp.Response) => {
+          should.exist(res.body.error);
+          res.status.should.equal(400);
+          should.not.exist(res.body.name);
+          should.not.exist(res.body.description);
+          should.not.exist(res.body.unionId);
+          res.body.error.should.equal("Name or description cannot be empty");
+          done();
+        });
+    });
+
     it("Can add a new student union : Wrong permissions should return unauthorized", (done: Mocha.Done) => {
       chai
         .request(app)
@@ -213,7 +252,7 @@ describe("StudentUnionController", () => {
           name: "TestUnion"
         })
         .end((err: any, res: ChaiHttp.Response) => {
-          res.status.should.equal(500);
+          res.status.should.equal(400);
           should.exist(res.body.error);
           res.body.error.should.equal("Missing request body parameters");
           done();
