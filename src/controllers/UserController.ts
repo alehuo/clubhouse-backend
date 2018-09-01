@@ -10,6 +10,7 @@ import CalendarEventDao from "../dao/CalendarEventDao";
 import { ICalendarEvent } from "../models/ICalendarEvent";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
+import * as Validator from "validator";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
 import StudentUnionDao from "../dao/StudentUnionDao";
@@ -20,7 +21,6 @@ import { INewsPost } from "../models/INewsPost";
 import { IStudentUnion } from "../models/IStudentUnion";
 import { IWatch } from "../models/IWatch";
 import { MessageFactory } from "../utils/MessageFactory";
-import Validator from "../utils/Validator";
 
 export default class UserController extends Controller {
   constructor(
@@ -107,14 +107,11 @@ export default class UserController extends Controller {
               .json(MessageFactory.createError("User not found"));
           } else {
             const errors: string[] = [];
-            user.firstName = req.body.firstName
-              ? req.body.firstName
-              : user.firstName;
-            user.lastName = req.body.lastName
-              ? req.body.lastName
-              : user.lastName;
-            if (req.body.email && user.email !== req.body.email) {
-              const usr: IUser = await this.userDao.findByEmail(req.body.email);
+            const { firstName, lastName, email, password }: IUser = req.body;
+            user.firstName = firstName ? firstName : user.firstName;
+            user.lastName = lastName ? lastName : user.lastName;
+            if (email && user.email !== email) {
+              const usr: IUser = await this.userDao.findByEmail(email.trim());
               if (usr) {
                 return res
                   .status(400)
@@ -125,34 +122,45 @@ export default class UserController extends Controller {
                   );
               }
             }
-            user.email = req.body.email ? req.body.email : user.email;
+            user.email = email ? email : user.email;
             if (
-              !Validator.validateStringLength.minMax(user.firstName, 2, 255)
+              firstName &&
+              !(
+                Validator.isLength(firstName, {
+                  max: 255
+                }) && !Validator.isEmpty(firstName)
+              )
             ) {
               errors.push(
-                "First name cannot be shorter than 2 or longer than 255 characters"
-              );
-            }
-            if (!Validator.validateStringLength.minMax(user.lastName, 2, 255)) {
-              errors.push(
-                "Last name cannot be shorter than 2 or longer than 255 characters"
-              );
-            }
-            if (!Validator.validateStringLength.minMax(user.email, 10, 255)) {
-              errors.push(
-                "Email address cannot be shorter than 10 or longer than 255 characters"
+                "First name cannot be empty or longer than 255 characters"
               );
             }
             if (
-              req.body.password &&
-              !Validator.validateStringLength.min(req.body.password, 8)
+              lastName &&
+              !Validator.isLength(lastName, {
+                min: 2,
+                max: 255
+              })
+            ) {
+              errors.push(
+                "Last name cannot be empty or longer than 255 characters"
+              );
+            }
+            if (email && !Validator.isEmail(email)) {
+              errors.push("Email address is invalid");
+            }
+            if (
+              password &&
+              !Validator.isLength(password, {
+                min: 8
+              })
             ) {
               errors.push(
                 "Password cannot be empty or shorter than 8 characters"
               );
             } else {
-              user.password = req.body.password
-                ? bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
+              user.password = password
+                ? bcrypt.hashSync(password, bcrypt.genSaltSync(10))
                 : user.password;
             }
             if (errors.length === 0) {
@@ -194,30 +202,21 @@ export default class UserController extends Controller {
       "",
       async (req: express.Request, res: express.Response) => {
         try {
-          const userData: {
-            username: string;
-            email: string;
-            firstName: string;
-            lastName: string;
-            unionId: number;
-            password: string;
-          } = req.body;
-          if (
-            !(
-              userData.email &&
-              userData.firstName &&
-              userData.lastName &&
-              userData.unionId &&
-              userData.password
-            )
-          ) {
+          const {
+            email,
+            firstName,
+            lastName,
+            unionId,
+            password
+          }: IUser = req.body;
+          if (!(email && firstName && lastName && unionId && password)) {
             return res
               .status(500)
               .json(
                 MessageFactory.createError("Missing request body parameters")
               );
           } else {
-            const user: IUser = await this.userDao.findByEmail(userData.email);
+            const user: IUser = await this.userDao.findByEmail(email.trim());
 
             if (user) {
               return res
@@ -227,42 +226,36 @@ export default class UserController extends Controller {
               const errors: string[] = [];
 
               const stdu: IStudentUnion = await this.studentUnionDao.findOne(
-                userData.unionId
+                Number(unionId)
               );
               if (!stdu) {
                 errors.push("Student union does not exist");
               }
 
               if (
-                !Validator.validateStringLength.minMax(
-                  userData.firstName,
-                  0,
-                  255
-                )
+                !Validator.isLength(firstName, {
+                  min: 2,
+                  max: 255
+                })
               ) {
                 errors.push(
                   "First name cannot be shorter than 2 or longer than 255 characters"
                 );
               }
               if (
-                !Validator.validateStringLength.minMax(
-                  userData.lastName,
-                  2,
-                  255
-                )
+                !Validator.isLength(lastName, {
+                  min: 2,
+                  max: 255
+                })
               ) {
                 errors.push(
                   "Last name cannot be shorter than 2 or longer than 255 characters"
                 );
               }
-              if (
-                !Validator.validateStringLength.minMax(userData.email, 10, 255)
-              ) {
-                errors.push(
-                  "Email address cannot be shorter than 10 or longer than 255 characters"
-                );
+              if (!Validator.isEmail(email)) {
+                errors.push("Email address is invalid");
               }
-              if (!Validator.validateStringLength.min(userData.password, 8)) {
+              if (!Validator.isLength(password, { min: 8 })) {
                 errors.push(
                   "Password cannot be empty or shorter than 8 characters"
                 );
@@ -281,10 +274,10 @@ export default class UserController extends Controller {
               }
 
               const savedUser: number[] = await this.userDao.save({
-                email: userData.email,
-                firstName: userData.firstName,
-                lastName: userData.lastName,
-                unionId: userData.unionId,
+                email,
+                firstName,
+                lastName,
+                unionId,
                 password: bcrypt.hashSync(
                   req.body.password,
                   bcrypt.genSaltSync(10)
@@ -292,9 +285,10 @@ export default class UserController extends Controller {
                 permissions: 8
               });
 
-              return res
-                .status(201)
-                .json(Object.assign({}, userData, { userId: savedUser[0] }));
+              return res.status(201).json({
+                ...{ email, firstName, lastName, unionId },
+                ...{ userId: savedUser[0] }
+              });
             }
           }
         } catch (err) {
@@ -360,9 +354,7 @@ export default class UserController extends Controller {
             );
             // Remove watches
             // Watches should be only anonymized..
-            const watches: IWatch[] = await this.watchDao.findByUser(
-              userId
-            );
+            const watches: IWatch[] = await this.watchDao.findByUser(userId);
             await Promise.all(
               watches.map((watch: IWatch) =>
                 this.watchDao.remove(watch.watchId)
