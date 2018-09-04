@@ -9,6 +9,7 @@ import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
 export default class CalendarEventController extends Controller {
   constructor(private calendarEventDao: CalendarEventDao) {
@@ -18,36 +19,55 @@ export default class CalendarEventController extends Controller {
   public routes(): express.Router {
     this.router.post(
       "",
+      RequestParamMiddleware(
+        "name",
+        "description",
+        "locationId",
+        "restricted",
+        "startTime",
+        "endTime",
+        "unionId"
+      ),
       JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_EVENT),
       async (req: express.Request, res: express.Response) => {
-        const calendarEventData: ICalendarEvent = req.body;
-        if (!calendarEventData) {
+        const {
+          name,
+          description,
+          locationId,
+          restricted,
+          startTime,
+          endTime,
+          unionId
+        }: ICalendarEvent = req.body;
+        const calendarEventData: ICalendarEvent = {
+          name,
+          description,
+          locationId,
+          restricted,
+          startTime,
+          endTime,
+          addedBy: res.locals.token.userId,
+          unionId
+        };
+        try {
+          const calendarEvent: number[] = await this.calendarEventDao.save(
+            calendarEventData
+          );
+          return res.status(201).json(
+            Object.assign({}, calendarEventData, {
+              eventId: calendarEvent[0]
+            })
+          );
+        } catch (ex) {
           return res
-            .status(403)
+            .status(500)
             .json(
-              MessageFactory.createError("Missing request body parameters")
+              MessageFactory.createError(
+                "Internal server error: Cannot add a new event",
+                ex as Error
+              )
             );
-        } else {
-          try {
-            const calendarEvent: number[] = await this.calendarEventDao.save(
-              calendarEventData
-            );
-            return res.status(201).json(
-              Object.assign({}, calendarEventData, {
-                eventId: calendarEvent[0]
-              })
-            );
-          } catch (ex) {
-            return res
-              .status(500)
-              .json(
-                MessageFactory.createError(
-                  "Internal server error: Cannot add a new event",
-                  ex as Error
-                )
-              );
-          }
         }
       }
     );
@@ -159,7 +179,7 @@ export default class CalendarEventController extends Controller {
               .status(404)
               .json(MessageFactory.createError("Event not found"));
           } else {
-            const calData: string = createICal(event);
+            const calData: string = await createICal(event);
             res.setHeader(
               "Content-disposition",
               "attachment; filename=event_" + event.eventId + ".ics"

@@ -2,7 +2,10 @@ process.env.NODE_ENV = "test";
 
 import { expect } from "chai";
 import "mocha";
-import { ICalendarEvent, calendarEventFilter } from "../../src/models/ICalendarEvent";
+import {
+  calendarEventFilter,
+  ICalendarEvent
+} from "../../src/models/ICalendarEvent";
 const chai: Chai.ChaiStatic = require("chai");
 const should: Chai.Should = chai.should();
 

@@ -4,8 +4,8 @@ process.env.DEBUG = "knex:query";
 
 import * as Knex from "knex";
 import "mocha";
-import app from "../../src";
 import * as Database from "../../src/Database";
+import app from "../../src/index";
 
 import { SignToken } from "../../src/utils/JwtUtils";
 
