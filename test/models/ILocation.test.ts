@@ -20,9 +20,9 @@ describe("ILocation", () => {
     location.address.should.equal("Test Address");
 
     should.exist(location.created_at);
-    location.created_at.toISOString().should.equal(
-      new Date(2017, 2, 12, 23, 55).toISOString()
-    );
+    location.created_at
+      .toISOString()
+      .should.equal(new Date(2017, 2, 12, 23, 55).toISOString());
 
     should.exist(location.locationId);
     location.locationId.should.equal(2);
@@ -31,9 +31,9 @@ describe("ILocation", () => {
     location.name.should.equal("Test");
 
     should.exist(location.updated_at.toISOString());
-    location.updated_at.toISOString().should.equal(
-      new Date(2018, 1, 2, 11, 28).toISOString()
-    );
+    location.updated_at
+      .toISOString()
+      .should.equal(new Date(2018, 1, 2, 11, 28).toISOString());
 
     done();
   });

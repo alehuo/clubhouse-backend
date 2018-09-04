@@ -1,6 +1,5 @@
 process.env.NODE_ENV = "test";
 process.env.JWT_SECRET = "HelloWorld";
-process.env.DEBUG = "knex:query";
 
 import * as Knex from "knex";
 import "mocha";
@@ -128,6 +127,12 @@ describe("UserController", () => {
   });
 
   describe("PUT /api/v1/users", () => {
+    // TODO: Create additional test cases for
+    // 1. Invalid email
+    // 2. Invalid first name
+    // 3. Invalid last name
+    // 4. Invalid password
+    // 5. Invalid unionId
     it("User can not edit his/her email to something that already exists", (done: Mocha.Done) => {
       chai
         .request(app)
@@ -189,8 +194,6 @@ describe("UserController", () => {
           res.body.unionId.should.equal(1);
           should.exist(res.body.userId);
           res.body.userId.should.equal(3);
-          should.exist(res.body.password);
-          res.body.password.should.equal("JohnDoe123");
           done();
         });
     }).timeout(5000);
@@ -254,9 +257,8 @@ describe("UserController", () => {
           should.exist(res.body.error);
           res.body.errors.length.should.equal(1);
           res.body.error.should.equal("Error registering user");
-          // Fix this test after implementing Validator.js
           res.body.errors[0].should.equal(
-            "Email address cannot be shorter than 10 or longer than 255 characters"
+            "Email address is invalid"
           );
           done();
         });

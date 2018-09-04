@@ -25,7 +25,6 @@ export default class StudentUnionController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const result: IStudentUnion[] = await this.studentUnionDao.findAll();
-
           return res.json(result.map(studentUnionFilter));
         } catch (err) {
           return res
@@ -70,9 +69,14 @@ export default class StudentUnionController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const studentUnionData: IStudentUnion = req.body;
-          if (!(studentUnionData.name && studentUnionData.description)) {
+          if (
+            !(
+              studentUnionData.name !== undefined &&
+              studentUnionData.description !== undefined
+            )
+          ) {
             return res
-              .status(500)
+              .status(400)
               .json(
                 MessageFactory.createError("Missing request body parameters")
               );

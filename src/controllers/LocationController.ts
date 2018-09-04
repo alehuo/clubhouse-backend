@@ -8,6 +8,7 @@ import Controller from "./Controller";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
 export default class LocationController extends Controller {
   constructor(private locationDao: LocationDao) {
@@ -66,38 +67,32 @@ export default class LocationController extends Controller {
 
     this.router.post(
       "",
+      RequestParamMiddleware("name, address"),
       JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_LOCATION),
       async (req: express.Request, res: express.Response) => {
         try {
-          const locationData: ILocation = req.body;
-          if (!(locationData.name && locationData.address)) {
+          const { name, address }: ILocation = req.body;
+          const location: ILocation = await this.locationDao.findByName(name);
+          if (location) {
             return res
-              .status(500)
-              .json(
-                MessageFactory.createError("Missing request body parameters")
-              );
+              .status(400)
+              .json(MessageFactory.createError("Location already exists"));
           } else {
-            const location: ILocation = await this.locationDao.findByName(
-              locationData.name
+            const locationObj: ILocation = {
+              name: name.trim(),
+              address: address.trim()
+            };
+            const savedLocation: number[] = await this.locationDao.save(
+              locationObj
             );
 
-            if (location) {
-              return res
-                .status(400)
-                .json(MessageFactory.createError("Location already exists"));
-            } else {
-              const savedLocation: number[] = await this.locationDao.save({
-                name: locationData.name,
-                address: locationData.address
-              });
-
-              return res.status(201).json(
-                Object.assign({}, locationData, {
-                  locationId: savedLocation[0]
-                })
-              );
-            }
+            return res.status(201).json({
+              ...locationObj,
+              ...{
+                locationId: savedLocation[0]
+              }
+            });
           }
         } catch (err) {
           return res

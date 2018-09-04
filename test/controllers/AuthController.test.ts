@@ -2,8 +2,8 @@ process.env.NODE_ENV = "test";
 
 import * as Knex from "knex";
 import "mocha";
-import * as Database from "./../../src/Database";
-import app from "./../../src/index";
+import * as Database from "../../src/Database";
+import app from "../../src/index";
 
 const knex: Knex = Database.connect();
 const chai: Chai.ChaiStatic = require("chai");
@@ -62,6 +62,40 @@ describe("AuthController", () => {
         should.exist(res.body.error);
         should.not.exist(res.body.token);
         res.status.should.equal(400);
+        res.body.error.should.equal("Invalid username or password");
+        done();
+      });
+  }).timeout(10000);
+
+  it("Does not authenticate with a non-existent user", (done: Mocha.Done) => {
+    chai
+      .request(app)
+      .post(authUrl)
+      .send({
+        email: "something",
+        password: "something"
+      })
+      .end((err: any, res: ChaiHttp.Response) => {
+        should.exist(res.body.error);
+        should.not.exist(res.body.token);
+        res.status.should.equal(400);
+        res.body.error.should.equal("Invalid username or password");
+        done();
+      });
+  }).timeout(10000);
+
+  it("Returns an error if request parameters are missing", (done: Mocha.Done) => {
+    chai
+      .request(app)
+      .post(authUrl)
+      .send({
+        email: "something"
+      })
+      .end((err: any, res: ChaiHttp.Response) => {
+        should.exist(res.body.error);
+        should.not.exist(res.body.token);
+        res.status.should.equal(400);
+        res.body.error.should.equal("Missing request body parameters");
         done();
       });
   }).timeout(10000);
