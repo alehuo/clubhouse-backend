@@ -9,6 +9,7 @@ exports.up = function(knex, Promise) {
         table.integer("value");
         // Timestamp
         table.timestamps(true, true);
+        table.unique(["value"]);
       });
     }
   });

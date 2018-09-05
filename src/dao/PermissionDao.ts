@@ -1,4 +1,3 @@
-import * as Promise from "bluebird";
 import * as Knex from "knex";
 import { IPermission } from "../models/IPermission";
 import IDao from "./Dao";

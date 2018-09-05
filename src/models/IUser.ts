@@ -3,7 +3,6 @@ export interface IUser {
   email: string;
   firstName: string;
   lastName: string;
-  unionId: number;
   password: string;
   hidden?: boolean;
   permissions?: number;
@@ -21,7 +20,6 @@ export const userFilter: (user: IUser) => object = (user: IUser): object => {
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
-    unionId: user.unionId,
     permissions: user.permissions,
     created_at: user.created_at,
     updated_at: user.updated_at

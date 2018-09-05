@@ -8,7 +8,7 @@ export const RequestParamMiddleware: any = (...params: string[]) => (
 ) => {
   const missing: string[] = [];
   for (const param of params) {
-    if (req.body[param] === undefined) {
+    if (!req.body.hasOwnProperty(param)) {
       missing.push(param);
     }
   }

@@ -13,12 +13,10 @@ import { Permissions } from "@alehuo/clubhouse-shared";
 import * as Validator from "validator";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
-import StudentUnionDao from "../dao/StudentUnionDao";
 import WatchDao from "../dao/WatchDao";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { IMessage } from "../models/IMessage";
 import { INewsPost } from "../models/INewsPost";
-import { IStudentUnion } from "../models/IStudentUnion";
 import { IWatch } from "../models/IWatch";
 import { MessageFactory } from "../utils/MessageFactory";
 
@@ -26,7 +24,6 @@ export default class UserController extends Controller {
   constructor(
     private userDao: UserDao,
     private calendarEventDao: CalendarEventDao,
-    private studentUnionDao: StudentUnionDao,
     private messageDao: MessageDao,
     private newsPostDao: NewsPostDao,
     private watchDao: WatchDao
@@ -202,14 +199,8 @@ export default class UserController extends Controller {
       "",
       async (req: express.Request, res: express.Response) => {
         try {
-          const {
-            email,
-            firstName,
-            lastName,
-            unionId,
-            password
-          }: IUser = req.body;
-          if (!(email && firstName && lastName && unionId && password)) {
+          const { email, firstName, lastName, password }: IUser = req.body;
+          if (!(email && firstName && lastName && password)) {
             return res
               .status(500)
               .json(
@@ -224,14 +215,6 @@ export default class UserController extends Controller {
                 .json(MessageFactory.createError("User already exists"));
             } else {
               const errors: string[] = [];
-
-              const stdu: IStudentUnion = await this.studentUnionDao.findOne(
-                Number(unionId)
-              );
-              if (!stdu) {
-                errors.push("Student union does not exist");
-              }
-
               if (
                 !Validator.isLength(firstName, {
                   min: 2,
@@ -277,7 +260,6 @@ export default class UserController extends Controller {
                 email,
                 firstName,
                 lastName,
-                unionId,
                 password: bcrypt.hashSync(
                   req.body.password,
                   bcrypt.genSaltSync(10)
@@ -286,7 +268,7 @@ export default class UserController extends Controller {
               });
 
               return res.status(201).json({
-                ...{ email, firstName, lastName, unionId },
+                ...{ email, firstName, lastName },
                 ...{ userId: savedUser[0] }
               });
             }
@@ -373,6 +355,7 @@ export default class UserController extends Controller {
               );
           }
         } catch (ex) {
+          console.log(ex);
           return res
             .status(500)
             .json(

@@ -74,7 +74,6 @@ app.use(
   new UserController(
     new UserDao(knex),
     new CalendarEventDao(knex),
-    new StudentUnionDao(knex),
     new MessageDao(knex),
     new NewsPostDao(knex),
     new WatchDao(knex)

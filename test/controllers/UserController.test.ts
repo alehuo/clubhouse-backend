@@ -76,14 +76,12 @@ describe("UserController", () => {
           res.body[0].email.should.equal("testuser@email.com");
           res.body[0].firstName.should.equal("Test");
           res.body[0].lastName.should.equal("User");
-          res.body[0].unionId.should.equal(1);
           res.body[0].permissions.should.equal(67108863);
           // Second
           res.body[1].userId.should.equal(2);
           res.body[1].email.should.equal("testuser2@email.com");
           res.body[1].firstName.should.equal("Test2");
           res.body[1].lastName.should.equal("User2");
-          res.body[1].unionId.should.equal(1);
           res.body[1].permissions.should.equal(8);
           done();
         });
@@ -104,8 +102,6 @@ describe("UserController", () => {
           res.body.firstName.should.equal("Test");
           should.exist(res.body.lastName);
           res.body.lastName.should.equal("User");
-          should.exist(res.body.unionId);
-          res.body.unionId.should.equal(1);
           should.exist(res.body.permissions);
           res.body.permissions.should.equal(67108863);
           done();
@@ -132,7 +128,6 @@ describe("UserController", () => {
     // 2. Invalid first name
     // 3. Invalid last name
     // 4. Invalid password
-    // 5. Invalid unionId
     it("User can not edit his/her email to something that already exists", (done: Mocha.Done) => {
       chai
         .request(app)
@@ -163,7 +158,6 @@ describe("UserController", () => {
           res.body.email.should.equal("testemail@email.com");
           res.body.firstName.should.equal("Test");
           res.body.lastName.should.equal("User");
-          res.body.unionId.should.equal(1);
           res.body.permissions.should.equal(67108863);
           done();
         });
@@ -190,8 +184,6 @@ describe("UserController", () => {
           res.body.firstName.should.equal("John");
           should.exist(res.body.lastName);
           res.body.lastName.should.equal("Doe");
-          should.exist(res.body.unionId);
-          res.body.unionId.should.equal(1);
           should.exist(res.body.userId);
           res.body.userId.should.equal(3);
           done();
@@ -206,7 +198,6 @@ describe("UserController", () => {
           email: "test@test.com",
           firstName: "John",
           lastName: "Doe",
-          unionId: 1,
           password: "JohnDoe"
         })
         .end((err: any, res: ChaiHttp.Response) => {
@@ -220,6 +211,7 @@ describe("UserController", () => {
         });
     });
 
+    /*
     it("Can't register a new user with an unknown student union", (done: Mocha.Done) => {
       chai
         .request(app)
@@ -228,7 +220,6 @@ describe("UserController", () => {
           email: "test@test.com",
           firstName: "John",
           lastName: "Doe",
-          unionId: 42,
           password: "JohnDoe123"
         })
         .end((err: any, res: ChaiHttp.Response) => {
@@ -240,6 +231,7 @@ describe("UserController", () => {
           done();
         });
     });
+    */
 
     it("Can't register a new user with an invalid email address", (done: Mocha.Done) => {
       chai
@@ -249,7 +241,6 @@ describe("UserController", () => {
           email: "test",
           firstName: "John",
           lastName: "Doe",
-          unionId: 1,
           password: "JohnDoe123"
         })
         .end((err: any, res: ChaiHttp.Response) => {
