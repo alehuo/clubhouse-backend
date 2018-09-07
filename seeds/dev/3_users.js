@@ -13,7 +13,6 @@ exports.seed = function(knex, Promise) {
           email: "testuser@email.com",
           firstName: "Test",
           lastName: "User",
-          unionId: 1,
           permissions: 67108863,
           password: bcrypt.hashSync("testuser", salt)
         },
@@ -22,7 +21,6 @@ exports.seed = function(knex, Promise) {
           email: "testuser2@email.com",
           firstName: "Test2",
           lastName: "User2",
-          unionId: 1,
           permissions: 8,
           password: bcrypt.hashSync("testuser2", salt)
         }

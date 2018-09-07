@@ -1,4 +1,3 @@
-import * as Promise from "bluebird";
 import * as Knex from "knex";
 import { IUser } from "../models/IUser";
 import IDao from "./Dao";

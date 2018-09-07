@@ -8,6 +8,7 @@ import { MessageFactory } from "../utils/MessageFactory";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
 export default class NewsPostController extends Controller {
   constructor(private newsPostDao: NewsPostDao) {
@@ -92,33 +93,27 @@ export default class NewsPostController extends Controller {
     // Add a newspost
     this.router.post(
       "",
+      RequestParamMiddleware("title", "message"),
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_POSTS),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
-          if (!(req.body.title && req.body.message)) {
+
+          const savedPost: INewsPost = {
+            message: req.body.message,
+            title: req.body.title,
+            author: userId
+          };
+          const newsPost: number[] = await this.newsPostDao.save(savedPost);
+          if (newsPost.length > 0) {
+            return res
+              .status(201)
+              .json({ ...savedPost, ...{ postId: newsPost[0] } });
+          } else {
             return res
               .status(400)
-              .json(
-                MessageFactory.createError("Missing request body parameters")
-              );
-          } else {
-            const savedPost: INewsPost = {
-              message: req.body.message,
-              title: req.body.title,
-              author: userId
-            };
-            const newsPost: number[] = await this.newsPostDao.save(savedPost);
-            if (newsPost.length > 0) {
-              return res
-                .status(201)
-                .json(Object.assign({}, savedPost, { postId: newsPost[0] }));
-            } else {
-              return res
-                .status(400)
-                .json(MessageFactory.createError("Error saving newspost"));
-            }
+              .json(MessageFactory.createError("Error saving newspost"));
           }
         } catch (err) {
           return res
@@ -137,7 +132,7 @@ export default class NewsPostController extends Controller {
     this.router.delete(
       "/:newsPostId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_REMOVE_POSTS),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPost: INewsPost = await this.newsPostDao.findOne(

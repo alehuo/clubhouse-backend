@@ -1,4 +1,3 @@
-import * as Promise from "bluebird";
 export default interface IDao<T> {
   findAll(): Promise<T[]>;
   findOne(id: number): Promise<T>;

@@ -6,10 +6,14 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { IWatch } from "../models/IWatch";
 import { MessageFactory } from "../utils/MessageFactory";
 
+import UserDao from "../dao/UserDao";
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
+import { IUser } from "../models/IUser";
 import { watchFilter } from "../models/IWatch";
+import { sendEmail } from "../utils/Mailer";
 
 export default class WatchController extends Controller {
-  constructor(private watchDao: WatchDao) {
+  constructor(private watchDao: WatchDao, private userDao: UserDao) {
     super();
   }
 
@@ -49,7 +53,7 @@ export default class WatchController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get watches from a single user",
+                "Internal server error: Cannot get sessions from a single user",
                 err as Error
               )
             );
@@ -72,7 +76,7 @@ export default class WatchController extends Controller {
             .json(
               MessageFactory.createError(
                 "Internal server error:" +
-                  " Cannot get current running watches from a single user",
+                  " Cannot get current running sessions from a single user",
                 err as Error
               )
             );
@@ -82,6 +86,7 @@ export default class WatchController extends Controller {
     // Start a watch.
     this.router.post(
       "/start",
+      RequestParamMiddleware("startMessage"),
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -93,32 +98,61 @@ export default class WatchController extends Controller {
             return res
               .status(400)
               .json(
-                MessageFactory.createError("You already have an ongoing watch")
+                MessageFactory.createError("You already have an ongoing session running.")
               );
           }
-          if (req.body.startMessage) {
-            const watch: IWatch = {
-              userId,
-              startMessage: req.body.startMessage,
-              startTime: new Date()
-            };
+          const watch: IWatch = {
+            userId,
+            startMessage: req.body.startMessage,
+            startTime: new Date()
+          };
 
-            await this.watchDao.save(watch);
+          const user: IUser = await this.userDao.findOne(userId);
 
-            return res
-              .status(201)
-              .json(MessageFactory.createMessage("Watch started"));
-          } else {
-            return res
-              .status(400)
-              .json(MessageFactory.createError("Missing starting message"));
-          }
+          // TODO: Websocket integration
+
+          await this.watchDao.save(watch);
+
+          const title: string =
+            (process.env.MAIL_PREFIX
+              ? "[" + process.env.MAIL_PREFIX + "]: "
+              : "") +
+            user.firstName +
+            " " +
+            user.lastName +
+            " has started a new session";
+
+          const message: string =
+            user.firstName +
+            " " +
+            user.lastName +
+            " has started a new session with the following message: \r\n\r\n\r\n\r\n" +
+            watch.startMessage +
+            "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
+
+          const htmlMessage: string =
+            "<span style='font-weight: bold;'>" +
+            user.firstName +
+            " " +
+            user.lastName +
+            "</span> has started a new session with the following message: <br/><br/><br/><p>" +
+            watch.startMessage +
+            "</p>" +
+            "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
+
+          // TODO: Fetch email list from userDao
+          await sendEmail(["testuser@test.com"], title, message, htmlMessage);
+
+          return res
+            .status(201)
+            .json(MessageFactory.createMessage("Session started"));
         } catch (err) {
+          console.log(err);
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot start a watch",
+                "Internal server error: Cannot start a session",
                 err as Error
               )
             );
@@ -128,6 +162,7 @@ export default class WatchController extends Controller {
     // Stop a watch.
     this.router.post(
       "/stop",
+      RequestParamMiddleware("endMessage"),
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -140,53 +175,81 @@ export default class WatchController extends Controller {
               return res
                 .status(400)
                 .json(
-                  MessageFactory.createError("You don't have an ongoing watch.")
+                  MessageFactory.createError("You don't have an ongoing session.")
                 );
             } else if (watches.length > 1) {
               return res
                 .status(400)
                 .json(
                   MessageFactory.createError(
-                    "You have more than one watch running." +
+                    "You have more than one session running." +
                       "Please contact a system administrator and use the email system as a backup."
                   )
                 );
             }
           }
-          if (req.body.endMessage) {
-            const currentWatch: IWatch = watches[0];
-            const watch: IWatch = {
-              userId,
-              endMessage: req.body.endMessage,
-              endTime: new Date(),
-              ended: true
-            };
-            if (!currentWatch.watchId) {
-              return res
-                .status(400)
-                .json(MessageFactory.createError("Invalid watch id"));
-            }
-
-            await this.watchDao.endWatch(currentWatch.watchId, watch);
-
-            return res
-              .status(200)
-              .json(
-                MessageFactory.createMessage(
-                  "Watch ended with message '" + req.body.endMessage + "'"
-                )
-              );
-          } else {
+          const currentWatch: IWatch = watches[0];
+          const watch: IWatch = {
+            userId,
+            endMessage: req.body.endMessage,
+            endTime: new Date(),
+            ended: true
+          };
+          if (!currentWatch.watchId) {
             return res
               .status(400)
-              .json(MessageFactory.createError("Missing ending message"));
+              .json(MessageFactory.createError("Invalid session id"));
           }
+
+          await this.watchDao.endWatch(currentWatch.watchId, watch);
+
+          const user: IUser = await this.userDao.findOne(userId);
+
+          // TODO: Websocket integration
+
+          const title: string =
+            (process.env.MAIL_PREFIX
+              ? "[" + process.env.MAIL_PREFIX + "]: "
+              : "") +
+            user.firstName +
+            " " +
+            user.lastName +
+            " has ended a session";
+
+          const message: string =
+            user.firstName +
+            " " +
+            user.lastName +
+            " has ended a session with the following message: \r\n\r\n\r\n\r\n" +
+            watch.endMessage +
+            "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
+
+          const htmlMessage: string =
+            "<span style='font-weight: bold;'>" +
+            user.firstName +
+            " " +
+            user.lastName +
+            "</span> has ended a session with the following message: <br/><br/><br/><p>" +
+            watch.endMessage +
+            "</p>" +
+            "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
+
+          // TODO: Fetch email list from userDao
+          await sendEmail(["testuser@test.com"], title, message, htmlMessage);
+
+          return res
+            .status(200)
+            .json(
+              MessageFactory.createMessage(
+                "Session ended with message '" + req.body.endMessage + "'"
+              )
+            );
         } catch (err) {
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Can't end a watch",
+                "Internal server error: Can't end a session",
                 err as Error
               )
             );
