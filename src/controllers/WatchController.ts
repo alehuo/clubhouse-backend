@@ -221,7 +221,7 @@ export default class WatchController extends Controller {
             " " +
             user.lastName +
             " has ended a watch with the following message: \r\n\r\n\r\n\r\n" +
-            watch.startMessage +
+            watch.endMessage +
             "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
 
           const htmlMessage: string =
@@ -230,7 +230,7 @@ export default class WatchController extends Controller {
             " " +
             user.lastName +
             "</span> has ended a watch with the following message: <br/><br/><br/><p>" +
-            watch.startMessage +
+            watch.endMessage +
             "</p>" +
             "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
 
