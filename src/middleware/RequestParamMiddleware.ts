@@ -17,7 +17,7 @@ export const RequestParamMiddleware: any = (...params: string[]) => (
       .status(400)
       .json(
         MessageFactory.createError("Missing request body parameters", null, [
-          "Missing: " + missing.join(", ")
+          "Missing: " + missing.sort().join(", ")
         ])
       );
   }

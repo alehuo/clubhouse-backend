@@ -15,6 +15,7 @@ import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
 import WatchDao from "../dao/WatchDao";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { IMessage } from "../models/IMessage";
 import { INewsPost } from "../models/INewsPost";
 import { IWatch } from "../models/IWatch";
@@ -197,81 +198,75 @@ export default class UserController extends Controller {
 
     this.router.post(
       "",
+      RequestParamMiddleware("email", "firstName", "lastName", "password"),
       async (req: express.Request, res: express.Response) => {
         try {
           const { email, firstName, lastName, password }: IUser = req.body;
-          if (!(email && firstName && lastName && password)) {
-            return res
-              .status(500)
-              .json(
-                MessageFactory.createError("Missing request body parameters")
-              );
-          } else {
-            const user: IUser = await this.userDao.findByEmail(email.trim());
 
-            if (user) {
+          const user: IUser = await this.userDao.findByEmail(email.trim());
+
+          if (user) {
+            return res
+              .status(400)
+              .json(MessageFactory.createError("User already exists"));
+          } else {
+            const errors: string[] = [];
+            if (
+              !Validator.isLength(firstName, {
+                min: 2,
+                max: 255
+              })
+            ) {
+              errors.push(
+                "First name cannot be shorter than 2 or longer than 255 characters"
+              );
+            }
+            if (
+              !Validator.isLength(lastName, {
+                min: 2,
+                max: 255
+              })
+            ) {
+              errors.push(
+                "Last name cannot be shorter than 2 or longer than 255 characters"
+              );
+            }
+            if (!Validator.isEmail(email)) {
+              errors.push("Email address is invalid");
+            }
+            if (!Validator.isLength(password, { min: 8 })) {
+              errors.push(
+                "Password cannot be empty or shorter than 8 characters"
+              );
+            }
+
+            if (errors.length > 0) {
               return res
                 .status(400)
-                .json(MessageFactory.createError("User already exists"));
-            } else {
-              const errors: string[] = [];
-              if (
-                !Validator.isLength(firstName, {
-                  min: 2,
-                  max: 255
-                })
-              ) {
-                errors.push(
-                  "First name cannot be shorter than 2 or longer than 255 characters"
+                .json(
+                  MessageFactory.createError(
+                    "Error registering user",
+                    null,
+                    errors
+                  )
                 );
-              }
-              if (
-                !Validator.isLength(lastName, {
-                  min: 2,
-                  max: 255
-                })
-              ) {
-                errors.push(
-                  "Last name cannot be shorter than 2 or longer than 255 characters"
-                );
-              }
-              if (!Validator.isEmail(email)) {
-                errors.push("Email address is invalid");
-              }
-              if (!Validator.isLength(password, { min: 8 })) {
-                errors.push(
-                  "Password cannot be empty or shorter than 8 characters"
-                );
-              }
-
-              if (errors.length > 0) {
-                return res
-                  .status(400)
-                  .json(
-                    MessageFactory.createError(
-                      "Error registering user",
-                      null,
-                      errors
-                    )
-                  );
-              }
-
-              const savedUser: number[] = await this.userDao.save({
-                email,
-                firstName,
-                lastName,
-                password: bcrypt.hashSync(
-                  req.body.password,
-                  bcrypt.genSaltSync(10)
-                ),
-                permissions: 8
-              });
-
-              return res.status(201).json({
-                ...{ email, firstName, lastName },
-                ...{ userId: savedUser[0] }
-              });
             }
+
+            const savedUser: number[] = await this.userDao.save({
+              email,
+              firstName,
+              lastName,
+              password: bcrypt.hashSync(
+                req.body.password,
+                bcrypt.genSaltSync(10)
+              ),
+              permissions: 8
+            });
+
+            return res.status(201).json({
+              ...{ email, firstName, lastName },
+              ...{ userId: savedUser[0] }
+            });
           }
         } catch (err) {
           return res
@@ -289,7 +284,7 @@ export default class UserController extends Controller {
     this.router.delete(
       "/:userId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_DELETE_USER),
+      PermissionMiddleware(Permissions.ALLOW_REMOVE_USER),
       async (req: express.Request, res: express.Response) => {
         try {
           const user: IUser = await this.userDao.findOne(req.params.userId);

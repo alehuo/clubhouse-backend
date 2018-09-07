@@ -6,6 +6,7 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { IWatch } from "../models/IWatch";
 import { MessageFactory } from "../utils/MessageFactory";
 
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { watchFilter } from "../models/IWatch";
 
 export default class WatchController extends Controller {
@@ -82,6 +83,7 @@ export default class WatchController extends Controller {
     // Start a watch.
     this.router.post(
       "/start",
+      RequestParamMiddleware("startMessage"),
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -96,23 +98,19 @@ export default class WatchController extends Controller {
                 MessageFactory.createError("You already have an ongoing watch")
               );
           }
-          if (req.body.startMessage) {
-            const watch: IWatch = {
-              userId,
-              startMessage: req.body.startMessage,
-              startTime: new Date()
-            };
+          const watch: IWatch = {
+            userId,
+            startMessage: req.body.startMessage,
+            startTime: new Date()
+          };
 
-            await this.watchDao.save(watch);
+          // TODO: Websocket integration
 
-            return res
-              .status(201)
-              .json(MessageFactory.createMessage("Watch started"));
-          } else {
-            return res
-              .status(400)
-              .json(MessageFactory.createError("Missing starting message"));
-          }
+          await this.watchDao.save(watch);
+
+          return res
+            .status(201)
+            .json(MessageFactory.createMessage("Watch started"));
         } catch (err) {
           return res
             .status(500)
@@ -128,6 +126,7 @@ export default class WatchController extends Controller {
     // Stop a watch.
     this.router.post(
       "/stop",
+      RequestParamMiddleware("endMessage"),
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
@@ -153,34 +152,30 @@ export default class WatchController extends Controller {
                 );
             }
           }
-          if (req.body.endMessage) {
-            const currentWatch: IWatch = watches[0];
-            const watch: IWatch = {
-              userId,
-              endMessage: req.body.endMessage,
-              endTime: new Date(),
-              ended: true
-            };
-            if (!currentWatch.watchId) {
-              return res
-                .status(400)
-                .json(MessageFactory.createError("Invalid watch id"));
-            }
-
-            await this.watchDao.endWatch(currentWatch.watchId, watch);
-
-            return res
-              .status(200)
-              .json(
-                MessageFactory.createMessage(
-                  "Watch ended with message '" + req.body.endMessage + "'"
-                )
-              );
-          } else {
+          const currentWatch: IWatch = watches[0];
+          const watch: IWatch = {
+            userId,
+            endMessage: req.body.endMessage,
+            endTime: new Date(),
+            ended: true
+          };
+          if (!currentWatch.watchId) {
             return res
               .status(400)
-              .json(MessageFactory.createError("Missing ending message"));
+              .json(MessageFactory.createError("Invalid watch id"));
           }
+
+          await this.watchDao.endWatch(currentWatch.watchId, watch);
+
+          // TODO: Websocket integration
+
+          return res
+            .status(200)
+            .json(
+              MessageFactory.createMessage(
+                "Watch ended with message '" + req.body.endMessage + "'"
+              )
+            );
         } catch (err) {
           return res
             .status(500)

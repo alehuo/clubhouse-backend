@@ -133,7 +133,9 @@ describe("WatchController", () => {
           );
           should.not.exist(res.body[1].endMessage);
           should.exist(res.body[1].startTime);
-          res.body[1].startTime.should.equal(new Date(2018, 6, 1, 23, 58).toISOString());
+          res.body[1].startTime.should.equal(
+            new Date(2018, 6, 1, 23, 58).toISOString()
+          );
           should.not.exist(res.body[1].endTime);
 
           done();
@@ -167,7 +169,7 @@ describe("WatchController", () => {
     });
   });
 
-  describe("POST /api/v1/watch/begin & POST /api/v1/watch/end", () => {
+  describe("POST /api/v1/watch/start & POST /api/v1/watch/stop", () => {
     it("User can start and stop a watch.", (done: Mocha.Done) => {
       // Start the watch
       chai
@@ -180,7 +182,7 @@ describe("WatchController", () => {
           should.not.exist(res.body.error);
           should.exist(res.body.message);
           res.body.message.should.equal("Watch started");
-          // End the watch
+          // Stop the watch
           chai
             .request(app)
             .post(url + "/stop")
@@ -199,7 +201,6 @@ describe("WatchController", () => {
     });
 
     it("User can not start a watch if he/she already has an ongoing watch.", (done: Mocha.Done) => {
-      // Start the watch
       chai
         .request(app)
         .post(url + "/start")
@@ -215,7 +216,6 @@ describe("WatchController", () => {
     });
 
     it("User can not stop a watch if he/she doesn't have an ongoing watch.", (done: Mocha.Done) => {
-      // Start the watch
       chai
         .request(app)
         .post(url + "/stop")
@@ -226,6 +226,42 @@ describe("WatchController", () => {
           should.exist(res.body.error);
           should.not.exist(res.body.message);
           res.body.error.should.equal("You don't have an ongoing watch.");
+          done();
+        });
+    });
+
+    it("User can not start a watch with missing request parameters.", (done: Mocha.Done) => {
+      chai
+        .request(app)
+        .post(url + "/start")
+        .set("Authorization", generateToken({ userId: 2 }))
+        .send({ test: "Let's rock and roll!" })
+        .end((err: any, res: ChaiHttp.Response) => {
+          res.status.should.equal(400);
+          should.exist(res.body.error);
+          should.not.exist(res.body.message);
+          res.body.error.should.equal("Missing request body parameters");
+          should.exist(res.body.errors);
+          res.body.errors.length.should.equal(1);
+          res.body.errors[0].should.equal("Missing: startMessage");
+          done();
+        });
+    });
+
+    it("User can not stop a watch with missing request parameters.", (done: Mocha.Done) => {
+      chai
+        .request(app)
+        .post(url + "/stop")
+        .set("Authorization", generateToken({ userId: 2 }))
+        .send({ test: "Let's rock and roll!" })
+        .end((err: any, res: ChaiHttp.Response) => {
+          res.status.should.equal(400);
+          should.exist(res.body.error);
+          should.not.exist(res.body.message);
+          res.body.error.should.equal("Missing request body parameters");
+          should.exist(res.body.errors);
+          res.body.errors.length.should.equal(1);
+          res.body.errors[0].should.equal("Missing: endMessage");
           done();
         });
     });

@@ -29,7 +29,7 @@ export default class CalendarEventController extends Controller {
         "unionId"
       ),
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EVENT),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req: express.Request, res: express.Response) => {
         const {
           name,
@@ -146,7 +146,7 @@ export default class CalendarEventController extends Controller {
     this.router.delete(
       "/:eventId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_REMOVE_EVENT),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(

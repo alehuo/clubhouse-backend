@@ -164,7 +164,7 @@ describe("CalendarEventController", () => {
         should.exist(res.body.errors);
         res.body.errors.length.should.equal(1);
         res.body.errors[0].should.equal(
-          "Missing: name, description, locationId, restricted, startTime, endTime, unionId"
+          "Missing: description, endTime, locationId, name, restricted, startTime, unionId"
         );
         should.not.exist(res.body.token);
         res.status.should.equal(400);

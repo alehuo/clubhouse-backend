@@ -3,6 +3,7 @@ import Controller from "./Controller";
 
 import MessageDao from "../dao/MessageDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { IMessage } from "../models/IMessage";
 import { MessageFactory } from "../utils/MessageFactory";
 
@@ -63,17 +64,11 @@ export default class MessageController extends Controller {
     // Add a message
     this.router.post(
       "",
+      RequestParamMiddleware("message"),
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          if (!req.body.message) {
-            return res
-              .status(400)
-              .json(MessageFactory.createError("Missing message"));
-          }
-
           const userId: number = res.locals.token.data.userId;
-          // const currentTimestamp: Date = new Date();
 
           const msg: IMessage = {
             message: req.body.message,
@@ -82,9 +77,11 @@ export default class MessageController extends Controller {
 
           const savedMessage: number[] = await this.messageDao.save(msg);
 
+          // TODO: Websocket integration
+
           return res
             .status(201)
-            .json(Object.assign({}, msg, { messageId: savedMessage[0] }));
+            .json({ ...msg, ...{ messageId: savedMessage[0] } });
         } catch (err) {
           return res
             .status(500)

@@ -67,9 +67,9 @@ export default class LocationController extends Controller {
 
     this.router.post(
       "",
-      RequestParamMiddleware("name, address"),
+      RequestParamMiddleware("name", "address"),
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_LOCATION),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const { name, address }: ILocation = req.body;
@@ -109,7 +109,7 @@ export default class LocationController extends Controller {
     this.router.delete(
       "/:locationId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_DELETE_LOCATION),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const locations: any = await this.locationDao.findOne(

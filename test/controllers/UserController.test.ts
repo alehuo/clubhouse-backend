@@ -248,9 +248,7 @@ describe("UserController", () => {
           should.exist(res.body.error);
           res.body.errors.length.should.equal(1);
           res.body.error.should.equal("Error registering user");
-          res.body.errors[0].should.equal(
-            "Email address is invalid"
-          );
+          res.body.errors[0].should.equal("Email address is invalid");
           done();
         });
     });
@@ -264,8 +262,13 @@ describe("UserController", () => {
           firstName: "John"
         })
         .end((err: any, res: ChaiHttp.Response) => {
-          res.status.should.equal(500);
+          res.status.should.equal(400);
           res.body.error.should.equal("Missing request body parameters");
+          should.exist(res.body.errors);
+          res.body.errors.length.should.equal(1);
+          res.body.errors[0].should.equal(
+            "Missing: lastName, password"
+          );
           should.exist(res.body.error);
           done();
         });
