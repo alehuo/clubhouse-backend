@@ -6,11 +6,14 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { IWatch } from "../models/IWatch";
 import { MessageFactory } from "../utils/MessageFactory";
 
+import UserDao from "../dao/UserDao";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
+import { IUser } from "../models/IUser";
 import { watchFilter } from "../models/IWatch";
+import { sendEmail } from "../utils/Mailer";
 
 export default class WatchController extends Controller {
-  constructor(private watchDao: WatchDao) {
+  constructor(private watchDao: WatchDao, private userDao: UserDao) {
     super();
   }
 
@@ -104,14 +107,47 @@ export default class WatchController extends Controller {
             startTime: new Date()
           };
 
+          const user: IUser = await this.userDao.findOne(userId);
+
           // TODO: Websocket integration
 
           await this.watchDao.save(watch);
+
+          const title: string =
+            (process.env.MAIL_PREFIX
+              ? "[" + process.env.MAIL_PREFIX + "]: "
+              : "") +
+            user.firstName +
+            " " +
+            user.lastName +
+            " has started a new watch";
+
+          const message: string =
+            user.firstName +
+            " " +
+            user.lastName +
+            " has started a new watch with the following message: \r\n\r\n\r\n\r\n" +
+            watch.startMessage +
+            "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
+
+          const htmlMessage: string =
+            "<span style='font-weight: bold;'>" +
+            user.firstName +
+            " " +
+            user.lastName +
+            "</span> has started a new watch with the following message: <br/><br/><br/><p>" +
+            watch.startMessage +
+            "</p>" +
+            "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
+
+          // TODO: Fetch email list from userDao
+          await sendEmail(["testuser@test.com"], title, message, htmlMessage);
 
           return res
             .status(201)
             .json(MessageFactory.createMessage("Watch started"));
         } catch (err) {
+          console.log(err);
           return res
             .status(500)
             .json(
@@ -167,7 +203,39 @@ export default class WatchController extends Controller {
 
           await this.watchDao.endWatch(currentWatch.watchId, watch);
 
+          const user: IUser = await this.userDao.findOne(userId);
+
           // TODO: Websocket integration
+
+          const title: string =
+            (process.env.MAIL_PREFIX
+              ? "[" + process.env.MAIL_PREFIX + "]: "
+              : "") +
+            user.firstName +
+            " " +
+            user.lastName +
+            " has ended a watch";
+
+          const message: string =
+            user.firstName +
+            " " +
+            user.lastName +
+            " has ended a watch with the following message: \r\n\r\n\r\n\r\n" +
+            watch.startMessage +
+            "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
+
+          const htmlMessage: string =
+            "<span style='font-weight: bold;'>" +
+            user.firstName +
+            " " +
+            user.lastName +
+            "</span> has ended a watch with the following message: <br/><br/><br/><p>" +
+            watch.startMessage +
+            "</p>" +
+            "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
+
+          // TODO: Fetch email list from userDao
+          await sendEmail(["testuser@test.com"], title, message, htmlMessage);
 
           return res
             .status(200)

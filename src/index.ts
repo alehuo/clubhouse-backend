@@ -55,7 +55,7 @@ app.use(
   morgan("common", {
     stream: fs.createWriteStream(path.join(__dirname, "..", "access.log"), {
       flags: "a"
-    }),
+    })
   })
 );
 
@@ -118,14 +118,14 @@ app.use(
 app.use(
   apiUrl("watch", API_VERSION),
   apiHeader("watch", API_VERSION),
-  new WatchController(new WatchDao(knex)).routes()
+  new WatchController(new WatchDao(knex), new UserDao(knex)).routes()
 );
 
 // Message route
 app.use(
   apiUrl("message", API_VERSION),
   apiHeader("message", API_VERSION),
-  new MessageController(new MessageDao(knex)).routes()
+  new MessageController(new MessageDao(knex), new UserDao(knex)).routes()
 );
 
 // Newspost route

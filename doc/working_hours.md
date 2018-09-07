@@ -44,10 +44,10 @@
 | 1.9.2018  | 1.0h  | Created tests for timestamp filter. Replaced custom Validators with Validator.js. Fixed failed tests.                                                                                                                                                                                            |
 | 4.9.2018  | 2.0h  | Created RequestParamMiddleware to check for missing request body parameters. Created some tests for CalendarEventController. Improved iCal format to include event address.                                                                                                                      |
 | 5.9.2018  | 1.5h  | Removed authorization requirement from viewing calendar events. Fixed iCal stream. Removed unionId column from User. Added unique email for user & unique permission value for permissions.                                                                                                      |
-| 7.9.2018  | 2h    | Added RequestParamMiddleware to all routes. Added Permission middleware to addional routes. Code cleanup.                                                                                                                                                                                        |
+| 7.9.2018  | 4h    | Added RequestParamMiddleware to all routes. Added Permission middleware to addional routes. Code cleanup. Implemented email functionality.                                                                                                                                                       |
 
 Total:
 
 61.0 h (part 1)
 
-17.5 h (part 2)
+19.5 h (part 2)

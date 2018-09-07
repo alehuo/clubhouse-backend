@@ -1,6 +1,5 @@
 process.env.NODE_ENV = "test";
 process.env.JWT_SECRET = "HelloWorld";
-process.env.DEBUG = "knex:query";
 
 import * as Knex from "knex";
 import "mocha";
