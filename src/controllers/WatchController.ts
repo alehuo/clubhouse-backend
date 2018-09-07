@@ -53,7 +53,7 @@ export default class WatchController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get watches from a single user",
+                "Internal server error: Cannot get sessions from a single user",
                 err as Error
               )
             );
@@ -76,7 +76,7 @@ export default class WatchController extends Controller {
             .json(
               MessageFactory.createError(
                 "Internal server error:" +
-                  " Cannot get current running watches from a single user",
+                  " Cannot get current running sessions from a single user",
                 err as Error
               )
             );
@@ -98,7 +98,7 @@ export default class WatchController extends Controller {
             return res
               .status(400)
               .json(
-                MessageFactory.createError("You already have an ongoing watch")
+                MessageFactory.createError("You already have an ongoing session running.")
               );
           }
           const watch: IWatch = {
@@ -120,13 +120,13 @@ export default class WatchController extends Controller {
             user.firstName +
             " " +
             user.lastName +
-            " has started a new watch";
+            " has started a new session";
 
           const message: string =
             user.firstName +
             " " +
             user.lastName +
-            " has started a new watch with the following message: \r\n\r\n\r\n\r\n" +
+            " has started a new session with the following message: \r\n\r\n\r\n\r\n" +
             watch.startMessage +
             "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
 
@@ -135,7 +135,7 @@ export default class WatchController extends Controller {
             user.firstName +
             " " +
             user.lastName +
-            "</span> has started a new watch with the following message: <br/><br/><br/><p>" +
+            "</span> has started a new session with the following message: <br/><br/><br/><p>" +
             watch.startMessage +
             "</p>" +
             "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
@@ -145,14 +145,14 @@ export default class WatchController extends Controller {
 
           return res
             .status(201)
-            .json(MessageFactory.createMessage("Watch started"));
+            .json(MessageFactory.createMessage("Session started"));
         } catch (err) {
           console.log(err);
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot start a watch",
+                "Internal server error: Cannot start a session",
                 err as Error
               )
             );
@@ -175,14 +175,14 @@ export default class WatchController extends Controller {
               return res
                 .status(400)
                 .json(
-                  MessageFactory.createError("You don't have an ongoing watch.")
+                  MessageFactory.createError("You don't have an ongoing session.")
                 );
             } else if (watches.length > 1) {
               return res
                 .status(400)
                 .json(
                   MessageFactory.createError(
-                    "You have more than one watch running." +
+                    "You have more than one session running." +
                       "Please contact a system administrator and use the email system as a backup."
                   )
                 );
@@ -198,7 +198,7 @@ export default class WatchController extends Controller {
           if (!currentWatch.watchId) {
             return res
               .status(400)
-              .json(MessageFactory.createError("Invalid watch id"));
+              .json(MessageFactory.createError("Invalid session id"));
           }
 
           await this.watchDao.endWatch(currentWatch.watchId, watch);
@@ -214,13 +214,13 @@ export default class WatchController extends Controller {
             user.firstName +
             " " +
             user.lastName +
-            " has ended a watch";
+            " has ended a session";
 
           const message: string =
             user.firstName +
             " " +
             user.lastName +
-            " has ended a watch with the following message: \r\n\r\n\r\n\r\n" +
+            " has ended a session with the following message: \r\n\r\n\r\n\r\n" +
             watch.endMessage +
             "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
 
@@ -229,7 +229,7 @@ export default class WatchController extends Controller {
             user.firstName +
             " " +
             user.lastName +
-            "</span> has ended a watch with the following message: <br/><br/><br/><p>" +
+            "</span> has ended a session with the following message: <br/><br/><br/><p>" +
             watch.endMessage +
             "</p>" +
             "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
@@ -241,7 +241,7 @@ export default class WatchController extends Controller {
             .status(200)
             .json(
               MessageFactory.createMessage(
-                "Watch ended with message '" + req.body.endMessage + "'"
+                "Session ended with message '" + req.body.endMessage + "'"
               )
             );
         } catch (err) {
@@ -249,7 +249,7 @@ export default class WatchController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Can't end a watch",
+                "Internal server error: Can't end a session",
                 err as Error
               )
             );
