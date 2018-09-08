@@ -33,15 +33,18 @@ export const sendEmail: (
     text,
     htmlString
   };
-  const res: any = await transporter.sendMail(mailOptions);
 
-  if (
-    process.env.NODE_ENV === "test" ||
-    process.env.NODE_ENV === "development"
-  ) {
-    console.log("Message sent: %s", res.messageId);
-    console.log("Sent message: ", res.message);
-    // Preview only available when sending through an Ethereal account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(res));
+  if (process.env.ENABLE_EMAIL_SENDING) {
+    const res: any = await transporter.sendMail(mailOptions);
+
+    if (
+      process.env.NODE_ENV === "test" ||
+      process.env.NODE_ENV === "development"
+    ) {
+      console.log("Message sent: %s", res.messageId);
+      console.log("Sent message: ", res.message);
+      // Preview only available when sending through an Ethereal account
+      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(res));
+    }
   }
 };
