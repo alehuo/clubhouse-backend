@@ -1,26 +1,26 @@
 language: node_js
 node_js:
-- '9.10'
+  - "9.10"
 services:
-- mysql
+  - mysql
 before_install:
-- mysql -e 'CREATE DATABASE IF NOT EXISTS `clubhouse_test`;'
-- npm install -g yarn
-- npm install -g codecov
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS `clubhouse_test`;'
+  - npm install -g yarn
+  - npm install -g codecov
 install:
-- yarn install --dev
-- yarn migrate
-- yarn seed
+  - yarn install --dev
+  - yarn migrate
+  - yarn seed
 script:
-- yarn lint
-- yarn test
+  - yarn lint
+  - yarn test
 after_success:
-- codecov
+  - codecov
 deploy:
   provider: heroku
   api_key:
     secure: ZkYx5sL6ugqIVsd1o5zNh/uAWxijYcve3CFkR0KmaHRaiddxIBNi8/ez2TDEdJEwYjAoNapzpOANXa2ypOC6ww+JyuBczjdRdjptEyn3VFCreQ31Ql+wIwHk0vR7y8ywEwLJrWjjgoNWI6oADfoeZ55d7L6CRe1Hr1Thmk7R5H3yQyYl1GBd2nAUrva7KlyxyskdvgP0VZud2D9Gj9WH4d1jZuoLIh5bmrYj/Rz7VbIQY6HSeByMkSr7BUPD6WJLdjKQuYgVRQ0p52fnCEDCQVB0RbNovtRuRJHtexoDo6yiUHjr/xTm2/xLcxE4nlNppoN2mTEgj99XP+OJUUGK6IMXxk1kilWMwfMU8N+jfqGAGDfDCR5VWTY1c0qkYjISsnnT0gVbmYt8zDeum2KVjqHAn+RQJmeeFnQH+PdJ7ZQydVlsYvcR3TXjgU3NbBzkz8NbGKXYxXDm/wUcNEdHvyhUBq1M7cvGM+P1xKWAZXukGR3qhgF1b0x0kqv3lGBrxV3ZWPFhAH1LNGOifMs9uK0WbRBEWeN1i04KrHIg8GyJ7ZQe+8hz5NnNJlDppi7xe74JgaiCn0+Ub42Ap16bl1bNYS+yKOpV3Qy+UuZnfqtxCHMp4QlpJ8jEShysA5m6uzZ9zZv8U+K5vYZ2KNHfqgzHnmLM/gsdQgG8+a9EUAs=
   run:
-  - yarn migrate
-  - yarn build
-  - node ./dist/src/index.js
+    - yarn migrate
+    - yarn build
+    - node ./dist/src/index.js
