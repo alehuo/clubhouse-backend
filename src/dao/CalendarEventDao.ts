@@ -1,4 +1,3 @@
-import * as Promise from "bluebird";
 import * as Knex from "knex";
 import { ICalendarEvent } from "../models/ICalendarEvent";
 import IDao from "./Dao";

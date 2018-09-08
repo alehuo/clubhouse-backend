@@ -41,13 +41,12 @@ export default class AuthController extends Controller {
               if (match) {
                 const token: string = SignToken({
                   userId: user.userId,
-                  unionId: user.unionId,
                   email: user.email,
                   firstName: user.firstName,
                   lastName: user.lastName,
                   permissions: user.permissions
                 });
-                return res.status(200).json(Object.assign({}, { token }));
+                return res.status(200).json({ ...{ token } });
               } else {
                 return res
                   .status(400)

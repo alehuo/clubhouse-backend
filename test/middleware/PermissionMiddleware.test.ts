@@ -24,7 +24,7 @@ describe("PermissionMiddleware", () => {
     });
     const response: httpMocks.MockResponse<any> = httpMocks.createResponse();
 
-    await PermissionMiddleware(Permissions.ALLOW_ADD_EVENT)(
+    await PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_EVENTS)(
       request,
       response,
       function(): void {
@@ -79,7 +79,7 @@ describe("PermissionMiddleware", () => {
     let nextCalled: number = 0;
     const token: string | object = VerifyToken(
       generateToken({
-        permissions: Math.pow(2, 4)
+        permissions: Permissions.ALLOW_ADD_REMOVE_KEYS.value
       }).replace("Bearer ", "")
     );
 
@@ -96,7 +96,7 @@ describe("PermissionMiddleware", () => {
         token
       }
     });
-    await PermissionMiddleware(Permissions.ALLOW_ADD_KEYS)(
+    await PermissionMiddleware(Permissions.ALLOW_ADD_REMOVE_KEYS)(
       request,
       response,
       function(): void {

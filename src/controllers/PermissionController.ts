@@ -6,6 +6,9 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
+import { Permissions } from "@alehuo/clubhouse-shared";
+import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { getPermissions } from "../utils/PermissionUtils";
 
 export default class PermissionController extends Controller {
@@ -17,6 +20,7 @@ export default class PermissionController extends Controller {
     this.router.get(
       "",
       JWTMiddleware,
+      PermissionMiddleware(Permissions.ALLOW_VIEW_PERMISSIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const result: IPermission[] = await this.permissionDao.findAll();
@@ -56,6 +60,7 @@ export default class PermissionController extends Controller {
     this.router.get(
       "/:permissionId(\\d+)",
       JWTMiddleware,
+      PermissionMiddleware(Permissions.ALLOW_VIEW_PERMISSIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const permission: IPermission = await this.permissionDao.findOne(
@@ -83,37 +88,30 @@ export default class PermissionController extends Controller {
 
     this.router.post(
       "",
+      RequestParamMiddleware("name", "value"),
       JWTMiddleware,
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_PERMISSIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const permissionData: IPermission = req.body;
-          if (!(permissionData.name && permissionData.value)) {
+          const { name, value }: IPermission = req.body;
+          const perm: IPermission = await this.permissionDao.findByValue(value);
+
+          if (perm) {
             return res
-              .status(500)
-              .json(
-                MessageFactory.createError("Missing request body parameters")
-              );
+              .status(400)
+              .json(MessageFactory.createError("Permission already exists"));
           } else {
-            const perm: IPermission = await this.permissionDao.findByValue(
-              permissionData.value
-            );
+            const savedPermission: number[] = await this.permissionDao.save({
+              name,
+              value
+            });
 
-            if (perm) {
-              return res
-                .status(400)
-                .json(MessageFactory.createError("Permission already exists"));
-            } else {
-              const savedPermission: number[] = await this.permissionDao.save({
-                name: permissionData.name,
-                value: permissionData.value
-              });
-
-              return res.status(201).json(
-                Object.assign({}, permissionData, {
-                  permissionId: savedPermission[0]
-                })
-              );
-            }
+            return res.status(201).json({
+              ...{ name, value },
+              ...{
+                permissionId: savedPermission[0]
+              }
+            });
           }
         } catch (err) {
           return res

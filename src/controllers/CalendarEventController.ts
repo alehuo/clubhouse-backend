@@ -4,7 +4,7 @@ import CalendarEventDao from "../dao/CalendarEventDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { ICalendarEvent } from "../models/ICalendarEvent";
-import { createICal } from "../utils/iCalUtils";
+import { createICal, createICalStream } from "../utils/iCalUtils";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
@@ -29,7 +29,7 @@ export default class CalendarEventController extends Controller {
         "unionId"
       ),
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EVENT),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req: express.Request, res: express.Response) => {
         const {
           name,
@@ -74,8 +74,6 @@ export default class CalendarEventController extends Controller {
 
     this.router.get(
       "",
-      JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const events: ICalendarEvent[] = await this.calendarEventDao.findAll();
@@ -94,9 +92,32 @@ export default class CalendarEventController extends Controller {
     );
 
     this.router.get(
+      "/ical",
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const events: ICalendarEvent[] = await this.calendarEventDao.findAll();
+          const ical: string = await createICalStream(events);
+          res.setHeader(
+            "Content-disposition",
+            "attachment; filename=events_all.ics"
+          );
+          res.setHeader("Content-type", "text/calendar");
+          return res.send(ical);
+        } catch (ex) {
+          return res
+            .status(500)
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get all events",
+                ex as Error
+              )
+            );
+        }
+      }
+    );
+
+    this.router.get(
       "/:eventId(\\d+)",
-      JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(
@@ -125,7 +146,7 @@ export default class CalendarEventController extends Controller {
     this.router.delete(
       "/:eventId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_REMOVE_EVENT),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(
@@ -167,8 +188,6 @@ export default class CalendarEventController extends Controller {
     // iCal
     this.router.get(
       "/:eventId(\\d+)/ical",
-      JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const event: ICalendarEvent = await this.calendarEventDao.findOne(
@@ -192,7 +211,7 @@ export default class CalendarEventController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server erro: Cannot get a single event as iCal",
+                "Internal server error: Cannot get a single event as iCal",
                 ex as Error
               )
             );

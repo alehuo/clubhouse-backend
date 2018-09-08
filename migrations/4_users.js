@@ -7,17 +7,13 @@ exports.up = function(knex, Promise) {
         table.string("password", 255).notNullable();
         table.string("firstName", 255).notNullable();
         table.string("lastName", 255).notNullable();
-        table.integer("unionId").unsigned().notNullable();
-        table
-          .foreign("unionId")
-          .references("unionId")
-          .inTable("studentUnions");
         table
           .integer("permissions")
           .notNullable()
           .defaultTo(8);
         // Timestamp
         table.timestamps(true, true);
+        table.unique(["email"]);
       });
     }
   });

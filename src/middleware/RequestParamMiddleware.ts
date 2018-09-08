@@ -8,7 +8,7 @@ export const RequestParamMiddleware: any = (...params: string[]) => (
 ) => {
   const missing: string[] = [];
   for (const param of params) {
-    if (req.body[param] === undefined) {
+    if (!req.body.hasOwnProperty(param)) {
       missing.push(param);
     }
   }
@@ -17,7 +17,7 @@ export const RequestParamMiddleware: any = (...params: string[]) => (
       .status(400)
       .json(
         MessageFactory.createError("Missing request body parameters", null, [
-          "Missing: " + missing.join(", ")
+          "Missing: " + missing.sort().join(", ")
         ])
       );
   }

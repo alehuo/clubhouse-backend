@@ -98,5 +98,5 @@ describe("AuthController", () => {
         res.body.error.should.equal("Missing request body parameters");
         done();
       });
-  }).timeout(10000);
+  }).timeout(5000);
 });

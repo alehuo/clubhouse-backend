@@ -255,6 +255,9 @@ describe("StudentUnionController", () => {
           res.status.should.equal(400);
           should.exist(res.body.error);
           res.body.error.should.equal("Missing request body parameters");
+          should.exist(res.body.errors);
+          res.body.errors.length.should.equal(1);
+          res.body.errors[0].should.equal("Missing: description");
           done();
         });
     });

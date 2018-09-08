@@ -8,6 +8,7 @@ import Controller from "./Controller";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
 /**
  * Student union controller.
@@ -64,60 +65,44 @@ export default class StudentUnionController extends Controller {
 
     this.router.post(
       "",
+      RequestParamMiddleware("name", "description"),
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_STUDENT_UNION),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const studentUnionData: IStudentUnion = req.body;
-          if (
-            !(
-              studentUnionData.name !== undefined &&
-              studentUnionData.description !== undefined
-            )
-          ) {
+          const { name, description }: IStudentUnion = req.body;
+          const studentUnion: IStudentUnion = await this.studentUnionDao.findByName(
+            name
+          );
+
+          if (studentUnion) {
             return res
               .status(400)
-              .json(
-                MessageFactory.createError("Missing request body parameters")
-              );
+              .json(MessageFactory.createError("Student union already exists"));
           } else {
-            const studentUnion: IStudentUnion = await this.studentUnionDao.findByName(
-              studentUnionData.name
-            );
-
-            if (studentUnion) {
+            if (name.length === 0 || description.length === 0) {
               return res
                 .status(400)
                 .json(
-                  MessageFactory.createError("Student union already exists")
+                  MessageFactory.createError(
+                    "Name or description cannot be empty"
+                  )
                 );
-            } else {
-              if (
-                studentUnionData.name.length === 0 ||
-                studentUnionData.description.length === 0
-              ) {
-                return res
-                  .status(400)
-                  .json(
-                    MessageFactory.createError(
-                      "Name or description cannot be empty"
-                    )
-                  );
-              }
-
-              const savedStudentUnion: number[] = await this.studentUnionDao.save(
-                {
-                  name: studentUnionData.name,
-                  description: studentUnionData.description
-                }
-              );
-
-              return res.status(201).json(
-                Object.assign({}, studentUnionData, {
-                  unionId: savedStudentUnion[0]
-                })
-              );
             }
+
+            const savedStudentUnion: number[] = await this.studentUnionDao.save(
+              {
+                name,
+                description
+              }
+            );
+
+            return res.status(201).json({
+              ...{ name, description },
+              ...{
+                unionId: savedStudentUnion[0]
+              }
+            });
           }
         } catch (err) {
           return res
@@ -132,7 +117,7 @@ export default class StudentUnionController extends Controller {
     this.router.delete(
       "/:studentUnionId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_REMOVE_STUDENT_UNION),
+      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         const studentUnion: IStudentUnion = await this.studentUnionDao.findOne(
           req.params.studentUnionId
