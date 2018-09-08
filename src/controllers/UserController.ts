@@ -54,6 +54,33 @@ export default class UserController extends Controller {
     );
 
     this.router.get(
+      "/ownData",
+      JWTMiddleware,
+      async (req: express.Request, res: express.Response) => {
+        try {
+          const userId: number = res.locals.token.data.userId;
+          const user: IUser = await this.userDao.findOne(userId);
+          if (!user) {
+            return res
+              .status(404)
+              .json(MessageFactory.createError("User not found"));
+          } else {
+            return res.status(200).json(userFilter(user));
+          }
+        } catch (ex) {
+          return res
+            .status(500)
+            .json(
+              MessageFactory.createError(
+                "Internal server error: Cannot get a single user",
+                ex as Error
+              )
+            );
+        }
+      }
+    );
+
+    this.router.get(
       "/:userId(\\d+)",
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {

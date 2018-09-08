@@ -98,7 +98,9 @@ export default class WatchController extends Controller {
             return res
               .status(400)
               .json(
-                MessageFactory.createError("You already have an ongoing session running.")
+                MessageFactory.createError(
+                  "You already have an ongoing session running."
+                )
               );
           }
           const watch: IWatch = {
@@ -175,7 +177,9 @@ export default class WatchController extends Controller {
               return res
                 .status(400)
                 .json(
-                  MessageFactory.createError("You don't have an ongoing session.")
+                  MessageFactory.createError(
+                    "You don't have an ongoing session."
+                  )
                 );
             } else if (watches.length > 1) {
               return res
@@ -262,17 +266,26 @@ export default class WatchController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
+          // This should return only one session, as only one active is permitted
           const watches: IWatch[] = await this.watchDao.findOngoingByUser(
             userId
           );
           const otherWatches: IWatch[] = await this.watchDao.findAllOngoing();
-          const peopleCount: number = otherWatches.filter(
-            (watch: IWatch) => watch.userId !== userId
-          ).length;
-          return res
-            .status(200)
-            .json({ running: watches && watches.length !== 0, peopleCount });
+          const peopleCount: number = otherWatches.length;
+          if (watches.length === 0) {
+            return res.status(200).json({
+              running: watches && watches.length !== 0,
+              peopleCount
+            });
+          } else {
+            return res.status(200).json({
+              running: watches && watches.length !== 0,
+              peopleCount,
+              startTime: watches[0].startTime
+            });
+          }
         } catch (err) {
+          console.log(err);
           return res
             .status(500)
             .json(
