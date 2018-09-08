@@ -34,6 +34,29 @@ const app: express.Application = express();
 // Use Helmet
 app.use(helmet());
 
+// Middleware to set Access-Control origin
+if (process.env.NODE_ENV !== "test") {
+  app.use(
+    (
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+      res.setHeader(
+        "Access-Control-Allow-Methods",
+        "POST, GET, PUT, PATCH, OPTIONS, DELETE"
+      );
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Accept, X-Requested-With, Authorization"
+      );
+      res.setHeader("Access-Control-Max-Age", "3600");
+      next();
+    }
+  );
+}
+
 // Knex instance
 const knex: Knex = Database.connect();
 
