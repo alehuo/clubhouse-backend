@@ -48,9 +48,7 @@ export class WebSocketServer {
    */
   public async broadcastMessage(message: string): Promise<void> {
     if (this.wss) {
-      if (this.wss.clients.size === 0) {
-        return;
-      } else {
+      if (this.wss.clients.size > 0) {
         await Promise.all(
           Array.from(this.wss.clients).map((ws: WebSocket) => {
             return new Promise((resolve: any, reject: any) => {
