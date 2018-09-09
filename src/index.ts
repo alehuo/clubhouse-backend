@@ -3,6 +3,7 @@ require("dotenv").config();
 import * as express from "express";
 import * as fs from "fs";
 import * as helmet from "helmet";
+import * as http from "http";
 import * as Knex from "knex";
 import * as morgan from "morgan";
 import * as path from "path";
@@ -27,9 +28,15 @@ import UserDao from "./dao/UserDao";
 import WatchDao from "./dao/WatchDao";
 import * as Database from "./Database";
 import { apiHeader, apiUrl } from "./utils/ApiUtils";
+import { WebSocketServer } from "./WebSocket";
 
 // Express instance
 const app: express.Application = express();
+
+const server: http.Server = http.createServer(app);
+
+// initialize WebSocket server
+const ws: WebSocketServer = new WebSocketServer(server);
 
 // Use Helmet
 app.use(helmet());
@@ -42,7 +49,10 @@ if (process.env.NODE_ENV !== "test") {
       res: express.Response,
       next: express.NextFunction
     ) => {
-      res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+      res.setHeader(
+        "Access-Control-Allow-Origin",
+        req.headers.origin || "localhost"
+      );
       res.setHeader(
         "Access-Control-Allow-Methods",
         "POST, GET, PUT, PATCH, OPTIONS, DELETE"
@@ -141,7 +151,7 @@ app.use(
 app.use(
   apiUrl("watch", API_VERSION),
   apiHeader("watch", API_VERSION),
-  new WatchController(new WatchDao(knex), new UserDao(knex)).routes()
+  new WatchController(new WatchDao(knex), new UserDao(knex), ws).routes()
 );
 
 // Message route
@@ -184,8 +194,8 @@ app.use(
 );
 
 // Listen
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log("Server running at ::%d", process.env.PORT);
 });
 
-export default app;
+export default server;

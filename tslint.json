@@ -23,7 +23,8 @@
     ],
     "only-arrow-functions": false,
     "interface-name": false,
-    "no-string-literal": false
+    "no-string-literal": false,
+    "no-shadowed-variable": false
   },
   "rulesDirectory": []
 }

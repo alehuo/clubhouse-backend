@@ -11,9 +11,14 @@ import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { IUser } from "../models/IUser";
 import { watchFilter } from "../models/IWatch";
 import { sendEmail } from "../utils/Mailer";
+import { MessageType, WebSocketServer, WsMessage } from "../WebSocket";
 
 export default class WatchController extends Controller {
-  constructor(private watchDao: WatchDao, private userDao: UserDao) {
+  constructor(
+    private watchDao: WatchDao,
+    private userDao: UserDao,
+    private ws: WebSocketServer
+  ) {
     super();
   }
 
@@ -111,8 +116,6 @@ export default class WatchController extends Controller {
 
           const user: IUser = await this.userDao.findOne(userId);
 
-          // TODO: Websocket integration
-
           await this.watchDao.save(watch);
 
           const title: string =
@@ -144,6 +147,14 @@ export default class WatchController extends Controller {
 
           // TODO: Fetch email list from userDao
           await sendEmail(["testuser@test.com"], title, message, htmlMessage);
+
+          try {
+            await this.ws.broadcastMessage(
+              WsMessage(MessageType.SessionStart, req.body.startMessage, userId)
+            );
+          } catch (err) {
+            console.log("WebSocket error: " + err);
+          }
 
           return res
             .status(201)
@@ -209,8 +220,6 @@ export default class WatchController extends Controller {
 
           const user: IUser = await this.userDao.findOne(userId);
 
-          // TODO: Websocket integration
-
           const title: string =
             (process.env.MAIL_PREFIX
               ? "[" + process.env.MAIL_PREFIX + "]: "
@@ -240,6 +249,14 @@ export default class WatchController extends Controller {
 
           // TODO: Fetch email list from userDao
           await sendEmail(["testuser@test.com"], title, message, htmlMessage);
+
+          try {
+            await this.ws.broadcastMessage(
+              WsMessage(MessageType.SessionEnd, req.body.endMessage, userId)
+            );
+          } catch (err) {
+            console.log("WebSocket error: " + err);
+          }
 
           return res
             .status(200)
