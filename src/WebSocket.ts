@@ -49,7 +49,7 @@ export class WebSocketServer {
   public async broadcastMessage(message: string): Promise<void> {
     if (this.wss) {
       if (this.wss.clients.size === 0) {
-        await Promise.resolve();
+        return;
       } else {
         await Promise.all(
           Array.from(this.wss.clients).map((ws: WebSocket) => {
@@ -66,7 +66,7 @@ export class WebSocketServer {
         );
       }
     } else {
-      await Promise.reject("WebSocket connection is not open");
+      throw new Error("WebSocket connection is not open");
     }
   }
 }
