@@ -118,7 +118,7 @@ This project is meant to solve this problem by providing:
 
 ## Database setup
 
-To quickly set up a MySQL server, run `docker run -p 3306:3306 --name clubhouse -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:8.0 --default-authentication-plugin=mysql_native_password` where `MYSQL_ROOT_PASSWORD` is your preferred mysql root password.
+To quickly set up a MySQL server, run `./start-mysli.sh`.
 
 ### Creating databases manually
 
@@ -137,7 +137,7 @@ You need to create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where 
 
 ## Running tests & calculating code coverage
 
-To run tests, run `yarn test`. To calculate code coverage, run `yarn coverage`. On your project root directory, run `yarn view-coverage` to see the coverage report.
+To run tests, run `yarn test`.
 
 ## API routes
 

@@ -10,3 +10,4 @@ app.log
 dist
 access.log
 .vscode
+data
