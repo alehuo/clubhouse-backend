@@ -1,5 +1,5 @@
 import * as http from "http";
-import * as moment from "moment";
+import moment from "moment";
 import * as WebSocket from "ws";
 
 export class WebSocketServer {

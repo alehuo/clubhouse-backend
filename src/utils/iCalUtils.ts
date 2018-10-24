@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import moment from "moment";
 import { ICalendarEvent } from "../models/ICalendarEvent";
 
 import * as Knex from "knex";

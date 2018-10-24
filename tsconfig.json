@@ -10,6 +10,8 @@
     "noUnusedLocals": true,
     "noImplicitAny": false,
     "listFiles": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
     "outDir": "./dist/",
     "rootDirs": ["src"],
     "lib": ["es6", "dom", "esnext"]

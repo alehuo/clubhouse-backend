@@ -15,10 +15,10 @@ export const watchFilter: (watch: IWatch) => IWatch = (
   watch: IWatch
 ): IWatch => {
   if (!watch.ended) {
-    watch.endTime = null;
+      watch.endTime = undefined;
   }
   if (!watch.started) {
-    watch.startTime = null;
+    watch.startTime = undefined;
   }
 
   delete watch.started;
