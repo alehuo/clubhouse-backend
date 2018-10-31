@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 
 import StatisticsDao from "../dao/StatisticsDao";
 import UserDao from "../dao/UserDao";

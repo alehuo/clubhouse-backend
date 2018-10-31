@@ -1,4 +1,4 @@
-import * as Knex from "knex";
+import Knex from "knex";
 import { IUser } from "../models/IUser";
 import IDao from "./Dao";
 
@@ -7,10 +7,10 @@ const TABLE_NAME: string = "users";
 export default class UserDao implements IDao<IUser> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): Promise<IUser[]> {
+  public findAll(): PromiseLike<IUser[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
-  public findOne(userId: number): Promise<IUser> {
+  public findOne(userId: number): PromiseLike<IUser> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -18,7 +18,7 @@ export default class UserDao implements IDao<IUser> {
         .first()
     );
   }
-  public findByEmail(email: string): Promise<IUser> {
+  public findByEmail(email: string): PromiseLike<IUser> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -27,11 +27,11 @@ export default class UserDao implements IDao<IUser> {
     );
   }
 
-  public save(user: IUser): Promise<number[]> {
+  public save(user: IUser): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(user));
   }
 
-  public update(user: IUser): Promise<boolean> {
+  public update(user: IUser): PromiseLike<boolean> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .where({ userId: user.userId })
@@ -39,7 +39,7 @@ export default class UserDao implements IDao<IUser> {
     );
   }
 
-  public remove(userId: number): Promise<boolean> {
+  public remove(userId: number): PromiseLike<boolean> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .delete()

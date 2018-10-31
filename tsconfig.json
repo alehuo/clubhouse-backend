@@ -8,10 +8,10 @@
     "sourceMap": true,
     "removeComments": true,
     "noUnusedLocals": true,
-    "noImplicitAny": false,
-    "listFiles": true,
+    "noImplicitAny": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "outDir": "./dist/",
     "rootDirs": ["src"],
     "lib": ["es6", "dom", "esnext"]

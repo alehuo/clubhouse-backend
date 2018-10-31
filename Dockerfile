@@ -11,6 +11,7 @@ RUN yarn install && apk del .gyp
 
 COPY knexfile.ts .
 COPY tsconfig.json .
+COPY tslint.json .
 COPY nodemon.json .
 COPY migrations ./migrations
 COPY seeds ./seeds

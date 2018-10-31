@@ -1,5 +1,5 @@
-import * as bcrypt from "bcrypt";
-import * as express from "express";
+import bcrypt from "bcrypt";
+import express from "express";
 import { IUser, userFilter } from "../models/IUser";
 
 import UserDao from "../dao/UserDao";
@@ -10,7 +10,7 @@ import CalendarEventDao from "../dao/CalendarEventDao";
 import { ICalendarEvent } from "../models/ICalendarEvent";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
-import * as Validator from "validator";
+import Validator from "validator";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
 import WatchDao from "../dao/WatchDao";
@@ -204,7 +204,7 @@ export default class UserController extends Controller {
                 .json(
                   MessageFactory.createError(
                     "Error editing user information",
-                    null,
+                    undefined,
                     errors
                   )
                 );
@@ -273,7 +273,7 @@ export default class UserController extends Controller {
                 .json(
                   MessageFactory.createError(
                     "Error registering user",
-                    null,
+                    undefined,
                     errors
                   )
                 );
@@ -329,40 +329,48 @@ export default class UserController extends Controller {
                   )
                 );
             }
-            const userId: number = user.userId;
+            const userId: number = Number(user.userId);
             const calendarEvents: ICalendarEvent[] = await this.calendarEventDao.findCalendarEventsByUser(
               userId
             );
             await Promise.all(
-              calendarEvents.map((event: ICalendarEvent) =>
-                this.calendarEventDao.remove(event.eventId)
-              )
+              calendarEvents.map((event: ICalendarEvent) => {
+                if (event.eventId !== undefined) {
+                  this.calendarEventDao.remove(event.eventId);
+                }
+              })
             );
             // Remove messages
             const messages: IMessage[] = await this.messageDao.findByUser(
               userId
             );
             await Promise.all(
-              messages.map((msg: IMessage) =>
-                this.messageDao.remove(msg.messageId)
-              )
+              messages.map((msg: IMessage) => {
+                if (msg.messageId !== undefined) {
+                  this.messageDao.remove(msg.messageId);
+                }
+              })
             );
             // Remove newsposts
             const newsPosts: INewsPost[] = await this.newsPostDao.findByAuthor(
               userId
             );
             await Promise.all(
-              newsPosts.map((newsPost: INewsPost) =>
-                this.newsPostDao.remove(newsPost.postId)
-              )
+              newsPosts.map((newsPost: INewsPost) => {
+                if (newsPost.postId !== undefined) {
+                  this.newsPostDao.remove(newsPost.postId);
+                }
+              })
             );
             // Remove watches
             // Watches should be only anonymized..
             const watches: IWatch[] = await this.watchDao.findByUser(userId);
             await Promise.all(
-              watches.map((watch: IWatch) =>
-                this.watchDao.remove(watch.watchId)
-              )
+              watches.map((watch: IWatch) => {
+                if (watch.watchId !== undefined) {
+                  this.watchDao.remove(watch.watchId);
+                }
+              })
             );
             // Remove user data
             await this.userDao.remove(userId);

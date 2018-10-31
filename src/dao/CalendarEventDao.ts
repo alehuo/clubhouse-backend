@@ -1,4 +1,4 @@
-import * as Knex from "knex";
+import Knex from "knex";
 import { ICalendarEvent } from "../models/ICalendarEvent";
 import IDao from "./Dao";
 
@@ -7,11 +7,11 @@ const TABLE_NAME: string = "calendarEvents";
 export default class CalendarEventDao implements IDao<ICalendarEvent> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): Promise<ICalendarEvent[]> {
+  public findAll(): PromiseLike<ICalendarEvent[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
 
-  public findOne(eventId: number): Promise<ICalendarEvent> {
+  public findOne(eventId: number): PromiseLike<ICalendarEvent> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -20,7 +20,7 @@ export default class CalendarEventDao implements IDao<ICalendarEvent> {
     );
   }
 
-  public findCalendarEventsByUser(userId: number): Promise<ICalendarEvent[]> {
+  public findCalendarEventsByUser(userId: number): PromiseLike<ICalendarEvent[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -29,11 +29,11 @@ export default class CalendarEventDao implements IDao<ICalendarEvent> {
     );
   }
 
-  public save(calendarEvent: ICalendarEvent): Promise<number[]> {
+  public save(calendarEvent: ICalendarEvent): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(calendarEvent));
   }
 
-  public remove(eventId: number): Promise<boolean> {
+  public remove(eventId: number): PromiseLike<boolean> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .delete()

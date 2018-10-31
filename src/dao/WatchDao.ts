@@ -1,4 +1,4 @@
-import * as Knex from "knex";
+import Knex from "knex";
 import { IWatch } from "../models/IWatch";
 import IDao from "./Dao";
 
@@ -10,17 +10,17 @@ const TABLE_NAME: string = "watches";
 export default class WatchDao implements IDao<IWatch> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): Promise<IWatch[]> {
+  public findAll(): PromiseLike<IWatch[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
-  public findAllOngoing(): Promise<IWatch[]> {
+  public findAllOngoing(): PromiseLike<IWatch[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
         .where("ended", "=", 0)
     );
   }
-  public findOne(watchId: number): Promise<IWatch> {
+  public findOne(watchId: number): PromiseLike<IWatch> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -28,7 +28,7 @@ export default class WatchDao implements IDao<IWatch> {
         .first()
     );
   }
-  public findOngoingByUser(userId: number): Promise<IWatch[]> {
+  public findOngoingByUser(userId: number): PromiseLike<IWatch[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -36,7 +36,7 @@ export default class WatchDao implements IDao<IWatch> {
         .andWhere("ended", "=", 0)
     );
   }
-  public findByUser(userId: number): Promise<IWatch[]> {
+  public findByUser(userId: number): PromiseLike<IWatch[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -44,11 +44,11 @@ export default class WatchDao implements IDao<IWatch> {
     );
   }
 
-  public save(watch: IWatch): Promise<number[]> {
+  public save(watch: IWatch): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(watch));
   }
 
-  public endWatch(watchId: number, watch: IWatch): Promise<IWatch> {
+  public endWatch(watchId: number, watch: IWatch): PromiseLike<IWatch> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .update({
@@ -60,7 +60,7 @@ export default class WatchDao implements IDao<IWatch> {
     );
   }
 
-  public remove(watchId: number): Promise<boolean> {
+  public remove(watchId: number): PromiseLike<boolean> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .delete()

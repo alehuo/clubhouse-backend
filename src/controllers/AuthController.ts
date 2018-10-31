@@ -1,5 +1,5 @@
-import * as bcrypt from "bcrypt";
-import * as express from "express";
+import bcrypt from "bcrypt";
+import express from "express";
 import { IUser } from "../models/IUser";
 
 import UserDao from "../dao/UserDao";

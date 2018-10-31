@@ -1,9 +1,8 @@
-import * as Promise from "bluebird";
-import * as Knex from "knex";
+import Knex from "knex";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
 
-exports.seed = function(knex: Knex): Promise<any> {
+exports.seed = function(knex: Knex): PromiseLike<any> {
   // Deletes ALL existing entries
   return knex("permissions")
     .del()

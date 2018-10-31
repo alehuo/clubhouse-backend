@@ -1,12 +1,12 @@
 require("dotenv").config();
 
 import express from "express";
-import * as fs from "fs";
+import fs from "fs";
 import helmet from "helmet";
-import * as http from "http";
-import * as Knex from "knex";
+import http from "http";
+import Knex from "knex";
 import morgan from "morgan";
-import * as path from "path";
+import path from "path";
 import AuthController from "./controllers/AuthController";
 import CalendarEventController from "./controllers/CalendarEventController";
 import LocationController from "./controllers/LocationController";

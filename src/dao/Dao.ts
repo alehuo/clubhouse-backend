@@ -1,6 +1,6 @@
 export default interface IDao<T> {
-  findAll(): Promise<T[]>;
-  findOne(id: number): Promise<T>;
-  remove(id: number): Promise<boolean>;
-  save(entity: T): Promise<number[]>;
+  findAll(): PromiseLike<T[]>;
+  findOne(id: number): PromiseLike<T>;
+  remove(id: number): PromiseLike<boolean>;
+  save(entity: T): PromiseLike<number[]>;
 }

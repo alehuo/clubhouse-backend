@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import Controller from "./Controller";
 
 import MessageDao from "../dao/MessageDao";

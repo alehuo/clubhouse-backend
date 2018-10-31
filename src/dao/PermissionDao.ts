@@ -1,4 +1,4 @@
-import * as Knex from "knex";
+import Knex from "knex";
 import { IPermission } from "../models/IPermission";
 import IDao from "./Dao";
 
@@ -7,11 +7,11 @@ const TABLE_NAME: string = "permissions";
 export default class PermissionDao implements IDao<IPermission> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): Promise<IPermission[]> {
+  public findAll(): PromiseLike<IPermission[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
 
-  public findOne(permissionId: number): Promise<IPermission> {
+  public findOne(permissionId: number): PromiseLike<IPermission> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -20,7 +20,7 @@ export default class PermissionDao implements IDao<IPermission> {
     );
   }
 
-  public findByValue(value: number): Promise<IPermission> {
+  public findByValue(value: number): PromiseLike<IPermission> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -29,7 +29,7 @@ export default class PermissionDao implements IDao<IPermission> {
     );
   }
 
-  public findByName(name: string): Promise<IPermission> {
+  public findByName(name: string): PromiseLike<IPermission> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -38,11 +38,11 @@ export default class PermissionDao implements IDao<IPermission> {
     );
   }
 
-  public save(permissions: IPermission): Promise<number[]> {
+  public save(permissions: IPermission): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(permissions));
   }
 
-  public remove(permissionId: number): Promise<boolean> {
+  public remove(permissionId: number): PromiseLike<boolean> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .delete()

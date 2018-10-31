@@ -1,4 +1,4 @@
-import * as nodemailer from "nodemailer";
+import nodemailer from "nodemailer";
 
 let transporter: any = nodemailer.createTransport({
   host: process.env.SMTP_SERVER,

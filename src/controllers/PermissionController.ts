@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import { IPermission } from "../models/IPermission";
 
 import PermissionDao from "../dao/PermissionDao";

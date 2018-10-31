@@ -1,4 +1,4 @@
-import * as Knex from "knex";
+import Knex from "knex";
 import { IMessage } from "../models/IMessage";
 import IDao from "./Dao";
 
@@ -10,11 +10,11 @@ const TABLE_NAME: string = "messages";
 export default class MessageDao implements IDao<IMessage> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): Promise<IMessage[]> {
+  public findAll(): PromiseLike<IMessage[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
 
-  public findOne(messageId: number): Promise<IMessage> {
+  public findOne(messageId: number): PromiseLike<IMessage> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -23,7 +23,7 @@ export default class MessageDao implements IDao<IMessage> {
     );
   }
 
-  public findByUser(userId: number): Promise<IMessage[]> {
+  public findByUser(userId: number): PromiseLike<IMessage[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -34,7 +34,7 @@ export default class MessageDao implements IDao<IMessage> {
   public findByDateBetween(
     startTime: Date,
     endTime?: Date
-  ): Promise<IMessage[]> {
+  ): PromiseLike<IMessage[]> {
     if (!endTime) {
       return Promise.resolve(
         this.knex(TABLE_NAME)
@@ -50,11 +50,11 @@ export default class MessageDao implements IDao<IMessage> {
     }
   }
 
-  public save(message: IMessage): Promise<number[]> {
+  public save(message: IMessage): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(message));
   }
 
-  public remove(messageId: number): Promise<boolean> {
+  public remove(messageId: number): PromiseLike<boolean> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .delete()

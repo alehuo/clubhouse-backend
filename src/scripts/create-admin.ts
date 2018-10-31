@@ -1,5 +1,5 @@
-import * as bcrypt from "bcrypt";
-import * as Knex from "knex";
+import bcrypt from "bcrypt";
+import Knex from "knex";
 import UserDao from "../dao/UserDao";
 import * as Database from "../Database";
 import { IUser } from "../models/IUser";

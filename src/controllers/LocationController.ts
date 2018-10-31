@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import { ILocation, locationFilter } from "../models/ILocation";
 
 import LocationDao from "../dao/LocationDao";

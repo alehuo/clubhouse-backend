@@ -1,6 +1,6 @@
-import * as http from "http";
+import http from "http";
 import moment from "moment";
-import * as WebSocket from "ws";
+import WebSocket from "ws";
 
 export class WebSocketServer {
   private wss: WebSocket.Server;

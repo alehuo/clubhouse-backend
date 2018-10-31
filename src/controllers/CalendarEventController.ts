@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";

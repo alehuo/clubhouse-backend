@@ -1,4 +1,4 @@
-import * as Knex from "knex";
+import Knex from "knex";
 import { INewsPost } from "../models/INewsPost";
 import IDao from "./Dao";
 
@@ -7,10 +7,10 @@ const TABLE_NAME: string = "newsposts";
 export default class NewsPostDao implements IDao<INewsPost> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): Promise<INewsPost[]> {
+  public findAll(): PromiseLike<INewsPost[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
-  public findOne(postId: number): Promise<INewsPost> {
+  public findOne(postId: number): PromiseLike<INewsPost> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -18,7 +18,7 @@ export default class NewsPostDao implements IDao<INewsPost> {
         .first()
     );
   }
-  public findByAuthor(author: number): Promise<INewsPost[]> {
+  public findByAuthor(author: number): PromiseLike<INewsPost[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -26,11 +26,11 @@ export default class NewsPostDao implements IDao<INewsPost> {
     );
   }
 
-  public save(newsPost: INewsPost): Promise<number[]> {
+  public save(newsPost: INewsPost): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(newsPost));
   }
 
-  public remove(postId: number): Promise<boolean> {
+  public remove(postId: number): PromiseLike<boolean> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .delete()

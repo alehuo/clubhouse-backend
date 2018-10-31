@@ -1,7 +1,7 @@
 import moment from "moment";
 import { ICalendarEvent } from "../models/ICalendarEvent";
 
-import * as Knex from "knex";
+import Knex from "knex";
 import LocationDao from "../dao/LocationDao";
 import * as Database from "../Database";
 import { ILocation } from "../models/ILocation";
