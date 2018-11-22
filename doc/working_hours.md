@@ -47,9 +47,10 @@
 | 7.9.2018  | 5h    | Added RequestParamMiddleware to all routes. Added Permission middleware to addional routes. Code cleanup. Implemented email functionality. Enabled automatic deployment to Heroku.                                                                                                               |
 | 9.9.2018  | 1h    | Implemented websocket functionality.                                                                                                                                                                                                                                                             |
 | 11.9.2018 | 1h    | Added script to start up MySQL server.                                                                                                                                                                                                                                                           |
+| 24.10.2018 | 1h    | Added strict null checks to tsconfig.json.                                                                                                                                                                                                                                                       |
 
 Total:
 
 61.0 h (part 1)
 
-22.5 h (part 2)
+23.5 h (part 2)

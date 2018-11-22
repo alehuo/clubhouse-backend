@@ -2,7 +2,7 @@ version: '3.7'
 volumes:
   clubhouse-mysql-data:
 services:
-  mysql:
+  mysli:
     image: mysql:5.6
     environment:
       MYSQL_ROOT_PASSWORD: my-secret-pw
@@ -16,7 +16,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+      - mysli
     volumes:
       - ./src:/backend/src
       - ./test:/backend/test
@@ -24,30 +24,23 @@ services:
       - ./migrations:/backend/migrations
       - ./knexfile.ts:/backend/knexfile.ts
     environment:
-      NODE_ENV: development
-      # Back-end port
-      PORT: 8080
-      # JWT
-      JWT_SECRET: abcd1234
-      JWT_EXPIRE: 86400
-      # Calendar
-      CAL_DOMAIN: clubhouse.com
-      CAL_LOCATION: Club house
-      # Knex debug
-      # DEBUG=knex:query
-      # MySQL
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
-      MYSQL_USER: root
-      MYSQL_PASSWORD: my-secret-pw
-      MYSQL_DB_NAME: clubhouse
-      # Email
-      ENABLE_EMAIL_SENDING: "yes"
-      MAIL_PREFIX: Clubhouse
-      MAIL_FROM_ADDRESS: clubhouse@example.com
-      MAIL_FROM_NAME: Clubhouse
-      SMTP_SERVER: smtp.ethereal.email
-      SMTP_USERNAME: qd3m27cu6ds4u4dd@ethereal.email
-      SMTP_PASSWORD: 3YaRwf2q5hMdkQ6yFM
-      SMTP_PORT: 587
-      SMTP_SECURE: "true"
+      - NODE_ENV=development
+      - PORT=8080
+      - JWT_SECRET=abcd1234
+      - JWT_EXPIRE=86400
+      - CAL_DOMAIN=clubhouse.com
+      - CAL_LOCATION=Club house
+      - MYSQL_HOST=mysli
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=my-secret-pw
+      - MYSQL_DB_NAME=clubhouse
+      - ENABLE_EMAIL_SENDING=no
+      - MAIL_PREFIX=Clubhouse
+      - MAIL_FROM_ADDRESS=clubhouse@example.com
+      - MAIL_FROM_NAME=Clubhouse
+      - SMTP_SERVER=smtp.ethereal.email
+      - SMTP_USERNAME=qd3m27cu6ds4u4dd@ethereal.email
+      - SMTP_PASSWORD=3YaRwf2q5hMdkQ6yFM
+      - SMTP_PORT=587
+      - SMTP_SECURE=true

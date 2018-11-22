@@ -13,7 +13,7 @@ export const JWTMiddleware: any = async (
   next: express.NextFunction
 ) => {
   // Extract auth header
-  const authHeader: string = req.get("Authorization");
+  const authHeader: string | undefined = req.get("Authorization");
   if (authHeader === undefined) {
     // If the token is undefined, return an error.
     return res
