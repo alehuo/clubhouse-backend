@@ -20,18 +20,18 @@ describe("ILocation", () => {
     location.address.should.equal("Test Address");
 
     should.exist(location.created_at);
-    location.created_at
+    (location.created_at as Date)
       .toISOString()
       .should.equal(new Date(2017, 2, 12, 23, 55).toISOString());
 
     should.exist(location.locationId);
-    location.locationId.should.equal(2);
+    (location.locationId as number).should.equal(2);
 
     should.exist(location.name);
     location.name.should.equal("Test");
 
-    should.exist(location.updated_at.toISOString());
-    location.updated_at
+    should.exist(location.updated_at);
+    (location.updated_at as Date)
       .toISOString()
       .should.equal(new Date(2018, 1, 2, 11, 28).toISOString());
 
@@ -53,7 +53,7 @@ describe("ILocation", () => {
     expect(location.address).to.equal("Test Address");
 
     should.exist(location.created_at);
-    expect(location.created_at.toISOString()).to.equal(
+    expect((location.created_at as Date).toISOString()).to.equal(
       new Date(2017, 2, 12, 23, 55).toISOString()
     );
 
@@ -63,8 +63,8 @@ describe("ILocation", () => {
     should.exist(location.name);
     expect(location.name).to.equal("Test");
 
-    should.exist(location.updated_at.toISOString());
-    expect(location.updated_at.toISOString()).to.equal(
+    should.exist(location.updated_at);
+    expect((location.updated_at as Date).toISOString()).to.equal(
       new Date(2018, 1, 2, 11, 28).toISOString()
     );
     done();

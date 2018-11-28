@@ -1,4 +1,5 @@
 process.env.NODE_ENV = "test";
+process.env.PORT = "5090";
 process.env.JWT_SECRET = "HelloWorld";
 
 import * as Knex from "knex";

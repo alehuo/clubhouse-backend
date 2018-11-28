@@ -1,4 +1,5 @@
 process.env.NODE_ENV = "test";
+process.env.PORT = "5090";
 
 import * as Knex from "knex";
 import "mocha";

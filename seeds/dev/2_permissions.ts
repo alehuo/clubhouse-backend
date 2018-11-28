@@ -10,8 +10,7 @@ exports.seed = function(knex: Knex): PromiseLike<any> {
       // Inserts seed entries
       return Promise.all(
         Object.keys(Permissions).map((key: string) => {
-          // @ts-ignore
-          return knex("permissions").insert(Permissions[key]);
+          return knex("permissions").insert(Permissions[key as keyof typeof Permissions]);
         })
       );
     });

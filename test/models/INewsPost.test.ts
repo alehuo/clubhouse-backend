@@ -24,13 +24,13 @@ describe("INewsPost", () => {
     should.exist(post.updated_at);
 
     expect(post.author).to.equal(225);
-    expect(post.created_at.toISOString()).to.equal(
+    expect((post.created_at as Date).toISOString()).to.equal(
       new Date(2018, 1, 2, 13, 44).toISOString()
     );
     expect(post.message).to.equal("Welcome!");
     expect(post.postId).to.equal(1);
     expect(post.title).to.equal("Welcome to the clubhouse!");
-    expect(post.updated_at.toISOString()).to.equal(
+    expect((post.updated_at as Date).toISOString()).to.equal(
       new Date(2018, 5, 2, 10, 5).toISOString()
     );
     done();
@@ -56,13 +56,13 @@ describe("INewsPost", () => {
     should.exist(post.updated_at);
 
     expect(post.author).to.equal(225);
-    expect(post.created_at.toISOString()).to.equal(
+    expect((post.created_at as Date).toISOString()).to.equal(
       new Date(2018, 1, 2, 13, 44).toISOString()
     );
     expect(post.message).to.equal("Welcome!");
     expect(post.postId).to.equal(1);
     expect(post.title).to.equal("Welcome to the clubhouse!");
-    expect(post.updated_at.toISOString()).to.equal(
+    expect((post.updated_at as Date).toISOString()).to.equal(
       new Date(2018, 5, 2, 10, 5).toISOString()
     );
     done();
@@ -83,7 +83,7 @@ describe("INewsPost", () => {
     should.not.exist(post.updated_at);
 
     expect(post.author).to.equal(225);
-    expect(post.created_at.toISOString()).to.equal(
+    expect((post.created_at as Date).toISOString()).to.equal(
       new Date(2018, 1, 2, 13, 44).toISOString()
     );
     expect(post.message).to.equal("Welcome!");

@@ -37,7 +37,8 @@ describe("ICalendarEvent", () => {
     should.exist(calendarEvent.updated_at);
 
     expect(calendarEvent.addedBy).to.equal(1);
-    expect(calendarEvent.created_at.toISOString()).to.equal(
+
+    expect((calendarEvent.created_at as Date).toISOString()).to.equal(
       new Date(2016, 1, 1, 22, 12).toISOString()
     );
     expect(calendarEvent.description).to.equal("Test description");
@@ -52,7 +53,8 @@ describe("ICalendarEvent", () => {
       new Date(2016, 1, 1, 23, 0).toISOString()
     );
     expect(calendarEvent.unionId).to.equal(52);
-    expect(calendarEvent.updated_at.toISOString()).to.equal(
+
+    expect((calendarEvent.updated_at as Date).toISOString()).to.equal(
       new Date(2016, 1, 1, 22, 13).toISOString()
     );
     done();
@@ -87,7 +89,7 @@ describe("ICalendarEvent", () => {
     should.exist(calendarEvent.updated_at);
 
     expect(calendarEvent.addedBy).to.equal(1);
-    expect(calendarEvent.created_at.toISOString()).to.equal(
+    expect((calendarEvent.created_at as Date).toISOString()).to.equal(
       new Date(2016, 1, 1, 22, 12).toISOString()
     );
     expect(calendarEvent.description).to.equal("Test description");
@@ -102,7 +104,7 @@ describe("ICalendarEvent", () => {
       new Date(2016, 1, 1, 23, 0).toISOString()
     );
     expect(calendarEvent.unionId).to.equal(52);
-    expect(calendarEvent.updated_at.toISOString()).to.equal(
+    expect((calendarEvent.updated_at as Date).toISOString()).to.equal(
       new Date(2016, 1, 1, 22, 13).toISOString()
     );
     done();
