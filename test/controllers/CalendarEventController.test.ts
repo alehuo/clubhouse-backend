@@ -121,7 +121,7 @@ describe("CalendarEventController", () => {
   it("Returns all calendar events", async () => {
     const calendarEvents: ICalendarEvent[] = await calendarEventDao.findAll();
     const sortedEvents: ICalendarEvent[] = calendarEvents.sort(
-      (a: ICalendarEvent, b: ICalendarEvent) => a.eventId - b.eventId
+      (a: ICalendarEvent, b: ICalendarEvent) => Number(a.eventId) - Number(b.eventId)
     );
     const res: any = await chai
       .request(app)
@@ -132,11 +132,13 @@ describe("CalendarEventController", () => {
     res.status.should.equal(200);
 
     const sortedRes: ICalendarEvent[] = res.body.sort(
-      (a: ICalendarEvent, b: ICalendarEvent) => a.eventId - b.eventId
+      (a: ICalendarEvent, b: ICalendarEvent) => Number(a.eventId) - Number(b.eventId)
     );
 
     for (let i: number = 0; i < sortedEvents.length; i++) {
       Object.keys(sortedEvents[i]).forEach((key: string) => {
+        // FIXME: Remove ts-ignore
+        // @ts-ignore
         should.exist(sortedRes[i][key]);
         if (key === "created_at" || key === "updated_at") {
           return;
@@ -147,6 +149,7 @@ describe("CalendarEventController", () => {
             .should.equal(new Date(sortedRes[i][key]).toISOString());
           return;
         }
+        // @ts-ignore
         sortedEvents[i][key].should.equal(sortedRes[i][key]);
       });
     }

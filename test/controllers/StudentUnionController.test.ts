@@ -86,7 +86,7 @@ describe("StudentUnionController", () => {
             const stdu: IStudentUnion = res.body[i];
             stdu.description.should.equal(unions[i].description);
             stdu.name.should.equal(unions[i].name);
-            stdu.unionId.should.equal(i + 1);
+            Number(stdu.unionId).should.equal(i + 1);
           }
           done();
         });

@@ -5,14 +5,11 @@ RUN apk add --no-cache --virtual .gyp \
         make \
         g++ \
         git
-COPY package.json .
-COPY yarn.lock .
-RUN yarn install && apk del .gyp
 
-COPY knexfile.ts .
-COPY tsconfig.json .
-COPY tslint.json .
-COPY nodemon.json .
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile && apk del .gyp
+
+COPY knexfile.ts tsconfig.json tslint.json nodemon.json ./
 COPY migrations ./migrations
 COPY seeds ./seeds
 COPY src ./src
