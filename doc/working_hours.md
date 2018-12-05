@@ -50,9 +50,11 @@
 | 24.10.2018 | 1h    | Added strict null checks to tsconfig.json.                                                                                                                                                                                                                                                       |
 | 22.11.2018 | 1h    | Tweaked docker-compose.yml                                                                                                                                                                                                                                                                       |
 | 28.11.2018 | 2h    | Fixed tests, fixed type-casting of Permission seed. Upgraded project dependencies.                                                                                                                                                                                                                                                                       |
+| 5.12.2018 | 1.5h    | Created different dockerfiles for dev and prod environments. Upgraded dependencies                                                                                                                                                                                                                                                                   |
+
 
 Total:
 
 61.0 h (part 1)
 
-26.5 h (part 2)
+28.0 h (part 2)
