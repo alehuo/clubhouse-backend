@@ -13,6 +13,7 @@ services:
     build:
       context: .
       shm_size: 1G
+      dockerfile: Dockerfile-dev.dockerfile
     ports:
       - "8080:8080"
     depends_on:

@@ -2,6 +2,7 @@
 
 require("dotenv").config();
 
+// @ts-ignore
 import { createConnection } from "mysql2/promise";
 
 async function createTables(): Promise<void> {
