@@ -9,7 +9,7 @@ services:
       MYSQL_DATABASE: clubhouse_dev
     volumes:
       - clubhouse-mysql-data:/var/lib/mysql
-  clubhouse:
+  clubhouse-backend:
     build:
       context: .
       shm_size: 1G
