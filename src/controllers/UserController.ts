@@ -7,18 +7,14 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import Controller from "./Controller";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
-import { ICalendarEvent } from "../models/ICalendarEvent";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
 import Validator from "validator";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
-import WatchDao from "../dao/WatchDao";
+import SessionDao from "../dao/SessionDao";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
-import { IMessage } from "../models/IMessage";
-import { INewsPost } from "../models/INewsPost";
-import { IWatch } from "../models/IWatch";
 import { MessageFactory } from "../utils/MessageFactory";
 
 export default class UserController extends Controller {
@@ -27,7 +23,7 @@ export default class UserController extends Controller {
     private calendarEventDao: CalendarEventDao,
     private messageDao: MessageDao,
     private newsPostDao: NewsPostDao,
-    private watchDao: WatchDao
+    private sessionDao: SessionDao
   ) {
     super();
   }
@@ -38,7 +34,7 @@ export default class UserController extends Controller {
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const result: IUser[] = await this.userDao.findAll();
+          const result = await this.userDao.findAll();
           return res.json(result.map(userFilter));
         } catch (err) {
           return res
@@ -59,7 +55,7 @@ export default class UserController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
-          const user: IUser = await this.userDao.findOne(userId);
+          const user = await this.userDao.findOne(userId);
           if (!user) {
             return res
               .status(404)
@@ -85,7 +81,7 @@ export default class UserController extends Controller {
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const user: IUser = await this.userDao.findOne(req.params.userId);
+          const user = await this.userDao.findOne(req.params.userId);
           if (!user) {
             return res
               .status(404)
@@ -123,9 +119,7 @@ export default class UserController extends Controller {
                 )
               );
           }
-          const user: IUser = await this.userDao.findOne(
-            res.locals.token.data.userId
-          );
+          const user = await this.userDao.findOne(res.locals.token.data.userId);
           if (!user) {
             return res
               .status(404)
@@ -136,7 +130,7 @@ export default class UserController extends Controller {
             user.firstName = firstName ? firstName : user.firstName;
             user.lastName = lastName ? lastName : user.lastName;
             if (email && user.email !== email) {
-              const usr: IUser = await this.userDao.findByEmail(email.trim());
+              const usr = await this.userDao.findByEmail(email.trim());
               if (usr) {
                 return res
                   .status(400)
@@ -191,7 +185,7 @@ export default class UserController extends Controller {
             if (errors.length === 0) {
               const result: boolean = await this.userDao.update(user);
               if (result) {
-                const updatedUser: IUser = await this.userDao.findOne(userId);
+                const updatedUser = await this.userDao.findOne(userId);
                 return res.status(200).json(userFilter(updatedUser));
               } else {
                 return res
@@ -230,7 +224,7 @@ export default class UserController extends Controller {
         try {
           const { email, firstName, lastName, password }: IUser = req.body;
 
-          const user: IUser = await this.userDao.findByEmail(email.trim());
+          const user = await this.userDao.findByEmail(email.trim());
 
           if (user) {
             return res
@@ -279,7 +273,7 @@ export default class UserController extends Controller {
                 );
             }
 
-            const savedUser: number[] = await this.userDao.save({
+            const savedUser = await this.userDao.save({
               email,
               firstName,
               lastName,
@@ -314,7 +308,7 @@ export default class UserController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_REMOVE_USER),
       async (req: express.Request, res: express.Response) => {
         try {
-          const user: IUser = await this.userDao.findOne(req.params.userId);
+          const user = await this.userDao.findOne(req.params.userId);
           if (!user) {
             return res
               .status(404)
@@ -329,46 +323,42 @@ export default class UserController extends Controller {
                   )
                 );
             }
-            const userId: number = Number(user.userId);
-            const calendarEvents: ICalendarEvent[] = await this.calendarEventDao.findCalendarEventsByUser(
+            const userId = Number(user.userId);
+            const calendarEvents = await this.calendarEventDao.findCalendarEventsByUser(
               userId
             );
             await Promise.all(
-              calendarEvents.map((event: ICalendarEvent) => {
+              calendarEvents.map((event) => {
                 if (event.eventId !== undefined) {
                   this.calendarEventDao.remove(event.eventId);
                 }
               })
             );
             // Remove messages
-            const messages: IMessage[] = await this.messageDao.findByUser(
-              userId
-            );
+            const messages = await this.messageDao.findByUser(userId);
             await Promise.all(
-              messages.map((msg: IMessage) => {
+              messages.map((msg) => {
                 if (msg.messageId !== undefined) {
                   this.messageDao.remove(msg.messageId);
                 }
               })
             );
             // Remove newsposts
-            const newsPosts: INewsPost[] = await this.newsPostDao.findByAuthor(
-              userId
-            );
+            const newsPosts = await this.newsPostDao.findByAuthor(userId);
             await Promise.all(
-              newsPosts.map((newsPost: INewsPost) => {
+              newsPosts.map((newsPost) => {
                 if (newsPost.postId !== undefined) {
                   this.newsPostDao.remove(newsPost.postId);
                 }
               })
             );
-            // Remove watches
-            // Watches should be only anonymized..
-            const watches: IWatch[] = await this.watchDao.findByUser(userId);
+            // Remove sessions
+            // FIXME: Sessions should only be anonymized.
+            const sessions = await this.sessionDao.findByUser(userId);
             await Promise.all(
-              watches.map((watch: IWatch) => {
-                if (watch.watchId !== undefined) {
-                  this.watchDao.remove(watch.watchId);
+              sessions.map((session) => {
+                if (session.sessionId !== undefined) {
+                  this.sessionDao.remove(session.sessionId);
                 }
               })
             );
@@ -380,7 +370,7 @@ export default class UserController extends Controller {
               .json(
                 MessageFactory.createMessage(
                   "User deleted from the server (including his/her created calendar events" +
-                    ", messages, watches and newsposts.)"
+                    ", messages, sessions and newsposts.)"
                 )
               );
           }

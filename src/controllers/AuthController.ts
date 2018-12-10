@@ -1,7 +1,5 @@
 import bcrypt from "bcrypt";
 import express from "express";
-import { IUser } from "../models/IUser";
-
 import UserDao from "../dao/UserDao";
 import { SignToken } from "../utils/JwtUtils";
 import Controller from "./Controller";
@@ -25,7 +23,7 @@ export default class AuthController extends Controller {
             password: string;
           } = req.body;
 
-          const user: IUser = await this.userDao.findByEmail(authData.email);
+          const user = await this.userDao.findByEmail(authData.email);
 
           if (!user) {
             return res
@@ -33,13 +31,13 @@ export default class AuthController extends Controller {
               .json(MessageFactory.createError("Invalid username or password"));
           } else {
             // User exists, check for pash
-            const dbPwd: string = user.password;
-            const inputPwd: string = authData.password;
+            const dbPwd = user.password;
+            const inputPwd = authData.password;
 
             try {
-              const match: boolean = await bcrypt.compare(inputPwd, dbPwd);
+              const match = await bcrypt.compare(inputPwd, dbPwd);
               if (match) {
-                const token: string = SignToken({
+                const token = SignToken({
                   userId: user.userId,
                   email: user.email,
                   firstName: user.firstName,

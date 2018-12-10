@@ -6,7 +6,6 @@ import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { IMessage } from "../models/IMessage";
-import { IUser } from "../models/IUser";
 import { sendEmail } from "../utils/Mailer";
 import { MessageFactory } from "../utils/MessageFactory";
 
@@ -22,7 +21,7 @@ export default class MessageController extends Controller {
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const messages: IMessage[] = await this.messageDao.findAll();
+          const messages = await this.messageDao.findAll();
           return res.status(200).json(messages);
         } catch (err) {
           return res
@@ -42,9 +41,7 @@ export default class MessageController extends Controller {
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const message: IMessage = await this.messageDao.findOne(
-            req.params.messageId
-          );
+          const message = await this.messageDao.findOne(req.params.messageId);
           if (message) {
             return res.status(200).json(message);
           } else {
@@ -73,7 +70,7 @@ export default class MessageController extends Controller {
         try {
           const userId: number = res.locals.token.data.userId;
 
-          const title: string = req.body.title ? req.body.title : "(No title)";
+          const title = req.body.title ? String(req.body.title) : "(No title)";
 
           const msg: IMessage = {
             message: req.body.message,
@@ -81,18 +78,18 @@ export default class MessageController extends Controller {
             userId
           };
 
-          const savedMessage: number[] = await this.messageDao.save(msg);
+          const savedMessage = await this.messageDao.save(msg);
 
-          const user: IUser = await this.userDao.findOne(userId);
+          const user = await this.userDao.findOne(userId);
 
           // TODO: Websocket integration
 
-          const emailTitle: string =
+          const emailTitle =
             (process.env.MAIL_PREFIX
               ? "[" + process.env.MAIL_PREFIX + "]: "
               : "") + title;
 
-          const message: string =
+          const message =
             user.firstName +
             " " +
             user.lastName +
@@ -131,13 +128,9 @@ export default class MessageController extends Controller {
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const message: IMessage = await this.messageDao.findOne(
-            req.params.messageId
-          );
+          const message = await this.messageDao.findOne(req.params.messageId);
           if (message) {
-            const result: boolean = await this.messageDao.remove(
-              req.params.messageId
-            );
+            const result = await this.messageDao.remove(req.params.messageId);
             if (result) {
               return res
                 .status(200)

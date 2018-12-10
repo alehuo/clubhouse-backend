@@ -3,7 +3,6 @@ import Controller from "./Controller";
 
 import NewsPostDao from "../dao/NewsPostDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
-import { INewsPost } from "../models/INewsPost";
 import { MessageFactory } from "../utils/MessageFactory";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
@@ -23,7 +22,7 @@ export default class NewsPostController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const newsPosts: INewsPost[] = await this.newsPostDao.findAll();
+          const newsPosts = await this.newsPostDao.findAll();
           return res.status(200).json(newsPosts);
         } catch (err) {
           return res
@@ -44,7 +43,7 @@ export default class NewsPostController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const newsPost: INewsPost = await this.newsPostDao.findOne(
+          const newsPost = await this.newsPostDao.findOne(
             req.params.newsPostId
           );
           if (newsPost) {
@@ -73,7 +72,7 @@ export default class NewsPostController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const newsPost: INewsPost[] = await this.newsPostDao.findByAuthor(
+          const newsPost = await this.newsPostDao.findByAuthor(
             req.params.userId
           );
           return res.status(200).json(newsPost);
@@ -100,12 +99,12 @@ export default class NewsPostController extends Controller {
         try {
           const userId: number = res.locals.token.data.userId;
 
-          const savedPost: INewsPost = {
+          const savedPost = {
             message: req.body.message,
             title: req.body.title,
             author: userId
           };
-          const newsPost: number[] = await this.newsPostDao.save(savedPost);
+          const newsPost = await this.newsPostDao.save(savedPost);
           if (newsPost.length > 0) {
             return res
               .status(201)
@@ -135,13 +134,11 @@ export default class NewsPostController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const newsPost: INewsPost = await this.newsPostDao.findOne(
+          const newsPost = await this.newsPostDao.findOne(
             req.params.newsPostId
           );
           if (newsPost) {
-            const result: boolean = await this.newsPostDao.remove(
-              req.params.newsPostId
-            );
+            const result = await this.newsPostDao.remove(req.params.newsPostId);
             if (result) {
               return res
                 .status(200)

@@ -1,12 +1,12 @@
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex("watches")
+  return knex("sessions")
     .del()
     .then(function() {
       // Inserts seed entries
-      return knex("watches").insert([
+      return knex("sessions").insert([
         {
-          watchId: 1,
+          sessionId: 1,
           userId: 1,
           startMessage: "Let's get this party started.",
           endMessage:
@@ -17,7 +17,7 @@ exports.seed = function(knex, Promise) {
           ended: 1
         },
         {
-          watchId: 2,
+          sessionId: 2,
           userId: 1,
           startMessage:
             "Good evening, I'm taking responsibility of a few exchange students.",

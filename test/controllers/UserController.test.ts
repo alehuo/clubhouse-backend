@@ -267,9 +267,7 @@ describe("UserController", () => {
           res.body.error.should.equal("Missing request body parameters");
           should.exist(res.body.errors);
           res.body.errors.length.should.equal(1);
-          res.body.errors[0].should.equal(
-            "Missing: lastName, password"
-          );
+          res.body.errors[0].should.equal("Missing: lastName, password");
           should.exist(res.body.error);
           done();
         });
@@ -303,7 +301,8 @@ describe("UserController", () => {
           should.not.exist(res.body.error);
           should.exist(res.body.message);
           res.body.message.should.equal(
-            "User deleted from the server (including his/her created calendar events, messages, watches and newsposts.)"
+            "User deleted from the server (including his/her created calendar " +
+              "events, messages, sessions and newsposts.)"
           );
           done();
         });

@@ -1,8 +1,8 @@
 exports.up = function(knex, Promise) {
-  return knex.schema.hasTable("watches").then(exists => {
+  return knex.schema.hasTable("sessions").then(exists => {
     if (!exists) {
-      return knex.schema.createTable("watches", table => {
-        table.increments("watchId");
+      return knex.schema.createTable("sessions", table => {
+        table.increments("sessionId");
 
         // User id
         table
@@ -14,7 +14,7 @@ exports.up = function(knex, Promise) {
         table.string("startMessage", 4096);
         table.string("endMessage", 4096);
 
-        // Start & end times of the watch
+        // Start & end times of the session
         table
           .timestamp("startTime")
           .notNullable()
@@ -48,9 +48,9 @@ exports.down = function(knex, Promise) {
   if (process.env.NODE_ENV == "production") {
     throw new Error("Do not drop tables in a production environment.");
   }
-  return knex.schema.hasTable("watches").then(exists => {
+  return knex.schema.hasTable("sessions").then(exists => {
     if (exists) {
-      return knex.schema.dropTable("watches");
+      return knex.schema.dropTable("sessions");
     }
   });
 };

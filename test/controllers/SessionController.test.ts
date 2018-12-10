@@ -32,7 +32,7 @@ const should: Chai.Should = chai.should();
 const chaiHttp: Chai.ChaiHttpRequest = require("chai-http");
 chai.use(chaiHttp);
 
-const url: string = "/api/v1/watch";
+const url: string = "/api/v1/session";
 
 describe("WatchController", () => {
   // Roll back
@@ -80,7 +80,7 @@ describe("WatchController", () => {
     });
   });
 
-  describe("GET /api/v1/watch/ongoing", () => {
+  describe("GET /api/v1/session/ongoing", () => {
     it("Returns all ongoing sessions", (done: Mocha.Done) => {
       chai
         .request(app)
@@ -89,7 +89,7 @@ describe("WatchController", () => {
         .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(200);
           res.body.length.should.equal(1);
-          res.body[0].watchId.should.equal(2);
+          res.body[0].sessionId.should.equal(2);
           res.body[0].userId.should.equal(1);
           res.body[0].startMessage.should.equal(
             "Good evening, I'm taking responsibility of a few exchange students."
@@ -102,7 +102,7 @@ describe("WatchController", () => {
     });
   });
 
-  describe("GET /api/v1/watch/user/:userId", () => {
+  describe("GET /api/v1/session/user/:userId", () => {
     it("Returns sessions (old and ongoing) by a single user", (done: Mocha.Done) => {
       chai
         .request(app)
@@ -114,7 +114,7 @@ describe("WatchController", () => {
           res.body.length.should.equal(2);
 
           // First
-          res.body[0].watchId.should.equal(1);
+          res.body[0].sessionId.should.equal(1);
           res.body[0].userId.should.equal(1);
           res.body[0].startMessage.should.equal(
             "Let's get this party started."
@@ -126,7 +126,7 @@ describe("WatchController", () => {
           should.exist(res.body[0].endTime);
 
           // Second
-          res.body[1].watchId.should.equal(2);
+          res.body[1].sessionId.should.equal(2);
           res.body[1].userId.should.equal(1);
           res.body[1].startMessage.should.equal(
             "Good evening, I'm taking responsibility of a few exchange students."
@@ -143,7 +143,7 @@ describe("WatchController", () => {
     });
   });
 
-  describe("GET /api/v1/watch/ongoing/user/:userId", () => {
+  describe("GET /api/v1/session/ongoing/user/:userId", () => {
     it("Returns all ongoing sessions by a single user.", (done: Mocha.Done) => {
       chai
         .request(app)
@@ -155,7 +155,7 @@ describe("WatchController", () => {
           res.body.length.should.equal(1);
 
           // First
-          res.body[0].watchId.should.equal(2);
+          res.body[0].sessionId.should.equal(2);
           res.body[0].userId.should.equal(1);
           res.body[0].startMessage.should.equal(
             "Good evening, I'm taking responsibility of a few exchange students."
@@ -169,7 +169,7 @@ describe("WatchController", () => {
     });
   });
 
-  describe("POST /api/v1/watch/start & POST /api/v1/watch/stop", () => {
+  describe("POST /api/v1/session/start & POST /api/v1/session/stop", () => {
     it("User can start and stop a session.", (done: Mocha.Done) => {
       // Start the watch
       chai
@@ -210,7 +210,9 @@ describe("WatchController", () => {
           res.status.should.equal(400);
           should.exist(res.body.error);
           should.not.exist(res.body.message);
-          res.body.error.should.equal("You already have an ongoing session running.");
+          res.body.error.should.equal(
+            "You already have an ongoing session running."
+          );
           done();
         });
     });

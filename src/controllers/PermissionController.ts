@@ -23,7 +23,7 @@ export default class PermissionController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_VIEW_PERMISSIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const result: IPermission[] = await this.permissionDao.findAll();
+          const result = await this.permissionDao.findAll();
           return res.json(result);
         } catch (err) {
           return res
@@ -44,10 +44,10 @@ export default class PermissionController extends Controller {
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         const permissions: number = res.locals.token.data.permissions;
-        const permlist: IPermission[] = await getPermissions(permissions);
+        const permlist = await getPermissions(permissions);
         return res.status(200).json({
           permissions,
-          permission_list: permlist.map((permission: IPermission) => {
+          permission_list: permlist.map((permission) => {
             delete permission.created_at;
             delete permission.updated_at;
             delete permission.permissionId;
@@ -63,7 +63,7 @@ export default class PermissionController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_VIEW_PERMISSIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const permission: IPermission = await this.permissionDao.findOne(
+          const permission = await this.permissionDao.findOne(
             req.params.permissionId
           );
           if (!permission) {
@@ -94,14 +94,14 @@ export default class PermissionController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const { name, value }: IPermission = req.body;
-          const perm: IPermission = await this.permissionDao.findByValue(value);
+          const perm = await this.permissionDao.findByValue(value);
 
           if (perm) {
             return res
               .status(400)
               .json(MessageFactory.createError("Permission already exists"));
           } else {
-            const savedPermission: number[] = await this.permissionDao.save({
+            const savedPermission = await this.permissionDao.save({
               name,
               value
             });

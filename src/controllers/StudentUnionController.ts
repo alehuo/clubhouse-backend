@@ -25,7 +25,7 @@ export default class StudentUnionController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_VIEW_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const result: IStudentUnion[] = await this.studentUnionDao.findAll();
+          const result = await this.studentUnionDao.findAll();
           return res.json(result.map(studentUnionFilter));
         } catch (err) {
           return res
@@ -43,7 +43,7 @@ export default class StudentUnionController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_VIEW_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const studentUnion: IStudentUnion = await this.studentUnionDao.findOne(
+          const studentUnion = await this.studentUnionDao.findOne(
             req.params.studentUnionId
           );
           if (studentUnion) {
@@ -71,9 +71,7 @@ export default class StudentUnionController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const { name, description }: IStudentUnion = req.body;
-          const studentUnion: IStudentUnion = await this.studentUnionDao.findByName(
-            name
-          );
+          const studentUnion = await this.studentUnionDao.findByName(name);
 
           if (studentUnion) {
             return res
@@ -90,12 +88,10 @@ export default class StudentUnionController extends Controller {
                 );
             }
 
-            const savedStudentUnion: number[] = await this.studentUnionDao.save(
-              {
-                name,
-                description
-              }
-            );
+            const savedStudentUnion = await this.studentUnionDao.save({
+              name,
+              description
+            });
 
             return res.status(201).json({
               ...{ name, description },
@@ -119,12 +115,12 @@ export default class StudentUnionController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
-        const studentUnion: IStudentUnion = await this.studentUnionDao.findOne(
+        const studentUnion = await this.studentUnionDao.findOne(
           req.params.studentUnionId
         );
         if (studentUnion) {
           try {
-            const result: boolean = await this.studentUnionDao.remove(
+            const result = await this.studentUnionDao.remove(
               req.params.studentUnionId
             );
             if (result) {

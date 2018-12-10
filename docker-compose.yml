@@ -24,6 +24,7 @@ services:
       - ./seeds:/backend/seeds
       - ./migrations:/backend/migrations
       - ./knexfile.ts:/backend/knexfile.ts
+    command: yarn watch
     environment:
       - NODE_ENV=development
       - PORT=8080

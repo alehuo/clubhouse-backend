@@ -1,21 +1,21 @@
 import express from "express";
-import WatchDao from "../dao/WatchDao";
+import SessionDao from "../dao/SessionDao";
 import Controller from "./Controller";
 
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
-import { IWatch } from "../models/IWatch";
+import { ISession } from "../models/ISession";
 import { MessageFactory } from "../utils/MessageFactory";
 
 import UserDao from "../dao/UserDao";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
+import { sessionFilter } from "../models/ISession";
 import { IUser } from "../models/IUser";
-import { watchFilter } from "../models/IWatch";
 import { sendEmail } from "../utils/Mailer";
 import { MessageType, WebSocketServer, WsMessage } from "../WebSocket";
 
-export default class WatchController extends Controller {
+export default class SessionController extends Controller {
   constructor(
-    private watchDao: WatchDao,
+    private sessionDao: SessionDao,
     private userDao: UserDao,
     private ws: WebSocketServer
   ) {
@@ -23,36 +23,34 @@ export default class WatchController extends Controller {
   }
 
   public routes(): express.Router {
-    // All watches that are currently running
+    // All session that are currently running
     this.router.get(
       "/ongoing",
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const watches: IWatch[] = await this.watchDao.findAllOngoing();
-          return res.status(200).json(watches.map(watchFilter));
+          const sessions = await this.sessionDao.findAllOngoing();
+          return res.status(200).json(sessions.map(sessionFilter));
         } catch (err) {
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get ongoing watches",
+                "Internal server error: Cannot get ongoing sessions",
                 err as Error
               )
             );
         }
       }
     );
-    // All watches from a single user
+    // All sessions from a single user
     this.router.get(
       "/user/:userId(\\d+)",
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const watches: IWatch[] = await this.watchDao.findByUser(
-            req.params.userId
-          );
-          return res.status(200).json(watches.map(watchFilter));
+          const sessions = await this.sessionDao.findByUser(req.params.userId);
+          return res.status(200).json(sessions.map(sessionFilter));
         } catch (err) {
           return res
             .status(500)
@@ -65,16 +63,16 @@ export default class WatchController extends Controller {
         }
       }
     );
-    // All watches from a single user that are currently running
+    // All sessions from a single user that are currently running
     this.router.get(
       "/ongoing/user/:userId(\\d+)",
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const watches: IWatch[] = await this.watchDao.findOngoingByUser(
+          const sessions = await this.sessionDao.findOngoingByUser(
             req.params.userId
           );
-          return res.status(200).json(watches.map(watchFilter));
+          return res.status(200).json(sessions.map(sessionFilter));
         } catch (err) {
           return res
             .status(500)
@@ -88,7 +86,7 @@ export default class WatchController extends Controller {
         }
       }
     );
-    // Start a watch.
+    // Start a session.
     this.router.post(
       "/start",
       RequestParamMiddleware("startMessage"),
@@ -96,10 +94,8 @@ export default class WatchController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
-          const watches: IWatch[] = await this.watchDao.findOngoingByUser(
-            userId
-          );
-          if (watches && watches.length > 0) {
+          const sessions = await this.sessionDao.findOngoingByUser(userId);
+          if (sessions && sessions.length > 0) {
             return res
               .status(400)
               .json(
@@ -108,7 +104,7 @@ export default class WatchController extends Controller {
                 )
               );
           }
-          const watch: IWatch = {
+          const session: ISession = {
             userId,
             startMessage: req.body.startMessage,
             startTime: new Date()
@@ -116,7 +112,7 @@ export default class WatchController extends Controller {
 
           const user: IUser = await this.userDao.findOne(userId);
 
-          await this.watchDao.save(watch);
+          await this.sessionDao.save(session);
 
           const title: string =
             (process.env.MAIL_PREFIX
@@ -132,7 +128,7 @@ export default class WatchController extends Controller {
             " " +
             user.lastName +
             " has started a new session with the following message: \r\n\r\n\r\n\r\n" +
-            watch.startMessage +
+            session.startMessage +
             "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
 
           const htmlMessage: string =
@@ -141,7 +137,7 @@ export default class WatchController extends Controller {
             " " +
             user.lastName +
             "</span> has started a new session with the following message: <br/><br/><br/><p>" +
-            watch.startMessage +
+            session.startMessage +
             "</p>" +
             "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
 
@@ -172,7 +168,7 @@ export default class WatchController extends Controller {
         }
       }
     );
-    // Stop a watch.
+    // Stop a session.
     this.router.post(
       "/stop",
       RequestParamMiddleware("endMessage"),
@@ -180,11 +176,11 @@ export default class WatchController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
-          const watches: IWatch[] = await this.watchDao.findOngoingByUser(
+          const sessions: ISession[] = await this.sessionDao.findOngoingByUser(
             userId
           );
-          if (watches) {
-            if (watches.length === 0) {
+          if (sessions) {
+            if (sessions.length === 0) {
               return res
                 .status(400)
                 .json(
@@ -192,7 +188,7 @@ export default class WatchController extends Controller {
                     "You don't have an ongoing session."
                   )
                 );
-            } else if (watches.length > 1) {
+            } else if (sessions.length > 1) {
               return res
                 .status(400)
                 .json(
@@ -203,20 +199,20 @@ export default class WatchController extends Controller {
                 );
             }
           }
-          const currentWatch: IWatch = watches[0];
-          const watch: IWatch = {
+          const currentSession: ISession = sessions[0];
+          const session: ISession = {
             userId,
             endMessage: req.body.endMessage,
             endTime: new Date(),
             ended: true
           };
-          if (!currentWatch.watchId) {
+          if (!currentSession.sessionId) {
             return res
               .status(400)
               .json(MessageFactory.createError("Invalid session id"));
           }
 
-          await this.watchDao.endWatch(currentWatch.watchId, watch);
+          await this.sessionDao.endSession(currentSession.sessionId, session);
 
           const user: IUser = await this.userDao.findOne(userId);
 
@@ -234,7 +230,7 @@ export default class WatchController extends Controller {
             " " +
             user.lastName +
             " has ended a session with the following message: \r\n\r\n\r\n\r\n" +
-            watch.endMessage +
+            session.endMessage +
             "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
 
           const htmlMessage: string =
@@ -243,7 +239,7 @@ export default class WatchController extends Controller {
             " " +
             user.lastName +
             "</span> has ended a session with the following message: <br/><br/><br/><p>" +
-            watch.endMessage +
+            session.endMessage +
             "</p>" +
             "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
 
@@ -284,25 +280,24 @@ export default class WatchController extends Controller {
         try {
           const userId: number = res.locals.token.data.userId;
           // This should return only one session, as only one active is permitted
-          const watches: IWatch[] = await this.watchDao.findOngoingByUser(
+          const sessions: ISession[] = await this.sessionDao.findOngoingByUser(
             userId
           );
-          const otherWatches: IWatch[] = await this.watchDao.findAllOngoing();
-          const peopleCount: number = otherWatches.length;
-          if (watches.length === 0) {
+          const otherSessions: ISession[] = await this.sessionDao.findAllOngoing();
+          const peopleCount: number = otherSessions.length;
+          if (sessions.length === 0) {
             return res.status(200).json({
-              running: watches && watches.length !== 0,
+              running: sessions && sessions.length !== 0,
               peopleCount
             });
           } else {
             return res.status(200).json({
-              running: watches && watches.length !== 0,
+              running: sessions && sessions.length !== 0,
               peopleCount,
-              startTime: watches[0].startTime
+              startTime: sessions[0].startTime
             });
           }
         } catch (err) {
-          console.log(err);
           return res
             .status(500)
             .json(

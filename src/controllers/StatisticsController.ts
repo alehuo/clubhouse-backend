@@ -3,9 +3,6 @@ import express from "express";
 import StatisticsDao from "../dao/StatisticsDao";
 import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
-import { IStatistics } from "../models/IStatistics";
-import { IUser } from "../models/IUser";
-import { IUserStatistics } from "../models/IUserStatistics";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
@@ -23,7 +20,7 @@ export default class StatisticsController extends Controller {
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const result: IStatistics[] = await this.statisticsDao.findStatistics();
+          const result = await this.statisticsDao.findStatistics();
           return res.json(result[0]);
         } catch (err) {
           return res
@@ -43,13 +40,13 @@ export default class StatisticsController extends Controller {
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         try {
-          const user: IUser = await this.userDao.findOne(req.params.userId);
+          const user = await this.userDao.findOne(req.params.userId);
           if (!user) {
             return res
               .status(404)
               .json(MessageFactory.createError("User not found"));
           }
-          const result: IUserStatistics[] = await this.statisticsDao.findStatisticsFromUser(
+          const result = await this.statisticsDao.findStatisticsFromUser(
             req.params.userId
           );
           if (result && result.length === 1) {

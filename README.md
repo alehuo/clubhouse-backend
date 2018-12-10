@@ -68,12 +68,12 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
   - [/api/v1/permission](#apiv1permission)
     - [GET /api/v1/permission](#get-apiv1permission)
     - [GET /api/v1/permission/:permissionId](#get-apiv1permissionpermissionid)
-  - [/api/v1/watch](#apiv1watch)
-    - [GET /api/v1/watch/ongoing](#get-apiv1watchongoing)
-    - [GET /api/v1/watch/user/:userId](#get-apiv1watchuseruserid)
-    - [GET /api/v1/watch/ongoing/user/:userId](#get-apiv1watchongoinguseruserid)
-    - [POST /api/v1/watch/begin](#post-apiv1watchbegin)
-    - [POST /api/v1/watch/end](#post-apiv1watchend)
+  - [/api/v1/session](#apiv1session)
+    - [GET /api/v1/session/ongoing](#get-apiv1sessionongoing)
+    - [GET /api/v1/session/user/:userId](#get-apiv1sessionuseruserid)
+    - [GET /api/v1/session/ongoing/user/:userId](#get-apiv1sessionongoinguseruserid)
+    - [POST /api/v1/session/start](#post-apiv1sessionstart)
+    - [POST /api/v1/session/end](#post-apiv1sessionend)
   - [/api/v1/message](#apiv1message)
     - [GET /api/v1/message](#get-apiv1message)
     - [GET /api/v1/message/:messageId](#get-apiv1messagemessageid)
@@ -880,11 +880,11 @@ _Response body:_ **GET /api/v1/permission/1**
 }
 ```
 
-### /api/v1/watch
+### /api/v1/session
 
-#### GET /api/v1/watch/ongoing
+#### GET /api/v1/session/ongoing
 
-_Returns:_ **All ongoing watches in the service.**
+_Returns:_ **All ongoing sessions in the service.**
 
 _Request headers:_ **Authorization: Bearer `[TOKEN]`**
 
@@ -896,7 +896,7 @@ _Response body:_
 
 ```json
   {
-    "watchId": 2,
+    "sessionId": 2,
     "userId": 1,
     "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
     "endMessage": null,
@@ -908,9 +908,9 @@ _Response body:_
 ]
 ```
 
-#### GET /api/v1/watch/user/:userId
+#### GET /api/v1/session/user/:userId
 
-_Returns:_ **All watches (old and ongoing) by a single user, by its id.**
+_Returns:_ **All sessions (old and ongoing) by a single user, by its id.**
 
 _Request headers:_ **Authorization: Bearer `[TOKEN]`**
 
@@ -920,12 +920,12 @@ _Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP
 
 _Response content-type:_ **application/json**
 
-_Response body:_ **GET /api/v1/watch/user/1**
+_Response body:_ **GET /api/v1/session/user/1**
 
 ```json
 [
   {
-    "watchId": 1,
+    "sessionId": 1,
     "userId": 1,
     "startMessage": "Let's get this party started.",
     "endMessage":
@@ -936,7 +936,7 @@ _Response body:_ **GET /api/v1/watch/user/1**
     "updated_at": "2018-04-17 10:01:27"
   },
   {
-    "watchId": 2,
+    "sessionId": 2,
     "userId": 1,
     "startMessage":
       "Good evening, I'm taking responsibility of a few exchange students.",
@@ -949,7 +949,7 @@ _Response body:_ **GET /api/v1/watch/user/1**
 ]
 ```
 
-#### GET /api/v1/watch/ongoing/user/:userId
+#### GET /api/v1/session/ongoing/user/:userId
 
 _Returns:_ **All ongoing watches by a single user, by its id.**
 
@@ -961,12 +961,12 @@ _Response status code:_ **HTTP 200** (success), **HTTP 404** (not found), **HTTP
 
 _Response content-type:_ **application/json**
 
-_Response body:_ **GET /api/v1/watch/ongoing/user/1**
+_Response body:_ **GET /api/v1/session/ongoing/user/1**
 
 ```json
 [
   {
-    "watchId": 2,
+    "sessionId": 2,
     "userId": 1,
     "startMessage":
       "Good evening, I'm taking responsibility of a few exchange students.",
@@ -979,9 +979,9 @@ _Response body:_ **GET /api/v1/watch/ongoing/user/1**
 ]
 ```
 
-#### POST /api/v1/watch/begin
+#### POST /api/v1/session/start
 
-_Returns:_ **Starts a new watch.**
+_Returns:_ **Starts a new session.**
 
 _Request content-type:_ **application/json**
 
@@ -993,11 +993,11 @@ Required: `startMessage`
 
 ```json
 {
-  "startMessage": "Start message of the watch."
+  "startMessage": "Start message of the session."
 }
 ```
 
-_Response status code:_ **HTTP 200** (success on starting a new watch), **HTTP 500** (server error)
+_Response status code:_ **HTTP 200** (success on starting a new session), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
@@ -1005,13 +1005,13 @@ _Response body:_ Status message
 
 ```json
 {
-  "message": "Watch started"
+  "message": "Session started"
 }
 ```
 
-#### POST /api/v1/watch/end
+#### POST /api/v1/session/end
 
-_Returns:_ **Ends an ongoing watch.**
+_Returns:_ **Ends an ongoing session.**
 
 _Request content-type:_ **application/json**
 
@@ -1023,11 +1023,11 @@ Required: `endMessage`
 
 ```json
 {
-  "endMessage": "End message of the watch."
+  "endMessage": "End message of the session."
 }
 ```
 
-_Response status code:_ **HTTP 200** (success on starting a new watch), **HTTP 500** (server error)
+_Response status code:_ **HTTP 200** (success on ending a session), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
@@ -1035,7 +1035,7 @@ _Response body:_ Status message
 
 ```json
 {
-  "message": "Watch ended with message 'End message of the watch.'"
+  "message": "Session ended with message 'End message of the session.'"
 }
 ```
 

@@ -51,14 +51,16 @@ export default class CalendarEventController extends Controller {
           unionId
         };
         try {
-          const calendarEvent: number[] = await this.calendarEventDao.save(
+          const calendarEvent = await this.calendarEventDao.save(
             calendarEventData
           );
-          return res.status(201).json(
-            Object.assign({}, calendarEventData, {
+          return res.status(201).json({
+            ...{},
+            ...calendarEventData,
+            ...{
               eventId: calendarEvent[0]
-            })
-          );
+            }
+          });
         } catch (ex) {
           return res
             .status(500)
@@ -72,31 +74,28 @@ export default class CalendarEventController extends Controller {
       }
     );
 
-    this.router.get(
-      "",
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const events: ICalendarEvent[] = await this.calendarEventDao.findAll();
-          return res.status(200).json(events);
-        } catch (ex) {
-          return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Internal server error: Cannot get all events",
-                ex as Error
-              )
-            );
-        }
+    this.router.get("", async (req: express.Request, res: express.Response) => {
+      try {
+        const events = await this.calendarEventDao.findAll();
+        return res.status(200).json(events);
+      } catch (ex) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Internal server error: Cannot get all events",
+              ex as Error
+            )
+          );
       }
-    );
+    });
 
     this.router.get(
       "/ical",
       async (req: express.Request, res: express.Response) => {
         try {
-          const events: ICalendarEvent[] = await this.calendarEventDao.findAll();
-          const ical: string = await createICalStream(events);
+          const events = await this.calendarEventDao.findAll();
+          const ical = await createICalStream(events);
           res.setHeader(
             "Content-disposition",
             "attachment; filename=events_all.ics"
@@ -120,9 +119,7 @@ export default class CalendarEventController extends Controller {
       "/:eventId(\\d+)",
       async (req: express.Request, res: express.Response) => {
         try {
-          const event: ICalendarEvent = await this.calendarEventDao.findOne(
-            req.params.eventId
-          );
+          const event = await this.calendarEventDao.findOne(req.params.eventId);
           if (!event) {
             return res
               .status(404)
@@ -149,15 +146,13 @@ export default class CalendarEventController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const event: ICalendarEvent = await this.calendarEventDao.findOne(
-            req.params.eventId
-          );
+          const event = await this.calendarEventDao.findOne(req.params.eventId);
           if (!event) {
             return res
               .status(404)
               .json(MessageFactory.createError("Calendar event not found"));
           } else {
-            const result: boolean = await this.calendarEventDao.remove(
+            const result = await this.calendarEventDao.remove(
               req.params.eventId
             );
             if (result) {
@@ -190,15 +185,13 @@ export default class CalendarEventController extends Controller {
       "/:eventId(\\d+)/ical",
       async (req: express.Request, res: express.Response) => {
         try {
-          const event: ICalendarEvent = await this.calendarEventDao.findOne(
-            req.params.eventId
-          );
+          const event = await this.calendarEventDao.findOne(req.params.eventId);
           if (!event) {
             return res
               .status(404)
               .json(MessageFactory.createError("Event not found"));
           } else {
-            const calData: string = await createICal(event);
+            const calData = await createICal(event);
             res.setHeader(
               "Content-disposition",
               "attachment; filename=event_" + event.eventId + ".ics"

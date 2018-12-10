@@ -4,7 +4,7 @@ exports.seed = function(knex, Promise) {
     .del()
     .then(function() {
       // Inserts seed entries
-      return knex("watches")
+      return knex("sessions")
         .del()
         .then(function() {
           return knex("calendarEvents")

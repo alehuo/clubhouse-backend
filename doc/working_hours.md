@@ -1,7 +1,5 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Working hours (Back-end)](#working-hours-back-end)
@@ -51,10 +49,10 @@
 | 22.11.2018 | 1h    | Tweaked docker-compose.yml                                                                                                                                                                                                                                                                       |
 | 28.11.2018 | 2h    | Fixed tests, fixed type-casting of Permission seed. Upgraded project dependencies.                                                                                                                                                                                                                                                                       |
 | 5.12.2018 | 1.5h    | Created different dockerfiles for dev and prod environments. Upgraded dependencies                                                                                                                                                                                                                                                                   |
-
+| 10.12.2018 | 1.0h    | Refactored code as TypeScript can determine types automatically with type inheritance. Fixed tests.                                                                                                                                                                                                                                                                   |
 
 Total:
 
 61.0 h (part 1)
 
-28.0 h (part 2)
+29.0 h (part 2)

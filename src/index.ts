@@ -1,4 +1,5 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 import express from "express";
 import fs from "fs";
@@ -13,19 +14,19 @@ import LocationController from "./controllers/LocationController";
 import MessageController from "./controllers/MessageController";
 import NewsPostController from "./controllers/NewsPostController";
 import PermissionController from "./controllers/PermissionController";
+import SessionController from "./controllers/SessionController";
 import StatisticsController from "./controllers/StatisticsController";
 import StudentUnionController from "./controllers/StudentUnionController";
 import UserController from "./controllers/UserController";
-import WatchController from "./controllers/WatchController";
 import CalendarEventDao from "./dao/CalendarEventDao";
 import LocationDao from "./dao/LocationDao";
 import MessageDao from "./dao/MessageDao";
 import NewsPostDao from "./dao/NewsPostDao";
 import PermissionDao from "./dao/PermissionDao";
+import SessionDao from "./dao/SessionDao";
 import StatisticsDao from "./dao/StatisticsDao";
 import StudentUnionDao from "./dao/StudentUnionDao";
 import UserDao from "./dao/UserDao";
-import WatchDao from "./dao/WatchDao";
 import * as Database from "./Database";
 import { apiHeader, apiUrl } from "./utils/ApiUtils";
 import { WebSocketServer } from "./WebSocket";
@@ -109,7 +110,7 @@ app.use(
     new CalendarEventDao(knex),
     new MessageDao(knex),
     new NewsPostDao(knex),
-    new WatchDao(knex)
+    new SessionDao(knex)
   ).routes()
 );
 
@@ -149,9 +150,9 @@ app.use(
 
 // Watch route
 app.use(
-  apiUrl("watch", API_VERSION),
-  apiHeader("watch", API_VERSION),
-  new WatchController(new WatchDao(knex), new UserDao(knex), ws).routes()
+  apiUrl("session", API_VERSION),
+  apiHeader("session", API_VERSION),
+  new SessionController(new SessionDao(knex), new UserDao(knex), ws).routes()
 );
 
 // Message route

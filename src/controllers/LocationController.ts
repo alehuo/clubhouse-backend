@@ -1,5 +1,5 @@
 import express from "express";
-import { ILocation, locationFilter } from "../models/ILocation";
+import { locationFilter } from "../models/ILocation";
 
 import LocationDao from "../dao/LocationDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
@@ -22,7 +22,7 @@ export default class LocationController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_VIEW_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const result: ILocation[] = await this.locationDao.findAll();
+          const result = await this.locationDao.findAll();
           return res.json(result.map(locationFilter));
         } catch (err) {
           return res
@@ -43,7 +43,7 @@ export default class LocationController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_VIEW_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const location: ILocation = await this.locationDao.findOne(
+          const location = await this.locationDao.findOne(
             req.params.locationId
           );
           if (location) {
@@ -72,20 +72,18 @@ export default class LocationController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const { name, address }: ILocation = req.body;
-          const location: ILocation = await this.locationDao.findByName(name);
+          const { name, address } = req.body;
+          const location = await this.locationDao.findByName(name);
           if (location) {
             return res
               .status(400)
               .json(MessageFactory.createError("Location already exists"));
           } else {
-            const locationObj: ILocation = {
+            const locationObj = {
               name: name.trim(),
               address: address.trim()
             };
-            const savedLocation: number[] = await this.locationDao.save(
-              locationObj
-            );
+            const savedLocation = await this.locationDao.save(locationObj);
 
             return res.status(201).json({
               ...locationObj,
@@ -112,13 +110,11 @@ export default class LocationController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const locations: any = await this.locationDao.findOne(
+          const locations = await this.locationDao.findOne(
             req.params.locationId
           );
-          if (locations && locations.length === 1) {
-            const result: boolean = await this.locationDao.remove(
-              req.params.locationId
-            );
+          if (locations) {
+            const result = await this.locationDao.remove(req.params.locationId);
             if (result) {
               return res
                 .status(200)
