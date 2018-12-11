@@ -6,6 +6,7 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 
 import { Session } from "@alehuo/clubhouse-shared";
+import moment from "moment";
 import UserDao from "../dao/UserDao";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { sessionFilter } from "../models/ISession";
@@ -106,7 +107,7 @@ export default class SessionController extends Controller {
           const session: Session = {
             userId,
             startMessage: req.body.startMessage,
-            startTime: new Date() // FIXME: Replace with moment
+            startTime: moment().toISOString()
           };
 
           const user = await this.userDao.findOne(userId);
@@ -200,7 +201,7 @@ export default class SessionController extends Controller {
           const session: Session = {
             userId,
             endMessage: req.body.endMessage,
-            endTime: new Date(), // FIXME: Replace with moment
+            endTime: moment().toISOString(),
             ended: true
           };
           if (!currentSession.sessionId) {
