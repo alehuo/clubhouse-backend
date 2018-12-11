@@ -1,20 +1,20 @@
+import { Message } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { IMessage } from "../models/IMessage";
-import IDao from "./Dao";
+import Dao from "./Dao";
 
 const TABLE_NAME: string = "messages";
 
 /**
  * DAO used to handle messages that people send to the system.
  */
-export default class MessageDao implements IDao<IMessage> {
+export default class MessageDao implements Dao<Message> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): PromiseLike<IMessage[]> {
+  public findAll(): PromiseLike<Message[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
 
-  public findOne(messageId: number): PromiseLike<IMessage> {
+  public findOne(messageId: number): PromiseLike<Message> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -23,7 +23,7 @@ export default class MessageDao implements IDao<IMessage> {
     );
   }
 
-  public findByUser(userId: number): PromiseLike<IMessage[]> {
+  public findByUser(userId: number): PromiseLike<Message[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -34,7 +34,7 @@ export default class MessageDao implements IDao<IMessage> {
   public findByDateBetween(
     startTime: Date,
     endTime?: Date
-  ): PromiseLike<IMessage[]> {
+  ): PromiseLike<Message[]> {
     if (!endTime) {
       return Promise.resolve(
         this.knex(TABLE_NAME)
@@ -50,7 +50,7 @@ export default class MessageDao implements IDao<IMessage> {
     }
   }
 
-  public save(message: IMessage): PromiseLike<number[]> {
+  public save(message: Message): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(message));
   }
 

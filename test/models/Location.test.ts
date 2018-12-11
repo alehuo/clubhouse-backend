@@ -1,14 +1,15 @@
 process.env.NODE_ENV = "test";
 
+import { Location } from "@alehuo/clubhouse-shared";
 import { expect } from "chai";
 import "mocha";
-import { ILocation, locationFilter } from "../../src/models/ILocation";
+import { locationFilter } from "../../src/models/ILocation";
 const chai: Chai.ChaiStatic = require("chai");
 const should: Chai.Should = chai.should();
 
 describe("ILocation", () => {
   it("should get and set properties correctly", (done: Mocha.Done) => {
-    const location: ILocation = {
+    const location: Location = {
       address: "Test Address",
       created_at: new Date(2017, 2, 12, 23, 55),
       locationId: 2,
@@ -39,7 +40,7 @@ describe("ILocation", () => {
   });
 
   it("Location filter should filter properties properties correctly", (done: Mocha.Done) => {
-    const tmpLocation: ILocation = {
+    const tmpLocation: Location = {
       address: "Test Address",
       created_at: new Date(2017, 2, 12, 23, 55),
       locationId: 2,
@@ -47,7 +48,7 @@ describe("ILocation", () => {
       updated_at: new Date(2018, 1, 2, 11, 28)
     };
 
-    const location: ILocation = locationFilter(tmpLocation);
+    const location = locationFilter(tmpLocation);
 
     should.exist(location.address);
     expect(location.address).to.equal("Test Address");

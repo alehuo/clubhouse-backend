@@ -1,20 +1,10 @@
-export interface IUser {
-  userId?: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  hidden?: boolean;
-  permissions?: number;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { DbUser, User } from "@alehuo/clubhouse-shared";
 
 /**
  * Filters an user object and removes its "hidden" & "password" fields.
  * @param user User object
  */
-export const userFilter: (user: IUser) => object = (user: IUser): object => {
+export const userFilter: (user: DbUser) => User = (user: DbUser): User => {
   return {
     userId: user.userId,
     email: user.email,

@@ -1,12 +1,5 @@
-export interface IStatistics {
-  newspostCount: number;
-  messageCount: number;
-  watchCount: number;
-  userCount: number;
-  hoursOnWatch: number;
-  eventCount: number;
-}
+import { Statistics } from "@alehuo/clubhouse-shared";
 
-export const statisticsFilter: (stats: IStatistics) => IStatistics = (
-  stats: IStatistics
-): IStatistics => stats;
+export const statisticsFilter: (stats: Statistics) => Statistics = (
+  stats: Statistics
+): Statistics => stats;

@@ -1,7 +1,7 @@
+import { Permission } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import PermissionDao from "../dao/PermissionDao";
 import * as Database from "../Database";
-import { IPermission } from "../models/IPermission";
 
 // Knex instance
 const knex: Knex = Database.connect();
@@ -10,19 +10,19 @@ const permissionDao: PermissionDao = new PermissionDao(knex);
 
 export const getPermission: (
   permissionName: string
-) => Promise<IPermission> = async (
+) => Promise<Permission> = async (
   permissionName: string
-): Promise<IPermission> => permissionDao.findByName(permissionName);
+): Promise<Permission> => permissionDao.findByName(permissionName);
 
 /**
  * Calculates user's permissions using bitwise operations.
  * @param perms User permissions.
  */
-export const calculatePermissions: (perms: IPermission[]) => number = (
-  perms: IPermission[]
+export const calculatePermissions: (perms: Permission[]) => number = (
+  perms: Permission[]
 ): number =>
   perms.reduce(
-    (prev: number, curr: IPermission) => prev | curr.value,
+    (prev: number, curr: Permission) => prev | curr.value,
     perms[0].value
   );
 
@@ -32,14 +32,13 @@ export const calculatePermissions: (perms: IPermission[]) => number = (
  */
 export const getPermissions: (
   userPerms: number
-) => Promise<IPermission[]> = async (
+) => Promise<Permission[]> = async (
   userPerms: number
-): Promise<IPermission[]> => {
-  const allowed: IPermission[] = [];
-  const allPerms: IPermission[] = await permissionDao.findAll();
-  allPerms.map((k: IPermission) => {
-    // const permissionName: string = k.name;
-    const permissionValue: number = k.value;
+): Promise<Permission[]> => {
+  const allowed: Permission[] = [];
+  const allPerms = await permissionDao.findAll();
+  allPerms.map((k) => {
+    const permissionValue = k.value;
     if ((userPerms & permissionValue) === permissionValue) {
       allowed.push(k);
     }
@@ -53,17 +52,17 @@ export const getPermissions: (
  * @param requiredPermissions Required permissions
  */
 export const hasPermissions: (
-  userPerms: number | IPermission[],
-  requiredPermissions: number | IPermission[]
+  userPerms: number | Permission[],
+  requiredPermissions: number | Permission[]
 ) => boolean = (
-  userPerms: number | IPermission[],
-  requiredPermissions: number | IPermission[]
+  userPerms: number | Permission[],
+  requiredPermissions: number | Permission[]
 ): boolean => {
   if (typeof userPerms === "number") {
     if (typeof requiredPermissions === "number") {
       return (requiredPermissions & userPerms) === requiredPermissions;
     } else {
-      const requiredPerms: number = calculatePermissions(requiredPermissions);
+      const requiredPerms = calculatePermissions(requiredPermissions);
       return (requiredPerms & userPerms) === requiredPerms;
     }
   } else {
@@ -73,7 +72,7 @@ export const hasPermissions: (
         requiredPermissions
       );
     } else {
-      const requiredPerms: number = calculatePermissions(requiredPermissions);
+      const requiredPerms = calculatePermissions(requiredPermissions);
       return (
         (requiredPerms & calculatePermissions(userPerms)) === requiredPerms
       );

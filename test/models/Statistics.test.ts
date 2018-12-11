@@ -1,14 +1,15 @@
 process.env.NODE_ENV = "test";
 
+import { Statistics } from "@alehuo/clubhouse-shared";
 import { expect } from "chai";
 import "mocha";
-import { IStatistics, statisticsFilter } from "../../src/models/IStatistics";
+import { statisticsFilter } from "../../src/models/IStatistics";
 const chai: Chai.ChaiStatic = require("chai");
 const should: Chai.Should = chai.should();
 
 describe("IUserStatistics", () => {
   it("should get and set user statistics correctly", (done: Mocha.Done) => {
-    const stats: IStatistics = {
+    const stats: Statistics = {
       eventCount: 55,
       hoursOnWatch: 225,
       messageCount: 2,
@@ -33,7 +34,7 @@ describe("IUserStatistics", () => {
   });
 
   it("should filter statistics correctly", (done: Mocha.Done) => {
-    const stats1: IStatistics = {
+    const stats1: Statistics = {
       eventCount: 55,
       hoursOnWatch: 225,
       messageCount: 2,
@@ -42,7 +43,7 @@ describe("IUserStatistics", () => {
       userCount: 225
     };
 
-    const stats: IStatistics = statisticsFilter(stats1);
+    const stats = statisticsFilter(stats1);
 
     should.exist(stats.eventCount);
     should.exist(stats.hoursOnWatch);

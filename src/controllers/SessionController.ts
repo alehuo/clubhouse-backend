@@ -3,13 +3,12 @@ import SessionDao from "../dao/SessionDao";
 import Controller from "./Controller";
 
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
-import { ISession } from "../models/ISession";
 import { MessageFactory } from "../utils/MessageFactory";
 
+import { Session } from "@alehuo/clubhouse-shared";
 import UserDao from "../dao/UserDao";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { sessionFilter } from "../models/ISession";
-import { IUser } from "../models/IUser";
 import { sendEmail } from "../utils/Mailer";
 import { MessageType, WebSocketServer, WsMessage } from "../WebSocket";
 
@@ -104,17 +103,17 @@ export default class SessionController extends Controller {
                 )
               );
           }
-          const session: ISession = {
+          const session: Session = {
             userId,
             startMessage: req.body.startMessage,
-            startTime: new Date()
+            startTime: new Date() // FIXME: Replace with moment
           };
 
-          const user: IUser = await this.userDao.findOne(userId);
+          const user = await this.userDao.findOne(userId);
 
           await this.sessionDao.save(session);
 
-          const title: string =
+          const title =
             (process.env.MAIL_PREFIX
               ? "[" + process.env.MAIL_PREFIX + "]: "
               : "") +
@@ -123,7 +122,7 @@ export default class SessionController extends Controller {
             user.lastName +
             " has started a new session";
 
-          const message: string =
+          const message =
             user.firstName +
             " " +
             user.lastName +
@@ -176,9 +175,7 @@ export default class SessionController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
-          const sessions: ISession[] = await this.sessionDao.findOngoingByUser(
-            userId
-          );
+          const sessions = await this.sessionDao.findOngoingByUser(userId);
           if (sessions) {
             if (sessions.length === 0) {
               return res
@@ -199,11 +196,11 @@ export default class SessionController extends Controller {
                 );
             }
           }
-          const currentSession: ISession = sessions[0];
-          const session: ISession = {
+          const currentSession: Session = sessions[0];
+          const session: Session = {
             userId,
             endMessage: req.body.endMessage,
-            endTime: new Date(),
+            endTime: new Date(), // FIXME: Replace with moment
             ended: true
           };
           if (!currentSession.sessionId) {
@@ -214,7 +211,7 @@ export default class SessionController extends Controller {
 
           await this.sessionDao.endSession(currentSession.sessionId, session);
 
-          const user: IUser = await this.userDao.findOne(userId);
+          const user = await this.userDao.findOne(userId);
 
           const title: string =
             (process.env.MAIL_PREFIX
@@ -280,11 +277,9 @@ export default class SessionController extends Controller {
         try {
           const userId: number = res.locals.token.data.userId;
           // This should return only one session, as only one active is permitted
-          const sessions: ISession[] = await this.sessionDao.findOngoingByUser(
-            userId
-          );
-          const otherSessions: ISession[] = await this.sessionDao.findAllOngoing();
-          const peopleCount: number = otherSessions.length;
+          const sessions = await this.sessionDao.findOngoingByUser(userId);
+          const otherSessions = await this.sessionDao.findAllOngoing();
+          const peopleCount = otherSessions.length;
           if (sessions.length === 0) {
             return res.status(200).json({
               running: sessions && sessions.length !== 0,

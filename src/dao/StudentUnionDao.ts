@@ -1,16 +1,16 @@
+import { StudentUnion } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { IStudentUnion } from "../models/IStudentUnion";
-import IDao from "./Dao";
+import Dao from "./Dao";
 
 const TABLE_NAME: string = "studentUnions";
 
-export default class StudentUnionDao implements IDao<IStudentUnion> {
+export default class StudentUnionDao implements Dao<StudentUnion> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): PromiseLike<IStudentUnion[]> {
+  public findAll(): PromiseLike<StudentUnion[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
-  public findOne(unionId: number): PromiseLike<IStudentUnion> {
+  public findOne(unionId: number): PromiseLike<StudentUnion> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -18,7 +18,7 @@ export default class StudentUnionDao implements IDao<IStudentUnion> {
         .first()
     );
   }
-  public findByName(name: string): PromiseLike<IStudentUnion> {
+  public findByName(name: string): PromiseLike<StudentUnion> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -27,7 +27,7 @@ export default class StudentUnionDao implements IDao<IStudentUnion> {
     );
   }
 
-  public save(stdu: IStudentUnion): PromiseLike<number[]> {
+  public save(stdu: StudentUnion): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(stdu));
   }
 

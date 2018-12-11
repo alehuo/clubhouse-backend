@@ -2,11 +2,11 @@ import express from "express";
 
 import StudentUnionDao from "../dao/StudentUnionDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
-import { IStudentUnion, studentUnionFilter } from "../models/IStudentUnion";
+import { studentUnionFilter } from "../models/IStudentUnion";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { Permissions } from "@alehuo/clubhouse-shared";
+import { Permissions, StudentUnion } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
@@ -70,7 +70,7 @@ export default class StudentUnionController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const { name, description }: IStudentUnion = req.body;
+          const { name, description }: StudentUnion = req.body;
           const studentUnion = await this.studentUnionDao.findByName(name);
 
           if (studentUnion) {

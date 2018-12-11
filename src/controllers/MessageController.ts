@@ -1,11 +1,11 @@
 import express from "express";
 import Controller from "./Controller";
 
+import { Message } from "@alehuo/clubhouse-shared";
 import MessageDao from "../dao/MessageDao";
 import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
-import { IMessage } from "../models/IMessage";
 import { sendEmail } from "../utils/Mailer";
 import { MessageFactory } from "../utils/MessageFactory";
 
@@ -72,7 +72,7 @@ export default class MessageController extends Controller {
 
           const title = req.body.title ? String(req.body.title) : "(No title)";
 
-          const msg: IMessage = {
+          const msg: Message = {
             message: req.body.message,
             title,
             userId

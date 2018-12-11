@@ -1,11 +1,5 @@
-export interface ILocation {
-  locationId?: number;
-  name: string;
-  address: string;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { Location } from "@alehuo/clubhouse-shared";
 
-export const locationFilter: (location: ILocation) => ILocation = (
-  location: ILocation
-): ILocation => location;
+export const locationFilter: (location: Location) => Location = (
+  location: Location
+): Location => location;

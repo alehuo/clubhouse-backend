@@ -1,17 +1,17 @@
+import { Permission } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { IPermission } from "../models/IPermission";
-import IDao from "./Dao";
+import Dao from "./Dao";
 
 const TABLE_NAME: string = "permissions";
 
-export default class PermissionDao implements IDao<IPermission> {
+export default class PermissionDao implements Dao<Permission> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): PromiseLike<IPermission[]> {
+  public findAll(): PromiseLike<Permission[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
 
-  public findOne(permissionId: number): PromiseLike<IPermission> {
+  public findOne(permissionId: number): PromiseLike<Permission> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -20,7 +20,7 @@ export default class PermissionDao implements IDao<IPermission> {
     );
   }
 
-  public findByValue(value: number): PromiseLike<IPermission> {
+  public findByValue(value: number): PromiseLike<Permission> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -29,7 +29,7 @@ export default class PermissionDao implements IDao<IPermission> {
     );
   }
 
-  public findByName(name: string): PromiseLike<IPermission> {
+  public findByName(name: string): PromiseLike<Permission> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -38,7 +38,7 @@ export default class PermissionDao implements IDao<IPermission> {
     );
   }
 
-  public save(permissions: IPermission): PromiseLike<number[]> {
+  public save(permissions: Permission): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(permissions));
   }
 

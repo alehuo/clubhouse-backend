@@ -72,7 +72,7 @@ export default class LocationController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const { name, address } = req.body;
+          const { name, address }: { name: string; address: string } = req.body;
           const location = await this.locationDao.findByName(name);
           if (location) {
             return res

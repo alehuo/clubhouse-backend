@@ -1,19 +1,8 @@
-export interface ISession {
-  sessionId?: number;
-  userId?: number;
-  startTime?: Date;
-  endTime?: Date;
-  startMessage?: string;
-  endMessage?: string;
-  started?: boolean;
-  ended?: boolean;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { Session } from "@alehuo/clubhouse-shared";
 
-export const sessionFilter: (watch: ISession) => ISession = (
-  session: ISession
-): ISession => {
+export const sessionFilter: (session: Session) => Session = (
+  session: Session
+): Session => {
   if (!session.ended) {
     session.endTime = undefined;
   }

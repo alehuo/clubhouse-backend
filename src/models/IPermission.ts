@@ -1,11 +1,5 @@
-export interface IPermission {
-  permissionId?: number;
-  name: string;
-  value: number;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { Permission } from "@alehuo/clubhouse-shared";
 
-export const permissionFilter: (perm: IPermission) => IPermission = (
-  perm: IPermission
-): IPermission => perm;
+export const permissionFilter: (perm: Permission) => Permission = (
+  perm: Permission
+): Permission => perm;

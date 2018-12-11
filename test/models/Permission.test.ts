@@ -1,14 +1,15 @@
 process.env.NODE_ENV = "test";
 
+import { Permission } from "@alehuo/clubhouse-shared";
 import { expect } from "chai";
 import "mocha";
-import { IPermission, permissionFilter } from "../../src/models/IPermission";
+import { permissionFilter } from "../../src/models/IPermission";
 const chai: Chai.ChaiStatic = require("chai");
 const should: Chai.Should = chai.should();
 
 describe("IPermission", () => {
   it("should get and set permission correctly", (done: Mocha.Done) => {
-    const perm: IPermission = {
+    const perm: Permission = {
       name: "TestPermission",
       permissionId: 1,
       value: 55
@@ -23,12 +24,12 @@ describe("IPermission", () => {
   });
 
   it("should filter permission correctly", (done: Mocha.Done) => {
-    const perm1: IPermission = {
+    const perm1: Permission = {
       name: "TestPermission",
       permissionId: 1,
       value: 55
     };
-    const perm: IPermission = permissionFilter(perm1);
+    const perm = permissionFilter(perm1);
     should.exist(perm.name);
     should.exist(perm.permissionId);
     should.exist(perm.value);

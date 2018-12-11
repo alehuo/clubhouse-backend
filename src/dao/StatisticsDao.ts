@@ -1,16 +1,15 @@
+import { Statistics, UserStatistics } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { IStatistics } from "../models/IStatistics";
-import { IUserStatistics } from "../models/IUserStatistics";
-import IDao from "./Dao";
+import Dao from "./Dao";
 
-export default class StatisticsDao implements IDao<IStatistics> {
+export default class StatisticsDao implements Dao<Statistics> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): PromiseLike<IStatistics[]> {
+  public findAll(): PromiseLike<Statistics[]> {
     throw new Error("Not implemented");
   }
 
-  public findStatistics(): PromiseLike<IStatistics[]> {
+  public findStatistics(): PromiseLike<Statistics[]> {
     return Promise.resolve(
       this.knex.raw(
         "SELECT (SELECT COUNT(*) from users) AS userCount, " +
@@ -23,7 +22,7 @@ export default class StatisticsDao implements IDao<IStatistics> {
     );
   }
 
-  public findStatisticsFromUser(userId: number): PromiseLike<IUserStatistics[]> {
+  public findStatisticsFromUser(userId: number): PromiseLike<UserStatistics[]> {
     return Promise.resolve(
       this.knex.raw(
         "SELECT (SELECT COUNT(*) from calendarEvents WHERE addedBy = :userId) AS eventCount, " +
@@ -37,11 +36,11 @@ export default class StatisticsDao implements IDao<IStatistics> {
     );
   }
 
-  public findOne(statisticsId: number): PromiseLike<IStatistics> {
+  public findOne(statisticsId: number): PromiseLike<Statistics> {
     throw new Error("Not implemented");
   }
 
-  public save(statistics: IStatistics): PromiseLike<number[]> {
+  public save(statistics: Statistics): PromiseLike<number[]> {
     throw new Error("Not implemented");
   }
 

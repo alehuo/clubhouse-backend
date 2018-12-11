@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import express from "express";
-import { IUser, userFilter } from "../models/IUser";
+import { userFilter } from "../models/IUser";
 
 import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
@@ -8,7 +8,7 @@ import Controller from "./Controller";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
 
-import { Permissions } from "@alehuo/clubhouse-shared";
+import { DbUser, Permissions } from "@alehuo/clubhouse-shared";
 import Validator from "validator";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
@@ -126,7 +126,7 @@ export default class UserController extends Controller {
               .json(MessageFactory.createError("User not found"));
           } else {
             const errors: string[] = [];
-            const { firstName, lastName, email, password }: IUser = req.body;
+            const { firstName, lastName, email, password }: DbUser = req.body;
             user.firstName = firstName ? firstName : user.firstName;
             user.lastName = lastName ? lastName : user.lastName;
             if (email && user.email !== email) {
@@ -222,7 +222,7 @@ export default class UserController extends Controller {
       RequestParamMiddleware("email", "firstName", "lastName", "password"),
       async (req: express.Request, res: express.Response) => {
         try {
-          const { email, firstName, lastName, password }: IUser = req.body;
+          const { email, firstName, lastName, password }: DbUser = req.body;
 
           const user = await this.userDao.findByEmail(email.trim());
 

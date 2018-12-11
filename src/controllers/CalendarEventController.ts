@@ -3,12 +3,11 @@ import express from "express";
 import CalendarEventDao from "../dao/CalendarEventDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
-import { ICalendarEvent } from "../models/ICalendarEvent";
 import { createICal, createICalStream } from "../utils/iCalUtils";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { Permissions } from "@alehuo/clubhouse-shared";
+import { CalendarEvent, Permissions } from "@alehuo/clubhouse-shared";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
 export default class CalendarEventController extends Controller {
@@ -39,8 +38,8 @@ export default class CalendarEventController extends Controller {
           startTime,
           endTime,
           unionId
-        }: ICalendarEvent = req.body;
-        const calendarEventData: ICalendarEvent = {
+        }: CalendarEvent = req.body;
+        const calendarEventData: CalendarEvent = {
           name,
           description,
           locationId,

@@ -4,7 +4,7 @@ export interface IError {
   errors?: string[];
 }
 
-export interface IMessage {
+export interface ApiMessage {
   message: string;
 }
 
@@ -25,9 +25,9 @@ const createError: (
   return errorObject;
 };
 
-const createMessage: (message: string) => IMessage = (
+const createMessage: (message: string) => ApiMessage = (
   message: string
-): IMessage => {
+): ApiMessage => {
   return {
     message
   };
@@ -35,7 +35,7 @@ const createMessage: (message: string) => IMessage = (
 
 interface MsgFactory {
   createError: (error: string, exception?: Error, errors?: string[]) => IError;
-  createMessage: (message: string) => IMessage;
+  createMessage: (message: string) => ApiMessage;
 }
 
 export const MessageFactory: MsgFactory = {

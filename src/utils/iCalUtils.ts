@@ -1,31 +1,29 @@
+import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import moment from "moment";
-import { ICalendarEvent } from "../models/ICalendarEvent";
 
 import Knex from "knex";
 import LocationDao from "../dao/LocationDao";
 import * as Database from "../Database";
-import { ILocation } from "../models/ILocation";
+
 const knex: Knex = Database.connect();
 
 const locationDao: LocationDao = new LocationDao(knex);
 
 export const createICal: (
-  data: ICalendarEvent,
+  data: CalendarEvent,
   dtStamp?: Date,
   uidStamp?: Date
 ) => Promise<string> = async (
-  data: ICalendarEvent,
+  data: CalendarEvent,
   dtStamp: Date = new Date(),
   uidStamp: Date = new Date()
 ): Promise<string> => {
-  const dStart: string = moment(new Date(data.startTime)).format(
-    "YYYYMMDDTHHmmss"
-  );
-  const dEnd: string = moment(new Date(data.endTime)).format("YYYYMMDDTHHmmss");
+  const dStart = moment(new Date(data.startTime)).format("YYYYMMDDTHHmmss");
+  const dEnd = moment(new Date(data.endTime)).format("YYYYMMDDTHHmmss");
 
   // Let's construct a valid iCal formatted string.
 
-  let iCalData: string = "";
+  let iCalData = "";
   iCalData += "BEGIN:VCALENDAR\r\n";
   iCalData += "VERSION:2.0\r\n";
   iCalData += "PRODID:clubhouse\r\n";
@@ -47,8 +45,8 @@ export const createICal: (
   iCalData += "DTEND:" + dEnd + "\r\n";
   iCalData += "SUMMARY: " + data.name + "\r\n";
   iCalData += "DESCRIPTION: " + data.description + "\r\n";
-  if (data.locationId !== null) {
-    const location: ILocation = await locationDao.findOne(data.locationId);
+  if (data.locationId !== undefined) {
+    const location = await locationDao.findOne(data.locationId);
     iCalData += "LOCATION: " + location.address.trim() + "\r\n";
   }
   iCalData += "CLASS:PRIVATE\r\n";
@@ -58,27 +56,23 @@ export const createICal: (
 };
 
 export const createICalStream: (
-  data: ICalendarEvent[],
+  data: CalendarEvent[],
   dtStamp?: Date,
   uidStamp?: Date
 ) => Promise<string> = async (
-  data: ICalendarEvent[],
+  data: CalendarEvent[],
   dtStamp: Date = new Date(),
   uidStamp: Date = new Date()
 ): Promise<string> => {
-  let iCalData: string = "";
+  let iCalData = "";
   iCalData += "BEGIN:VCALENDAR\r\n";
   iCalData += "VERSION:2.0\r\n";
   iCalData += "PRODID:clubhouse\r\n";
   iCalData += "METHOD:PUBLISH\r\n";
 
   for (const event of data) {
-    const dStart: string = moment(new Date(event.startTime)).format(
-      "YYYYMMDDTHHmmss"
-    );
-    const dEnd: string = moment(new Date(event.endTime)).format(
-      "YYYYMMDDTHHmmss"
-    );
+    const dStart = moment(new Date(event.startTime)).format("YYYYMMDDTHHmmss");
+    const dEnd = moment(new Date(event.endTime)).format("YYYYMMDDTHHmmss");
 
     // Let's construct a valid iCal formatted string.
 
@@ -99,8 +93,8 @@ export const createICalStream: (
     iCalData += "DTEND:" + dEnd + "\r\n";
     iCalData += "SUMMARY: " + event.name + "\r\n";
     iCalData += "DESCRIPTION: " + event.description + "\r\n";
-    if (event.locationId !== null) {
-      const location: ILocation = await locationDao.findOne(event.locationId);
+    if (event.locationId !== undefined) {
+      const location = await locationDao.findOne(event.locationId);
       iCalData += "LOCATION: " + location.address.trim() + "\r\n";
     }
     iCalData += "CLASS:PRIVATE\r\n";
@@ -114,7 +108,7 @@ export const createICalStream: (
 export const iCalFilter: (cal: string) => string = (cal: string) =>
   cal
     .split("\r\n")
-    .filter((line: string) => {
+    .filter((line) => {
       return !(line.indexOf("DTSTAMP:") > -1 || line.indexOf("UID:") > -1);
     })
     .join("\r\n");

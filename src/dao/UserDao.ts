@@ -1,16 +1,16 @@
+import { DbUser } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { IUser } from "../models/IUser";
-import IDao from "./Dao";
+import Dao from "./Dao";
 
 const TABLE_NAME: string = "users";
 
-export default class UserDao implements IDao<IUser> {
+export default class UserDao implements Dao<DbUser> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): PromiseLike<IUser[]> {
+  public findAll(): PromiseLike<DbUser[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
-  public findOne(userId: number): PromiseLike<IUser> {
+  public findOne(userId: number): PromiseLike<DbUser> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -18,7 +18,7 @@ export default class UserDao implements IDao<IUser> {
         .first()
     );
   }
-  public findByEmail(email: string): PromiseLike<IUser> {
+  public findByEmail(email: string): PromiseLike<DbUser> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -27,11 +27,11 @@ export default class UserDao implements IDao<IUser> {
     );
   }
 
-  public save(user: IUser): PromiseLike<number[]> {
+  public save(user: DbUser): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(user));
   }
 
-  public update(user: IUser): PromiseLike<boolean> {
+  public update(user: DbUser): PromiseLike<boolean> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .where({ userId: user.userId })

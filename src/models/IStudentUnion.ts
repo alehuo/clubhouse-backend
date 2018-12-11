@@ -1,23 +1,9 @@
-export interface IStudentUnion {
-  unionId?: number;
-  name: string;
-  description: string;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { StudentUnion } from "@alehuo/clubhouse-shared";
 
 /**
- * Filters a student union object and removes its "hidden" & "password" fields.
+ * Filters a student union object
  * @param user StudentUnion object
  */
-export const studentUnionFilter: (stdu: IStudentUnion) => object = (
-  stdu: IStudentUnion
-): object => {
-  return {
-    unionId: stdu.unionId,
-    name: stdu.name,
-    description: stdu.description,
-    created_at: stdu.created_at,
-    updated_at: stdu.updated_at
-  };
-};
+export const studentUnionFilter: (stdu: StudentUnion) => StudentUnion = (
+  stdu: StudentUnion
+): StudentUnion => stdu;

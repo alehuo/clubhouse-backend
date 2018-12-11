@@ -1,12 +1,5 @@
-export interface INewsPost {
-  postId?: number;
-  author: number;
-  title: string;
-  message: string;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { Newspost } from "@alehuo/clubhouse-shared";
 
-export const newsPostFilter: (post: INewsPost) => INewsPost = (
-  post: INewsPost
-): INewsPost => post;
+export const newsPostFilter: (post: Newspost) => Newspost = (
+  post: Newspost
+): Newspost => post;

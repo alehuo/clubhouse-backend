@@ -1,12 +1,11 @@
 import express from "express";
-import { IPermission } from "../models/IPermission";
 
 import PermissionDao from "../dao/PermissionDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { Permissions } from "@alehuo/clubhouse-shared";
+import { Permission, Permissions } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { getPermissions } from "../utils/PermissionUtils";
@@ -93,7 +92,7 @@ export default class PermissionController extends Controller {
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_PERMISSIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const { name, value }: IPermission = req.body;
+          const { name, value }: Permission = req.body;
           const perm = await this.permissionDao.findByValue(value);
 
           if (perm) {

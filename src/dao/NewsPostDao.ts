@@ -1,16 +1,16 @@
+import { Newspost } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { INewsPost } from "../models/INewsPost";
-import IDao from "./Dao";
+import Dao from "./Dao";
 
 const TABLE_NAME: string = "newsposts";
 
-export default class NewsPostDao implements IDao<INewsPost> {
+export default class NewsPostDao implements Dao<Newspost> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): PromiseLike<INewsPost[]> {
+  public findAll(): PromiseLike<Newspost[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
-  public findOne(postId: number): PromiseLike<INewsPost> {
+  public findOne(postId: number): PromiseLike<Newspost> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -18,7 +18,7 @@ export default class NewsPostDao implements IDao<INewsPost> {
         .first()
     );
   }
-  public findByAuthor(author: number): PromiseLike<INewsPost[]> {
+  public findByAuthor(author: number): PromiseLike<Newspost[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -26,7 +26,7 @@ export default class NewsPostDao implements IDao<INewsPost> {
     );
   }
 
-  public save(newsPost: INewsPost): PromiseLike<number[]> {
+  public save(newsPost: Newspost): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(newsPost));
   }
 

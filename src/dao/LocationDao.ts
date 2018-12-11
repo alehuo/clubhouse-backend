@@ -1,17 +1,17 @@
+import { Location } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { ILocation } from "../models/ILocation";
-import IDao from "./Dao";
+import Dao from "./Dao";
 
 const TABLE_NAME: string = "locations";
 
-export default class LocationDao implements IDao<ILocation> {
+export default class LocationDao implements Dao<Location> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): PromiseLike<ILocation[]> {
+  public findAll(): PromiseLike<Location[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
 
-  public findOne(locationId: number): PromiseLike<ILocation> {
+  public findOne(locationId: number): PromiseLike<Location> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -20,7 +20,7 @@ export default class LocationDao implements IDao<ILocation> {
     );
   }
 
-  public findByName(name: string): PromiseLike<ILocation> {
+  public findByName(name: string): PromiseLike<Location> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -29,7 +29,7 @@ export default class LocationDao implements IDao<ILocation> {
     );
   }
 
-  public save(location: ILocation): PromiseLike<number[]> {
+  public save(location: Location): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(location));
   }
 

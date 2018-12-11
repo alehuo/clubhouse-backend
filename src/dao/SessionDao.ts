@@ -1,26 +1,26 @@
+import { Session } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { ISession } from "../models/ISession";
-import IDao from "./Dao";
+import Dao from "./Dao";
 
 const TABLE_NAME: string = "sessions";
 
 /**
  * DAO used to handle sessions.
  */
-export default class SessionDao implements IDao<ISession> {
+export default class SessionDao implements Dao<Session> {
   constructor(private readonly knex: Knex) {}
 
-  public findAll(): PromiseLike<ISession[]> {
+  public findAll(): PromiseLike<Session[]> {
     return Promise.resolve(this.knex(TABLE_NAME).select());
   }
-  public findAllOngoing(): PromiseLike<ISession[]> {
+  public findAllOngoing(): PromiseLike<Session[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
         .where("ended", "=", 0)
     );
   }
-  public findOne(sessionId: number): PromiseLike<ISession> {
+  public findOne(sessionId: number): PromiseLike<Session> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -28,7 +28,7 @@ export default class SessionDao implements IDao<ISession> {
         .first()
     );
   }
-  public findOngoingByUser(userId: number): PromiseLike<ISession[]> {
+  public findOngoingByUser(userId: number): PromiseLike<Session[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -36,7 +36,7 @@ export default class SessionDao implements IDao<ISession> {
         .andWhere("ended", "=", 0)
     );
   }
-  public findByUser(userId: number): PromiseLike<ISession[]> {
+  public findByUser(userId: number): PromiseLike<Session[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -44,14 +44,14 @@ export default class SessionDao implements IDao<ISession> {
     );
   }
 
-  public save(session: ISession): PromiseLike<number[]> {
+  public save(session: Session): PromiseLike<number[]> {
     return Promise.resolve(this.knex(TABLE_NAME).insert(session));
   }
 
   public endSession(
     sessionId: number,
-    session: ISession
-  ): PromiseLike<ISession> {
+    session: Session
+  ): PromiseLike<Session> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .update({

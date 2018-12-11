@@ -7,7 +7,7 @@ import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 
-import { IStudentUnion } from "../../src/models/IStudentUnion";
+import { StudentUnion } from "@alehuo/clubhouse-shared";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
@@ -18,7 +18,7 @@ chai.use(chaiHttp);
 
 const url: string = "/api/v1/studentunion";
 
-const unions: IStudentUnion[] = [
+const unions: StudentUnion[] = [
   { unionId: 1, name: "Union 1", description: "Union 1 description" },
   { unionId: 2, name: "Union 2", description: "Union 2 description" },
   { unionId: 3, name: "Union 3", description: "Union 3 description" },
@@ -84,7 +84,7 @@ describe("StudentUnionController", () => {
           res.body.length.should.equal(unions.length);
           for (let i: number = 0; i < unions.length; i++) {
             should.exist(res.body[i]);
-            const stdu: IStudentUnion = res.body[i];
+            const stdu: StudentUnion = res.body[i];
             stdu.description.should.equal(unions[i].description);
             stdu.name.should.equal(unions[i].name);
             Number(stdu.unionId).should.equal(i + 1);

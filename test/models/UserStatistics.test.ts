@@ -1,8 +1,8 @@
 process.env.NODE_ENV = "test";
 
+import { UserStatistics } from "@alehuo/clubhouse-shared";
 import "mocha";
 import {
-  IUserStatistics,
   userStatisticsFilter
 } from "../../src/models/IUserStatistics";
 const chai: Chai.ChaiStatic = require("chai");
@@ -10,7 +10,7 @@ const should: Chai.Should = chai.should();
 
 describe("IUserStatistics", () => {
   it("should get and set user statistics correctly", (done: Mocha.Done) => {
-    const post: IUserStatistics = {
+    const post: UserStatistics = {
       eventCount: 55,
       hoursOnWatch: 225,
       messageCount: 2,
@@ -32,7 +32,7 @@ describe("IUserStatistics", () => {
   });
 
   it("should filter user statistics correctly", (done: Mocha.Done) => {
-    const post1: IUserStatistics = {
+    const post1: UserStatistics = {
       eventCount: 55,
       hoursOnWatch: 225,
       messageCount: 2,
@@ -40,7 +40,7 @@ describe("IUserStatistics", () => {
       watchCount: 1
     };
 
-    const post: IUserStatistics = userStatisticsFilter(post1);
+    const post: UserStatistics = userStatisticsFilter(post1);
 
     should.exist(post.eventCount);
     should.exist(post.hoursOnWatch);

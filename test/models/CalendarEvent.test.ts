@@ -1,17 +1,15 @@
 process.env.NODE_ENV = "test";
 
+import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import { expect } from "chai";
 import "mocha";
-import {
-  calendarEventFilter,
-  ICalendarEvent
-} from "../../src/models/ICalendarEvent";
+import { calendarEventFilter } from "../../src/models/ICalendarEvent";
 const chai: Chai.ChaiStatic = require("chai");
 const should: Chai.Should = chai.should();
 
 describe("ICalendarEvent", () => {
   it("should get and set properties correctly", (done: Mocha.Done) => {
-    const calendarEvent: ICalendarEvent = {
+    const calendarEvent: CalendarEvent = {
       addedBy: 1,
       created_at: new Date(2016, 1, 1, 22, 12),
       description: "Test description",
@@ -61,7 +59,7 @@ describe("ICalendarEvent", () => {
   });
 
   it("should filter event correctly", (done: Mocha.Done) => {
-    const calendarEvent1: ICalendarEvent = {
+    const calendarEvent1: CalendarEvent = {
       addedBy: 1,
       created_at: new Date(2016, 1, 1, 22, 12),
       description: "Test description",
@@ -75,7 +73,7 @@ describe("ICalendarEvent", () => {
       updated_at: new Date(2016, 1, 1, 22, 13)
     };
 
-    const calendarEvent: ICalendarEvent = calendarEventFilter(calendarEvent1);
+    const calendarEvent: CalendarEvent = calendarEventFilter(calendarEvent1);
 
     should.exist(calendarEvent.addedBy);
     should.exist(calendarEvent.created_at);

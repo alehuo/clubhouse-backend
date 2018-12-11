@@ -1,14 +1,15 @@
 process.env.NODE_ENV = "test";
 
+import { Newspost } from "@alehuo/clubhouse-shared";
 import { expect } from "chai";
 import "mocha";
-import { INewsPost, newsPostFilter } from "../../src/models/INewsPost";
+import { newsPostFilter } from "../../src/models/INewsPost";
 const chai: Chai.ChaiStatic = require("chai");
 const should: Chai.Should = chai.should();
 
 describe("INewsPost", () => {
   it("should get and set newspost correctly", (done: Mocha.Done) => {
-    const post: INewsPost = {
+    const post: Newspost = {
       author: 225,
       created_at: new Date(2018, 1, 2, 13, 44),
       message: "Welcome!",
@@ -37,7 +38,7 @@ describe("INewsPost", () => {
   });
 
   it("should filter newspost correctly", (done: Mocha.Done) => {
-    const post1: INewsPost = {
+    const post1: Newspost = {
       author: 225,
       created_at: new Date(2018, 1, 2, 13, 44),
       message: "Welcome!",
@@ -46,7 +47,7 @@ describe("INewsPost", () => {
       updated_at: new Date(2018, 5, 2, 10, 5)
     };
 
-    const post: INewsPost = newsPostFilter(post1);
+    const post = newsPostFilter(post1);
 
     should.exist(post.author);
     should.exist(post.created_at);
@@ -69,7 +70,7 @@ describe("INewsPost", () => {
   });
 
   it("should get and set newspost correctly, with missing properties non-existent", (done: Mocha.Done) => {
-    const post: INewsPost = {
+    const post: Newspost = {
       author: 225,
       created_at: new Date(2018, 1, 2, 13, 44),
       message: "Welcome!",

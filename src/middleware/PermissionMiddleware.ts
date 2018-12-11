@@ -1,5 +1,5 @@
+import { Permission } from "@alehuo/clubhouse-shared";
 import * as express from "express";
-import { IPermission } from "../models/IPermission";
 import { MessageFactory } from "../utils/MessageFactory";
 import { hasPermissions } from "../utils/PermissionUtils";
 
@@ -10,7 +10,7 @@ import { hasPermissions } from "../utils/PermissionUtils";
  * @param next Express NextFunction
  */
 export const PermissionMiddleware: any = (
-  ...requiredPermissions: IPermission[]
+  ...requiredPermissions: Permission[]
 ) => async (
   req: express.Request,
   res: express.Response,

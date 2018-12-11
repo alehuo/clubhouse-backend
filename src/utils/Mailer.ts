@@ -27,11 +27,11 @@ export const sendEmail: (
   text: string,
   htmlString: string
 ): Promise<any> => {
-  const addr: string = process.env.MAIL_FROM_ADDRESS || "clubhouse.example.com";
-  const name: string = process.env.MAIL_FROM_NAME || "Clubhouse";
-  const from: string = '"' + name + '" <' + addr + ">";
+  const addr = process.env.MAIL_FROM_ADDRESS || "clubhouse.example.com";
+  const name = process.env.MAIL_FROM_NAME || "Clubhouse";
+  const from = '"' + name + '" <' + addr + ">";
 
-  const mailOptions: any = {
+  const mailOptions = {
     from,
     bcc: to.join(", "),
     subject,
@@ -40,7 +40,7 @@ export const sendEmail: (
   };
 
   if (process.env.ENABLE_EMAIL_SENDING) {
-    const res: any = await transporter.sendMail(mailOptions);
+    const res = await transporter.sendMail(mailOptions);
 
     // Debug output
     if (process.env.NODE_ENV !== "production") {

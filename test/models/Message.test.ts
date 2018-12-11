@@ -1,15 +1,16 @@
 process.env.NODE_ENV = "test";
 
+import { Message } from "@alehuo/clubhouse-shared";
 import { expect } from "chai";
 import "mocha";
-import { IMessage, messageFilter } from "../../src/models/IMessage";
+import { messageFilter } from "../../src/models/IMessage";
 const chai: Chai.ChaiStatic = require("chai");
 const should: Chai.Should = chai.should();
 
 describe("IMessage", () => {
   it("should get and set message correctly", (done: Mocha.Done) => {
     // const date: Date = new Date();
-    const message: IMessage = {
+    const message: Message = {
       message: "HelloWorld",
       userId: 1,
       messageId: 1
@@ -19,7 +20,7 @@ describe("IMessage", () => {
   });
   it("should get and set userid correctly", (done: Mocha.Done) => {
     // const date: Date = new Date();
-    const message: IMessage = {
+    const message: Message = {
       message: "HelloWorld",
       userId: 1,
       messageId: 1
@@ -29,7 +30,7 @@ describe("IMessage", () => {
   });
   it("should get and set messageId correctly", (done: Mocha.Done) => {
     // const date: Date = new Date();
-    const message: IMessage = {
+    const message: Message = {
       message: "HelloWorld",
       userId: 1,
       messageId: 1
@@ -41,13 +42,13 @@ describe("IMessage", () => {
 
   it("should filter message correctly", (done: Mocha.Done) => {
     // const date: Date = new Date();
-    const message1: IMessage = {
+    const message1: Message = {
       message: "HelloWorld",
       userId: 1,
       messageId: 1
     };
 
-    const message: IMessage = messageFilter(message1);
+    const message = messageFilter(message1);
 
     should.exist(message.message);
     should.exist(message.userId);

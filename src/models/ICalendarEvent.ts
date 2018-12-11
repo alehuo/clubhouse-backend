@@ -1,17 +1,5 @@
-export interface ICalendarEvent {
-  eventId?: number;
-  name: string;
-  description: string;
-  locationId: number | null;
-  restricted: boolean;
-  startTime: Date;
-  endTime: Date;
-  addedBy: number;
-  unionId: number;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { CalendarEvent } from "@alehuo/clubhouse-shared";
 
-export const calendarEventFilter: (event: ICalendarEvent) => ICalendarEvent = (
-  event: ICalendarEvent
-): ICalendarEvent => event;
+export const calendarEventFilter: (event: CalendarEvent) => CalendarEvent = (
+  event: CalendarEvent
+): CalendarEvent => event;

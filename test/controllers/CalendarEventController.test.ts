@@ -1,12 +1,12 @@
 process.env.NODE_ENV = "test";
 process.env.PORT = "5090";
 
+import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import * as Knex from "knex";
 import "mocha";
 import CalendarEventDao from "../../src/dao/CalendarEventDao";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
-import { ICalendarEvent } from "../../src/models/ICalendarEvent";
 import { createICal, iCalFilter } from "../../src/utils/iCalUtils";
 import { generateToken } from "../TestUtils";
 
@@ -38,7 +38,7 @@ describe("CalendarEventController", () => {
       done();
     });
   });
-/*
+  /*
   describe("API endpoint protection", () => {
     it("Missing Authorization header should throw an error", (done: Mocha.Done) => {
       chai
@@ -68,9 +68,9 @@ describe("CalendarEventController", () => {
   */
 
   it("Returns a single calendar event", async () => {
-    const calendarEvent: ICalendarEvent = await calendarEventDao.findOne(1);
+    const calendarEvent = await calendarEventDao.findOne(1);
 
-    const res: any = await chai
+    const res = await chai
       .request(app)
       .get(calendarUrl + "/1")
       .set("Authorization", generateToken());
@@ -97,7 +97,7 @@ describe("CalendarEventController", () => {
   }).timeout(5000);
 
   it("Returns a single calendar event as iCal", async () => {
-    const calendarEvent: ICalendarEvent = await calendarEventDao.findOne(1);
+    const calendarEvent = await calendarEventDao.findOne(1);
     const mockDate: Date = new Date(2015, 1, 1);
     const calendarEventString: string = await createICal(
       calendarEvent,
@@ -106,7 +106,7 @@ describe("CalendarEventController", () => {
     );
     const parsedString: string = iCalFilter(calendarEventString);
 
-    const res: any = await chai
+    const res = await chai
       .request(app)
       .get(calendarUrl + "/1/ical")
       .set("Authorization", generateToken());
@@ -120,11 +120,11 @@ describe("CalendarEventController", () => {
   }).timeout(5000);
 
   it("Returns all calendar events", async () => {
-    const calendarEvents: ICalendarEvent[] = await calendarEventDao.findAll();
-    const sortedEvents: ICalendarEvent[] = calendarEvents.sort(
-      (a: ICalendarEvent, b: ICalendarEvent) => Number(a.eventId) - Number(b.eventId)
+    const calendarEvents = await calendarEventDao.findAll();
+    const sortedEvents = calendarEvents.sort(
+      (a, b) => Number(a.eventId) - Number(b.eventId)
     );
-    const res: any = await chai
+    const res = await chai
       .request(app)
       .get(calendarUrl)
       .set("Authorization", generateToken());
@@ -132,8 +132,8 @@ describe("CalendarEventController", () => {
     res.body.length.should.equal(calendarEvents.length);
     res.status.should.equal(200);
 
-    const sortedRes: ICalendarEvent[] = res.body.sort(
-      (a: ICalendarEvent, b: ICalendarEvent) => Number(a.eventId) - Number(b.eventId)
+    const sortedRes = (res.body as CalendarEvent[]).sort(
+      (a, b) => Number(a.eventId) - Number(b.eventId)
     );
 
     for (let i: number = 0; i < sortedEvents.length; i++) {

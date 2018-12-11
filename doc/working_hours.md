@@ -47,12 +47,13 @@
 | 11.9.2018  | 1h    | Added script to start up MySQL server.                                                                                                                                                                                                                                                           |
 | 24.10.2018 | 1h    | Added strict null checks to tsconfig.json.                                                                                                                                                                                                                                                       |
 | 22.11.2018 | 1h    | Tweaked docker-compose.yml                                                                                                                                                                                                                                                                       |
-| 28.11.2018 | 2h    | Fixed tests, fixed type-casting of Permission seed. Upgraded project dependencies.                                                                                                                                                                                                                                                                       |
-| 5.12.2018 | 1.5h    | Created different dockerfiles for dev and prod environments. Upgraded dependencies                                                                                                                                                                                                                                                                   |
-| 10.12.2018 | 1.0h    | Refactored code as TypeScript can determine types automatically with type inheritance. Fixed tests.                                                                                                                                                                                                                                                                   |
+| 28.11.2018 | 2h    | Fixed tests, fixed type-casting of Permission seed. Upgraded project dependencies.                                                                                                                                                                                                               |
+| 5.12.2018  | 1.5h  | Created different dockerfiles for dev and prod environments. Upgraded dependencies                                                                                                                                                                                                               |
+| 10.12.2018 | 1.0h  | Refactored code as TypeScript can determine types automatically with type inheritance. Fixed tests.                                                                                                                                                                                              |
+| 11.12.2018 | 1.5h  | Changed model imports to use shared library. Refactored code to remove redundant typings                                                                                                                                                                                                         |
 
 Total:
 
 61.0 h (part 1)
 
-29.0 h (part 2)
+30.5 h (part 2)
