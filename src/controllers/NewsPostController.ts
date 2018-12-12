@@ -16,31 +16,24 @@ export default class NewsPostController extends Controller {
 
   public routes(): express.Router {
     // All newsposts
-    this.router.get(
-      "",
-      JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const newsPosts = await this.newsPostDao.findAll();
-          return res.status(200).json(newsPosts);
-        } catch (err) {
-          return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Internal server error: Cannot get all newsposts",
-                err as Error
-              )
-            );
-        }
+    this.router.get("", async (req: express.Request, res: express.Response) => {
+      try {
+        const newsPosts = await this.newsPostDao.findAll();
+        return res.status(200).json(newsPosts);
+      } catch (err) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Internal server error: Cannot get all newsposts",
+              err as Error
+            )
+          );
       }
-    );
+    });
     // A single newspost
     this.router.get(
       "/:newsPostId(\\d+)",
-      JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPost = await this.newsPostDao.findOne(
@@ -68,8 +61,6 @@ export default class NewsPostController extends Controller {
     // All newsposts by a single user
     this.router.get(
       "/user/:userId(\\d+)",
-      JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const newsPost = await this.newsPostDao.findByAuthor(
