@@ -7,6 +7,7 @@ import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 
+import moment = require("moment");
 import { SignToken } from "../../src/utils/JwtUtils";
 
 const validUser: any = {
@@ -34,7 +35,7 @@ chai.use(chaiHttp);
 
 const url: string = "/api/v1/session";
 
-describe("WatchController", () => {
+describe("SessionController", () => {
   // Roll back
   beforeEach((done: Mocha.Done) => {
     knex.migrate.rollback().then(() => {
@@ -133,9 +134,9 @@ describe("WatchController", () => {
           );
           should.not.exist(res.body[1].endMessage);
           should.exist(res.body[1].startTime);
-          res.body[1].startTime.should.equal(
-            new Date(2018, 6, 1, 23, 58).toISOString()
-          );
+          moment(res.body[1].startTime)
+            .toISOString()
+            .should.equal(moment(new Date(2018, 6, 1, 23, 58)).toISOString());
           should.not.exist(res.body[1].endTime);
 
           done();
@@ -182,6 +183,7 @@ describe("WatchController", () => {
           should.not.exist(res.body.error);
           should.exist(res.body.message);
           res.body.message.should.equal("Session started");
+          console.log(res.body);
           // Stop the watch
           chai
             .request(app)
@@ -195,6 +197,7 @@ describe("WatchController", () => {
               res2.body.message.should.equal(
                 "Session ended with message 'Good night all!'"
               );
+              console.log(res2.body);
               done();
             });
         });

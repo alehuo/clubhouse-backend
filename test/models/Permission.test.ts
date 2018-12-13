@@ -12,11 +12,15 @@ describe("IPermission", () => {
     const perm: Permission = {
       name: "TestPermission",
       permissionId: 1,
-      value: 55
+      value: 55,
+      created_at: "",
+      updated_at: ""
     };
     should.exist(perm.name);
     should.exist(perm.permissionId);
     should.exist(perm.value);
+    should.exist(perm.created_at);
+    should.exist(perm.updated_at);
     expect(perm.name).to.equal("TestPermission");
     expect(perm.permissionId).to.equal(1);
     expect(perm.value).to.equal(55);
@@ -27,7 +31,9 @@ describe("IPermission", () => {
     const perm1: Permission = {
       name: "TestPermission",
       permissionId: 1,
-      value: 55
+      value: 55,
+      created_at: "",
+      updated_at: ""
     };
     const perm = permissionFilter(perm1);
     should.exist(perm.name);

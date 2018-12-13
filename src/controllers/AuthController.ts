@@ -4,6 +4,7 @@ import UserDao from "../dao/UserDao";
 import { SignToken } from "../utils/JwtUtils";
 import Controller from "./Controller";
 
+import { isString } from "@alehuo/clubhouse-shared/dist/Models";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 
@@ -18,12 +19,25 @@ export default class AuthController extends Controller {
       RequestParamMiddleware("email", "password"),
       async (req: express.Request, res: express.Response) => {
         try {
-          const authData: {
+          const {
+            email,
+            password
+          }: {
             email: string;
             password: string;
           } = req.body;
 
-          const user = await this.userDao.findByEmail(authData.email);
+          if (!isString(email) || !isString(password)) {
+            return res
+              .status(400)
+              .json(
+                MessageFactory.createError(
+                  "Invalid request parameters: Email and password must be in correct format."
+                )
+              );
+          }
+
+          const user = await this.userDao.findByEmail(email);
 
           if (!user) {
             return res
@@ -32,7 +46,7 @@ export default class AuthController extends Controller {
           } else {
             // User exists, check for pash
             const dbPwd = user.password;
-            const inputPwd = authData.password;
+            const inputPwd = password;
 
             try {
               const match = await bcrypt.compare(inputPwd, dbPwd);

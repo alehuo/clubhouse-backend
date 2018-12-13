@@ -6,6 +6,7 @@ import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { Permission, Permissions } from "@alehuo/clubhouse-shared";
+import { isNumber, isPermission } from "@alehuo/clubhouse-shared/dist/Models";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { getPermissions } from "../utils/PermissionUtils";
@@ -61,6 +62,11 @@ export default class PermissionController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_PERMISSIONS),
       async (req: express.Request, res: express.Response) => {
+        if (!isNumber(req.params.permissionId)) {
+          return res
+            .status(400)
+            .json(MessageFactory.createError("Invalid permission ID"));
+        }
         try {
           const permission = await this.permissionDao.findOne(
             req.params.permissionId
@@ -100,10 +106,25 @@ export default class PermissionController extends Controller {
               .status(400)
               .json(MessageFactory.createError("Permission already exists"));
           } else {
-            const savedPermission = await this.permissionDao.save({
+            const dbPerm: Permission = {
               name,
-              value
-            });
+              value,
+              created_at: "",
+              updated_at: "",
+              permissionId: -1
+            };
+
+            if (!isPermission(dbPerm)) {
+              return res
+                .status(400)
+                .json(
+                  MessageFactory.createError(
+                    "The request did not contain a valid permission object."
+                  )
+                );
+            }
+
+            const savedPermission = await this.permissionDao.save(dbPerm);
 
             return res.status(201).json({
               ...{ name, value },

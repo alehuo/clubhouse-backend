@@ -8,6 +8,7 @@ import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { CalendarEvent, Permissions } from "@alehuo/clubhouse-shared";
+import { isCalendarEvent } from "@alehuo/clubhouse-shared/dist/Models";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
 export default class CalendarEventController extends Controller {
@@ -38,8 +39,20 @@ export default class CalendarEventController extends Controller {
           startTime,
           endTime,
           unionId
-        }: CalendarEvent = req.body;
+        }: {
+          name: string;
+          description: string;
+          locationId: number;
+          restricted: 0 | 1;
+          startTime: string;
+          endTime: string;
+          unionId: number;
+        } = req.body;
+
         const calendarEventData: CalendarEvent = {
+          eventId: -1, // Placeholder
+          created_at: "placeholder", // Placeholder
+          updated_at: "placeholder", // Placeholder
           name,
           description,
           locationId,
@@ -49,6 +62,17 @@ export default class CalendarEventController extends Controller {
           addedBy: res.locals.token.userId,
           unionId
         };
+
+        if (!isCalendarEvent(calendarEventData)) {
+          return res
+            .status(400)
+            .json(
+              MessageFactory.createError(
+                "The request did not contain a valid calendar event."
+              )
+            );
+        }
+
         try {
           const calendarEvent = await this.calendarEventDao.save(
             calendarEventData
@@ -119,6 +143,16 @@ export default class CalendarEventController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const event = await this.calendarEventDao.findOne(req.params.eventId);
+          if (!isCalendarEvent(event)) {
+            return res
+              .status(400)
+              .json(
+                MessageFactory.createError(
+                  "The calendar event that was returned is invalid. Please contact a system administrator."
+                )
+              );
+          }
+
           if (!event) {
             return res
               .status(404)

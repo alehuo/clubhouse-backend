@@ -7,6 +7,7 @@ import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { Permissions, StudentUnion } from "@alehuo/clubhouse-shared";
+import { isStudentUnion } from "@alehuo/clubhouse-shared/dist/Models";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
@@ -88,10 +89,25 @@ export default class StudentUnionController extends Controller {
                 );
             }
 
-            const savedStudentUnion = await this.studentUnionDao.save({
+            const newStdu: StudentUnion = {
               name,
-              description
-            });
+              description,
+              created_at: "",
+              unionId: -1,
+              updated_at: ""
+            };
+
+            if (!isStudentUnion(newStdu)) {
+              return res
+                .status(400)
+                .json(
+                  MessageFactory.createError(
+                    "The request did not contain a valid student union object."
+                  )
+                );
+            }
+
+            const savedStudentUnion = await this.studentUnionDao.save(newStdu);
 
             return res.status(201).json({
               ...{ name, description },

@@ -51,7 +51,7 @@
     "tslint": "^5.9.1"
   },
   "dependencies": {
-    "@alehuo/clubhouse-shared": "https://github.com/alehuo/clubhouse-shared",
+    "@alehuo/clubhouse-shared": "https://github.com/alehuo/clubhouse-shared.git",
     "bcrypt": "3.0.2",
     "chai-http": "^4.0.0",
     "express": "^4.16.3",

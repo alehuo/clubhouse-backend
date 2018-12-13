@@ -8,6 +8,10 @@ export interface ApiMessage {
   message: string;
 }
 
+export interface ApiResponse<T> {
+  payload: T;
+}
+
 const createError: (
   error: string,
   exception?: Error,

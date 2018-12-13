@@ -9,6 +9,7 @@ import Controller from "./Controller";
 import CalendarEventDao from "../dao/CalendarEventDao";
 
 import { DbUser, Permissions } from "@alehuo/clubhouse-shared";
+import { isDbUser } from "@alehuo/clubhouse-shared/dist/Models";
 import Validator from "validator";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
@@ -223,7 +224,6 @@ export default class UserController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const { email, firstName, lastName, password }: DbUser = req.body;
-
           const user = await this.userDao.findByEmail(email.trim());
 
           if (user) {
@@ -273,16 +273,28 @@ export default class UserController extends Controller {
                 );
             }
 
-            const savedUser = await this.userDao.save({
+            const userToSave: DbUser = {
               email,
               firstName,
               lastName,
-              password: bcrypt.hashSync(
-                req.body.password,
-                bcrypt.genSaltSync(10)
-              ),
-              permissions: 8
-            });
+              password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+              permissions: 8,
+              created_at: "",
+              hidden: 0,
+              updated_at: "",
+              userId: -1
+            };
+            if (!isDbUser(userToSave)) {
+              return res
+                .status(400) // TODO: Should we return HTTP 500 on this kind of error?
+                .json(
+                  MessageFactory.createError(
+                    "The request did not contain a valid user object."
+                  )
+                );
+            }
+
+            const savedUser = await this.userDao.save(userToSave);
 
             return res.status(201).json({
               ...{ email, firstName, lastName },
@@ -353,14 +365,9 @@ export default class UserController extends Controller {
               })
             );
             // Remove sessions
-            // FIXME: Sessions should only be anonymized.
             const sessions = await this.sessionDao.findByUser(userId);
             await Promise.all(
-              sessions.map((session) => {
-                if (session.sessionId !== undefined) {
-                  this.sessionDao.remove(session.sessionId);
-                }
-              })
+              sessions.map((session) => this.sessionDao.remove(session.sessionId))
             );
             // Remove user data
             await this.userDao.remove(userId);

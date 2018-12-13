@@ -166,7 +166,7 @@ describe("UserController", () => {
   });
 
   describe("POST /api/v1/users", () => {
-    it("Can register a new user", (done: Mocha.Done) => {
+    it("Can register a new user with valid information", (done: Mocha.Done) => {
       chai
         .request(app)
         .post(url)

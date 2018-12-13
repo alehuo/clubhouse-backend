@@ -51,9 +51,10 @@
 | 5.12.2018  | 1.5h  | Created different dockerfiles for dev and prod environments. Upgraded dependencies                                                                                                                                                                                                               |
 | 10.12.2018 | 1.0h  | Refactored code as TypeScript can determine types automatically with type inheritance. Fixed tests.                                                                                                                                                                                              |
 | 11.12.2018 | 2.0h  | Changed model imports to use shared library. Refactored code to remove redundant typings. Changed Date type from 'Date' to 'string' and enabled moment.js library.                                                                                                                               |
+| 13.12.2018 | 2.0h  | Implemented strict object validation for all models. Created validators for all models.                                                                                                                                                                                                          |
 
 Total:
 
 61.0 h (part 1)
 
-31.0 h (part 2)
+33.0 h (part 2)

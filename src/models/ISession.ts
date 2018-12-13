@@ -4,10 +4,10 @@ export const sessionFilter: (session: Session) => Session = (
   session: Session
 ): Session => {
   if (!session.ended) {
-    session.endTime = undefined;
+    delete session.endTime;
   }
   if (!session.started) {
-    session.startTime = undefined;
+    delete session.startTime;
   }
 
   delete session.started;

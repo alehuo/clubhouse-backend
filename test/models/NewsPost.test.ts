@@ -70,20 +70,23 @@ describe("INewsPost", () => {
     done();
   });
 
-  it("should get and set newspost correctly, with missing properties non-existent", (done: Mocha.Done) => {
+  it("should get and set newspost correctly", (done: Mocha.Done) => {
     const post: Newspost = {
       author: 225,
       created_at: moment(new Date(2018, 1, 2, 13, 44)).toISOString(),
       message: "Welcome!",
-      title: "Welcome to the clubhouse!"
+      title: "Welcome to the clubhouse!",
+      postId: 1,
+      updated_at: ""
     };
+    should.exist(post.postId);
     should.exist(post.author);
     should.exist(post.created_at);
     should.exist(post.message);
-    should.not.exist(post.postId);
     should.exist(post.title);
-    should.not.exist(post.updated_at);
+    should.exist(post.updated_at);
 
+    expect(post.postId).to.equal(1);
     expect(post.author).to.equal(225);
     expect(post.created_at).to.equal(
       moment(new Date(2018, 1, 2, 13, 44)).toISOString()

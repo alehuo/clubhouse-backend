@@ -1,5 +1,6 @@
 import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
+import { addTimestamps } from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
 const TABLE_NAME: string = "calendarEvents";
@@ -20,7 +21,9 @@ export default class CalendarEventDao implements Dao<CalendarEvent> {
     );
   }
 
-  public findCalendarEventsByUser(userId: number): PromiseLike<CalendarEvent[]> {
+  public findCalendarEventsByUser(
+    userId: number
+  ): PromiseLike<CalendarEvent[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()
@@ -30,6 +33,10 @@ export default class CalendarEventDao implements Dao<CalendarEvent> {
   }
 
   public save(calendarEvent: CalendarEvent): PromiseLike<number[]> {
+    if (calendarEvent.eventId) {
+      delete calendarEvent.eventId;
+    }
+    addTimestamps(calendarEvent);
     return Promise.resolve(this.knex(TABLE_NAME).insert(calendarEvent));
   }
 

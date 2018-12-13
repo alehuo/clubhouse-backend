@@ -2,6 +2,7 @@ import express from "express";
 import Controller from "./Controller";
 
 import { Message } from "@alehuo/clubhouse-shared";
+import { isMessage, isNumber } from "@alehuo/clubhouse-shared/dist/Models";
 import MessageDao from "../dao/MessageDao";
 import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
@@ -40,6 +41,11 @@ export default class MessageController extends Controller {
       "/:messageId(\\d+)",
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
+        if (!isNumber(req.params.messageId)) {
+          return res
+            .status(400)
+            .json(MessageFactory.createError("Invalid message ID"));
+        }
         try {
           const message = await this.messageDao.findOne(req.params.messageId);
           if (message) {
@@ -73,10 +79,23 @@ export default class MessageController extends Controller {
           const title = req.body.title ? String(req.body.title) : "(No title)";
 
           const msg: Message = {
+            created_at: "", // Placeholder
+            messageId: -1, // Placeholder
+            updated_at: "", // Placeholder
             message: req.body.message,
             title,
             userId
           };
+
+          if (!isMessage(msg)) {
+            return res
+              .status(400)
+              .json(
+                MessageFactory.createError(
+                  "The request did not contain a valid message."
+                )
+              );
+          }
 
           const savedMessage = await this.messageDao.save(msg);
 
@@ -127,6 +146,11 @@ export default class MessageController extends Controller {
       "/:messageId(\\d+)",
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
+        if (!isNumber(req.params.messageId)) {
+          return res
+            .status(400)
+            .json(MessageFactory.createError("Invalid message ID"));
+        }
         try {
           const message = await this.messageDao.findOne(req.params.messageId);
           if (message) {

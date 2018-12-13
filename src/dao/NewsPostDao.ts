@@ -1,5 +1,6 @@
 import { Newspost } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
+import { addTimestamps } from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
 const TABLE_NAME: string = "newsposts";
@@ -27,6 +28,10 @@ export default class NewsPostDao implements Dao<Newspost> {
   }
 
   public save(newsPost: Newspost): PromiseLike<number[]> {
+    if (newsPost.postId) {
+      delete newsPost.postId;
+    }
+    addTimestamps(newsPost);
     return Promise.resolve(this.knex(TABLE_NAME).insert(newsPost));
   }
 

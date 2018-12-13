@@ -1,5 +1,6 @@
 import { Message } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
+import { addTimestamps } from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
 const TABLE_NAME: string = "messages";
@@ -51,6 +52,10 @@ export default class MessageDao implements Dao<Message> {
   }
 
   public save(message: Message): PromiseLike<number[]> {
+    if (message.messageId) {
+      delete message.messageId;
+    }
+    addTimestamps(message);
     return Promise.resolve(this.knex(TABLE_NAME).insert(message));
   }
 

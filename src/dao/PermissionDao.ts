@@ -1,5 +1,6 @@
 import { Permission } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
+import { addTimestamps } from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
 const TABLE_NAME: string = "permissions";
@@ -39,6 +40,10 @@ export default class PermissionDao implements Dao<Permission> {
   }
 
   public save(permissions: Permission): PromiseLike<number[]> {
+    if (permissions.permissionId) {
+      delete permissions.permissionId;
+    }
+    addTimestamps(permissions);
     return Promise.resolve(this.knex(TABLE_NAME).insert(permissions));
   }
 

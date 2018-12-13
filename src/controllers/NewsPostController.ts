@@ -6,6 +6,11 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 
 import { Permissions } from "@alehuo/clubhouse-shared";
+import {
+  isNewspost,
+  isNumber,
+  Newspost
+} from "@alehuo/clubhouse-shared/dist/Models";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
@@ -35,6 +40,11 @@ export default class NewsPostController extends Controller {
     this.router.get(
       "/:newsPostId(\\d+)",
       async (req: express.Request, res: express.Response) => {
+        if (!isNumber(req.params.newsPostId)) {
+          return res
+            .status(400)
+            .json(MessageFactory.createError("Invalid newspost ID"));
+        }
         try {
           const newsPost = await this.newsPostDao.findOne(
             req.params.newsPostId
@@ -62,6 +72,11 @@ export default class NewsPostController extends Controller {
     this.router.get(
       "/user/:userId(\\d+)",
       async (req: express.Request, res: express.Response) => {
+        if (!isNumber(req.params.userId)) {
+          return res
+            .status(400)
+            .json(MessageFactory.createError("Invalid user ID"));
+        }
         try {
           const newsPost = await this.newsPostDao.findByAuthor(
             req.params.userId
@@ -90,11 +105,25 @@ export default class NewsPostController extends Controller {
         try {
           const userId: number = res.locals.token.data.userId;
 
-          const savedPost = {
+          const savedPost: Newspost = {
+            created_at: "", // Placeholder
+            postId: -1, // Placeholder
+            updated_at: "", // Placeholder
             message: req.body.message,
             title: req.body.title,
             author: userId
           };
+
+          if (!isNewspost(savedPost)) {
+            return res
+              .status(400)
+              .json(
+                MessageFactory.createError(
+                  "The request did not contain a valid newspost."
+                )
+              );
+          }
+
           const newsPost = await this.newsPostDao.save(savedPost);
           if (newsPost.length > 0) {
             return res
@@ -124,6 +153,11 @@ export default class NewsPostController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_POSTS),
       async (req: express.Request, res: express.Response) => {
+        if (!isNumber(req.params.newsPostId)) {
+          return res
+            .status(400)
+            .json(MessageFactory.createError("Invalid newspost ID"));
+        }
         try {
           const newsPost = await this.newsPostDao.findOne(
             req.params.newsPostId

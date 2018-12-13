@@ -1,5 +1,6 @@
 import { Location } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
+import { addTimestamps } from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
 const TABLE_NAME: string = "locations";
@@ -30,6 +31,10 @@ export default class LocationDao implements Dao<Location> {
   }
 
   public save(location: Location): PromiseLike<number[]> {
+    if (location.locationId) {
+      delete location.locationId;
+    }
+    addTimestamps(location);
     return Promise.resolve(this.knex(TABLE_NAME).insert(location));
   }
 

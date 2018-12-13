@@ -2,22 +2,40 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import * as Knex from "knex";
 
+const testConnectionObject: Knex.MySqlConnectionConfig = {
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DB_NAME + "_test",
+  dateStrings: true,
+  charset: "utf8",
+  timezone: "UTC"
+};
+
+const devConnectionObject: Knex.MySqlConnectionConfig = {
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DB_NAME + "_dev",
+  dateStrings: true,
+  charset: "utf8",
+  timezone: "UTC"
+};
+
+const prodConnectionObject: Knex.MySqlConnectionConfig = {
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DB_NAME,
+  dateStrings: true,
+  charset: "utf8",
+  timezone: "UTC"
+};
+
 const development: Knex.Config = {
   dialect: "mysql2",
   version: "5.6",
-  connection: process.env.MYSQL_CONNECTION_STRING
-    ? process.env.MYSQL_CONNECTION_STRING
-    : "mysql://" +
-      process.env.MYSQL_USER +
-      ":" +
-      process.env.MYSQL_PASSWORD +
-      "@" +
-      process.env.MYSQL_HOST +
-      ":" +
-      process.env.MYSQL_PORT +
-      "/" +
-      process.env.MYSQL_DB_NAME +
-      "_dev?charset=utf8&timezone=UTC",
+  connection: devConnectionObject,
   seeds: {
     directory: "./seeds/dev"
   },
@@ -30,19 +48,7 @@ const development: Knex.Config = {
 const test: Knex.Config = {
   dialect: "mysql2",
   version: "5.6",
-  connection: process.env.MYSQL_CONNECTION_STRING
-    ? process.env.MYSQL_CONNECTION_STRING
-    : "mysql://" +
-      process.env.MYSQL_USER +
-      ":" +
-      process.env.MYSQL_PASSWORD +
-      "@" +
-      process.env.MYSQL_HOST +
-      ":" +
-      process.env.MYSQL_PORT +
-      "/" +
-      process.env.MYSQL_DB_NAME +
-      "_test?charset=utf8&timezone=UTC",
+  connection: testConnectionObject,
   seeds: {
     directory: "./seeds/test"
   },
@@ -55,19 +61,7 @@ const test: Knex.Config = {
 const production: Knex.Config = {
   dialect: "mysql2",
   version: "5.6",
-  connection: process.env.MYSQL_CONNECTION_STRING
-    ? process.env.MYSQL_CONNECTION_STRING
-    : "mysql://" +
-      process.env.MYSQL_USER +
-      ":" +
-      process.env.MYSQL_PASSWORD +
-      "@" +
-      process.env.MYSQL_HOST +
-      ":" +
-      process.env.MYSQL_PORT +
-      "/" +
-      process.env.MYSQL_DB_NAME +
-      "?charset=utf8&timezone=UTC",
+  connection: prodConnectionObject,
   seeds: {
     directory: "./seeds/production"
   },

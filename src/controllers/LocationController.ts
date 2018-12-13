@@ -6,7 +6,8 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { Permissions } from "@alehuo/clubhouse-shared";
+import { Location, Permissions } from "@alehuo/clubhouse-shared";
+import { isLocation, isNumber } from "@alehuo/clubhouse-shared/dist/Models";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
@@ -42,6 +43,11 @@ export default class LocationController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
+        if (!isNumber(req.params.locationId)) {
+          return res
+            .status(400)
+            .json(MessageFactory.createError("Invalid location ID"));
+        }
         try {
           const location = await this.locationDao.findOne(
             req.params.locationId
@@ -79,10 +85,24 @@ export default class LocationController extends Controller {
               .status(400)
               .json(MessageFactory.createError("Location already exists"));
           } else {
-            const locationObj = {
+            const locationObj: Location = {
               name: name.trim(),
-              address: address.trim()
+              address: address.trim(),
+              created_at: "", // Placeholder
+              locationId: -1, // Placeholder
+              updated_at: "" // Placeholder
             };
+
+            if (!isLocation(locationObj)) {
+              return res
+                .status(400)
+                .json(
+                  MessageFactory.createError(
+                    "The request did not contain a valid location."
+                  )
+                );
+            }
+
             const savedLocation = await this.locationDao.save(locationObj);
 
             return res.status(201).json({
@@ -109,6 +129,11 @@ export default class LocationController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
+        if (!isNumber(req.params.locationId)) {
+          return res
+            .status(400)
+            .json(MessageFactory.createError("Invalid location ID"));
+        }
         try {
           const locations = await this.locationDao.findOne(
             req.params.locationId

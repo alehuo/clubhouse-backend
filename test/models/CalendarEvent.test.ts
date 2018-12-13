@@ -18,7 +18,7 @@ describe("ICalendarEvent", () => {
       eventId: 1,
       locationId: 22,
       name: "Test event",
-      restricted: true,
+      restricted: 1,
       startTime: moment(new Date(2016, 1, 1, 23, 0)).toISOString(),
       unionId: 52,
       updated_at: moment(new Date(2016, 1, 1, 22, 13)).toISOString()
@@ -47,7 +47,7 @@ describe("ICalendarEvent", () => {
     expect(calendarEvent.eventId).to.equal(1);
     expect(calendarEvent.locationId).to.equal(22);
     expect(calendarEvent.name).to.equal("Test event");
-    expect(calendarEvent.restricted).to.equal(true);
+    expect(calendarEvent.restricted).to.equal(1);
     expect(calendarEvent.startTime).to.equal(
       moment(new Date(2016, 1, 1, 23, 0)).toISOString()
     );
@@ -68,7 +68,7 @@ describe("ICalendarEvent", () => {
       eventId: 1,
       locationId: 22,
       name: "Test event",
-      restricted: true,
+      restricted: 1,
       startTime: moment(new Date(2016, 1, 1, 23, 0)).toISOString(),
       unionId: 52,
       updated_at: moment(new Date(2016, 1, 1, 22, 13)).toISOString()
@@ -98,7 +98,7 @@ describe("ICalendarEvent", () => {
     expect(calendarEvent.eventId).to.equal(1);
     expect(calendarEvent.locationId).to.equal(22);
     expect(calendarEvent.name).to.equal("Test event");
-    expect(calendarEvent.restricted).to.equal(true);
+    expect(calendarEvent.restricted).to.equal(1);
     expect(calendarEvent.startTime).to.equal(
       moment(new Date(2016, 1, 1, 23, 0)).toISOString()
     );

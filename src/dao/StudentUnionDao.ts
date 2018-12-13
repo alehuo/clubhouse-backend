@@ -1,5 +1,6 @@
 import { StudentUnion } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
+import { addTimestamps } from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
 const TABLE_NAME: string = "studentUnions";
@@ -28,6 +29,10 @@ export default class StudentUnionDao implements Dao<StudentUnion> {
   }
 
   public save(stdu: StudentUnion): PromiseLike<number[]> {
+    if (stdu.unionId) {
+      delete stdu.unionId;
+    }
+    addTimestamps(stdu);
     return Promise.resolve(this.knex(TABLE_NAME).insert(stdu));
   }
 

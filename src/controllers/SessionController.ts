@@ -6,7 +6,9 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 
 import { Session } from "@alehuo/clubhouse-shared";
+import { isSession } from "@alehuo/clubhouse-shared/dist/Models";
 import moment from "moment";
+import { isString } from "util";
 import UserDao from "../dao/UserDao";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { sessionFilter } from "../models/ISession";
@@ -92,6 +94,12 @@ export default class SessionController extends Controller {
       RequestParamMiddleware("startMessage"),
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
+        const { startMessage }: { startMessage: string } = req.body;
+
+        if (!isString(startMessage)) {
+          return res.status(400).json("Invalid format for start message.");
+        }
+
         try {
           const userId: number = res.locals.token.data.userId;
           const sessions = await this.sessionDao.findOngoingByUser(userId);
@@ -105,10 +113,29 @@ export default class SessionController extends Controller {
               );
           }
           const session: Session = {
+            sessionId: -1, // Placeholder
             userId,
-            startMessage: req.body.startMessage,
-            startTime: moment().toISOString()
+            startMessage,
+            endMessage: "",
+            startTime: moment().toISOString(),
+            endTime: "",
+            ended: 0,
+            started: 1,
+            created_at: "placeholder", // Placeholder
+            updated_at: "placeholder" // Placeholder
           };
+
+          console.log(session, "IS SESSION: ", isSession(session));
+
+          if (!isSession(session)) {
+            return res
+              .status(400)
+              .json(
+                MessageFactory.createError(
+                  "The request did not contain a valid session object."
+                )
+              );
+          }
 
           const user = await this.userDao.findOne(userId);
 
@@ -174,6 +201,7 @@ export default class SessionController extends Controller {
       RequestParamMiddleware("endMessage"),
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
+        const { endMessage }: { endMessage: string } = req.body;
         try {
           const userId: number = res.locals.token.data.userId;
           const sessions = await this.sessionDao.findOngoingByUser(userId);
@@ -198,19 +226,30 @@ export default class SessionController extends Controller {
             }
           }
           const currentSession: Session = sessions[0];
-          const session: Session = {
-            userId,
-            endMessage: req.body.endMessage,
-            endTime: moment().toISOString(),
-            ended: true
-          };
-          if (!currentSession.sessionId) {
+          if (currentSession === undefined) {
+            return res
+              .status(400)
+              .json(MessageFactory.createError("Invalid session"));
+          }
+
+          if (currentSession.sessionId === undefined) {
             return res
               .status(400)
               .json(MessageFactory.createError("Invalid session id"));
           }
 
-          await this.sessionDao.endSession(currentSession.sessionId, session);
+          if (!isString(endMessage)) {
+            return res
+              .status(400)
+              .json(
+                MessageFactory.createError("Invalid format for ending message")
+              );
+          }
+
+          await this.sessionDao.endSession(
+            currentSession.sessionId,
+            endMessage
+          );
 
           const user = await this.userDao.findOne(userId);
 
@@ -228,7 +267,7 @@ export default class SessionController extends Controller {
             " " +
             user.lastName +
             " has ended a session with the following message: \r\n\r\n\r\n\r\n" +
-            session.endMessage +
+            endMessage +
             "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
 
           const htmlMessage: string =
@@ -237,7 +276,7 @@ export default class SessionController extends Controller {
             " " +
             user.lastName +
             "</span> has ended a session with the following message: <br/><br/><br/><p>" +
-            session.endMessage +
+            endMessage +
             "</p>" +
             "<br/><br/><br/><br/><hr/>To view more details, please visit the clubhouse website.";
 
