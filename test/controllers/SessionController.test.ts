@@ -183,7 +183,6 @@ describe("SessionController", () => {
           should.not.exist(res.body.error);
           should.exist(res.body.message);
           res.body.message.should.equal("Session started");
-          console.log(res.body);
           // Stop the watch
           chai
             .request(app)
@@ -197,7 +196,6 @@ describe("SessionController", () => {
               res2.body.message.should.equal(
                 "Session ended with message 'Good night all!'"
               );
-              console.log(res2.body);
               done();
             });
         });

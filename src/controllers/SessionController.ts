@@ -125,8 +125,6 @@ export default class SessionController extends Controller {
             updated_at: "placeholder" // Placeholder
           };
 
-          console.log(session, "IS SESSION: ", isSession(session));
-
           if (!isSession(session)) {
             return res
               .status(400)
