@@ -30,7 +30,7 @@ export default class LocationController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get all locations",
+                "Server error: Cannot get all locations",
                 err as Error
               )
             );
@@ -64,7 +64,7 @@ export default class LocationController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get a single location"
+                "Server error: Cannot get a single location"
               )
             );
         }

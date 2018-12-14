@@ -7,7 +7,7 @@ import "mocha";
 import * as httpMocks from "node-mocks-http";
 import { PermissionMiddleware } from "../../src/middleware/PermissionMiddleware";
 import { VerifyToken } from "../../src/utils/JwtUtils";
-import { IError } from "../../src/utils/MessageFactory";
+import { ApiResponse } from "../../src/utils/MessageFactory";
 import { generateToken } from "../TestUtils";
 const chai: Chai.ChaiStatic = require("chai");
 const should: Chai.Should = chai.should();
@@ -32,10 +32,11 @@ describe("PermissionMiddleware", () => {
       }
     );
     expect(nextCalled).to.equal(0);
-    const data: IError = JSON.parse(response._getData());
+    const data: ApiResponse<undefined> = JSON.parse(response._getData());
     should.exist(data.error);
+    should.exist(data.error!.message);
     should.exist(response.statusCode);
-    expect(data.error).to.equal("Invalid token");
+    expect(data.error!.message).to.equal("Invalid token");
     expect(response.statusCode).to.equal(400);
   });
 
@@ -55,7 +56,6 @@ describe("PermissionMiddleware", () => {
       }
     });
     const response: httpMocks.MockResponse<any> = httpMocks.createResponse({
-      // @ts-ignore
       locals: {
         token
       }
@@ -68,10 +68,11 @@ describe("PermissionMiddleware", () => {
       }
     );
     expect(nextCalled).to.equal(0);
-    const data: IError = JSON.parse(response._getData());
+    const data: ApiResponse<undefined> = JSON.parse(response._getData());
     should.exist(data.error);
+    should.exist(data.error!.message);
     should.exist(response.statusCode);
-    expect(data.error).to.equal("Unauthorized");
+    expect(data.error!.message).to.equal("Unauthorized");
     expect(response.statusCode).to.equal(400);
   });
 
@@ -91,7 +92,6 @@ describe("PermissionMiddleware", () => {
       }
     });
     const response: httpMocks.MockResponse<any> = httpMocks.createResponse({
-      // @ts-ignore
       locals: {
         token
       }

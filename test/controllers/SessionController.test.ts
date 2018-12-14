@@ -7,8 +7,10 @@ import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 
-import moment = require("moment");
+import { Session } from "@alehuo/clubhouse-shared";
+import moment from "moment";
 import { SignToken } from "../../src/utils/JwtUtils";
+import { ApiResponse } from "../../src/utils/MessageFactory";
 
 const validUser: any = {
   userId: 1,
@@ -61,8 +63,10 @@ describe("SessionController", () => {
         .get(url + "/ongoing")
         .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(403);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Missing Authorization header");
+          const body = res.body as ApiResponse<undefined>;
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Missing Authorization header");
           done();
         });
     });
@@ -74,8 +78,10 @@ describe("SessionController", () => {
         .set("Authorization", "Bearer HelloWorld")
         .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(403);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Malformed Authorization header");
+          const body = res.body as ApiResponse<undefined>;
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Malformed Authorization header");
           done();
         });
     });
@@ -88,16 +94,17 @@ describe("SessionController", () => {
         .get(url + "/ongoing")
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<Session[]>;
           res.status.should.equal(200);
-          res.body.length.should.equal(1);
-          res.body[0].sessionId.should.equal(2);
-          res.body[0].userId.should.equal(1);
-          res.body[0].startMessage.should.equal(
+          body.payload!.length.should.equal(1);
+          body.payload![0].sessionId.should.equal(2);
+          body.payload![0].userId.should.equal(1);
+          body.payload![0].startMessage.should.equal(
             "Good evening, I'm taking responsibility of a few exchange students."
           );
-          should.not.exist(res.body[0].endMessage);
-          should.exist(res.body[0].startTime);
-          should.not.exist(res.body[0].endTime);
+          should.not.exist(body.payload![0].endMessage);
+          should.exist(body.payload![0].startTime);
+          should.not.exist(body.payload![0].endTime);
           done();
         });
     });
@@ -110,34 +117,35 @@ describe("SessionController", () => {
         .get(url + "/user/1")
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<Session[]>;
           res.status.should.equal(200);
-          should.not.exist(res.body.error);
-          res.body.length.should.equal(2);
+          should.not.exist(body.error);
+          body.payload!.length.should.equal(2);
 
           // First
-          res.body[0].sessionId.should.equal(1);
-          res.body[0].userId.should.equal(1);
-          res.body[0].startMessage.should.equal(
+          body.payload![0].sessionId.should.equal(1);
+          body.payload![0].userId.should.equal(1);
+          body.payload![0].startMessage.should.equal(
             "Let's get this party started."
           );
-          res.body[0].endMessage.should.equal(
+          body.payload![0].endMessage.should.equal(
             "I have left the building. Moved people under my supervision to another keyholder."
           );
-          should.exist(res.body[0].startTime);
-          should.exist(res.body[0].endTime);
+          should.exist(body.payload![0].startTime);
+          should.exist(body.payload![0].endTime);
 
           // Second
-          res.body[1].sessionId.should.equal(2);
-          res.body[1].userId.should.equal(1);
-          res.body[1].startMessage.should.equal(
+          body.payload![1].sessionId.should.equal(2);
+          body.payload![1].userId.should.equal(1);
+          body.payload![1].startMessage.should.equal(
             "Good evening, I'm taking responsibility of a few exchange students."
           );
-          should.not.exist(res.body[1].endMessage);
-          should.exist(res.body[1].startTime);
-          moment(res.body[1].startTime)
+          should.not.exist(body.payload![1].endMessage);
+          should.exist(body.payload![1].startTime);
+          moment(body.payload![1].startTime)
             .toISOString()
             .should.equal(moment(new Date(2018, 6, 1, 23, 58)).toISOString());
-          should.not.exist(res.body[1].endTime);
+          should.not.exist(body.payload![1].endTime);
 
           done();
         });
@@ -151,19 +159,21 @@ describe("SessionController", () => {
         .get(url + "/ongoing/user/1")
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<Session[]>;
+          const sessions = body.payload!;
           res.status.should.equal(200);
-          should.not.exist(res.body.error);
-          res.body.length.should.equal(1);
+          should.not.exist(body.error);
+          sessions.length.should.equal(1);
 
           // First
-          res.body[0].sessionId.should.equal(2);
-          res.body[0].userId.should.equal(1);
-          res.body[0].startMessage.should.equal(
+          sessions[0].sessionId.should.equal(2);
+          sessions[0].userId.should.equal(1);
+          sessions[0].startMessage.should.equal(
             "Good evening, I'm taking responsibility of a few exchange students."
           );
-          should.not.exist(res.body[0].endMessage);
-          should.exist(res.body[0].startTime);
-          should.not.exist(res.body[0].endTime);
+          should.not.exist(sessions[0].endMessage);
+          should.exist(sessions[0].startTime);
+          should.not.exist(sessions[0].endTime);
 
           done();
         });
@@ -179,10 +189,11 @@ describe("SessionController", () => {
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ startMessage: "Let's rock and roll!" })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(201);
-          should.not.exist(res.body.error);
-          should.exist(res.body.message);
-          res.body.message.should.equal("Session started");
+          should.not.exist(body.error);
+          should.exist(body.message);
+          body.message!.should.equal("Session started");
           // Stop the watch
           chai
             .request(app)
@@ -190,10 +201,11 @@ describe("SessionController", () => {
             .set("Authorization", generateToken({ userId: 2 }))
             .send({ endMessage: "Good night all!" })
             .end((err2: any, res2: ChaiHttp.Response) => {
+              const body2 = res2.body as ApiResponse<undefined>;
               res2.status.should.equal(200);
-              should.not.exist(res2.body.error);
-              should.exist(res2.body.message);
-              res2.body.message.should.equal(
+              should.not.exist(body2.error);
+              should.exist(body2.message);
+              body2.message!.should.equal(
                 "Session ended with message 'Good night all!'"
               );
               done();
@@ -208,10 +220,11 @@ describe("SessionController", () => {
         .set("Authorization", generateToken())
         .send({ startMessage: "Let's rock and roll!" })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          should.not.exist(res.body.message);
-          res.body.error.should.equal(
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal(
             "You already have an ongoing session running."
           );
           done();
@@ -225,10 +238,13 @@ describe("SessionController", () => {
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ endMessage: "Let's rock and roll!" })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          should.not.exist(res.body.message);
-          res.body.error.should.equal("You don't have an ongoing session.");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal(
+            "You don't have an ongoing session."
+          );
           done();
         });
     });
@@ -240,13 +256,14 @@ describe("SessionController", () => {
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ test: "Let's rock and roll!" })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          should.not.exist(res.body.message);
-          res.body.error.should.equal("Missing request body parameters");
-          should.exist(res.body.errors);
-          res.body.errors.length.should.equal(1);
-          res.body.errors[0].should.equal("Missing: startMessage");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Missing request body parameters");
+          should.exist(body.error!.errors);
+          body.error!.errors!.length.should.equal(1);
+          body.error!.errors![0].should.equal("Missing: startMessage");
           done();
         });
     });
@@ -258,13 +275,14 @@ describe("SessionController", () => {
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ test: "Let's rock and roll!" })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          should.not.exist(res.body.message);
-          res.body.error.should.equal("Missing request body parameters");
-          should.exist(res.body.errors);
-          res.body.errors.length.should.equal(1);
-          res.body.errors[0].should.equal("Missing: endMessage");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Missing request body parameters");
+          should.exist(body.error!.errors);
+          body.error!.errors!.length.should.equal(1);
+          body.error!.errors![0].should.equal("Missing: endMessage");
           done();
         });
     });

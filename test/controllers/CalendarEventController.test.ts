@@ -8,6 +8,7 @@ import CalendarEventDao from "../../src/dao/CalendarEventDao";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 import { createICal, iCalFilter } from "../../src/utils/iCalUtils";
+import { ApiResponse } from "../../src/utils/MessageFactory";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
@@ -74,26 +75,31 @@ describe("CalendarEventController", () => {
       .request(app)
       .get(calendarUrl + "/1")
       .set("Authorization", generateToken());
-    should.not.exist(res.body.error);
+
+    const body = res.body as ApiResponse<CalendarEvent>;
+    should.not.exist(body.error);
+    should.exist(body.payload);
+    should.exist(body.success);
+    body.success.should.equal(true);
+
     res.status.should.equal(200);
 
     Object.keys(calendarEvent).length.should.equal(
-      Object.keys(res.body).length
+      Object.keys(body.payload!).length
     );
 
-    for (const key of Object.keys(calendarEvent)) {
-      should.exist(res.body[key]);
-      if (key === "created_at" || key === "updated_at") {
-        return;
-      }
-      if (key === "startTime" || key === "endTime") {
-        new Date(res.body[key])
-          .toISOString()
-          .should.equal(new Date(res.body[key]).toISOString());
-        return;
-      }
-      res.body[key].should.equal(res.body[key]);
-    }
+    const event = body.payload!;
+    event.addedBy.should.equal(calendarEvent.addedBy);
+    event.created_at.should.equal(calendarEvent.created_at);
+    event.description.should.equal(calendarEvent.description);
+    event.endTime.should.equal(calendarEvent.endTime);
+    event.eventId.should.equal(calendarEvent.eventId);
+    event.locationId.should.equal(calendarEvent.locationId);
+    event.name.should.equal(calendarEvent.name);
+    event.restricted.should.equal(calendarEvent.restricted);
+    event.startTime.should.equal(calendarEvent.startTime);
+    event.unionId.should.equal(calendarEvent.unionId);
+    event.updated_at.should.equal(calendarEvent.updated_at);
   }).timeout(5000);
 
   it("Returns a single calendar event as iCal", async () => {
@@ -128,31 +134,33 @@ describe("CalendarEventController", () => {
       .request(app)
       .get(calendarUrl)
       .set("Authorization", generateToken());
-    should.not.exist(res.body.error);
-    res.body.length.should.equal(calendarEvents.length);
+    const body = res.body as ApiResponse<CalendarEvent[]>;
+    should.not.exist(body.error);
+    should.exist(body.payload);
+    should.exist(body.success);
+    body.success.should.equal(true);
+    body.payload!.length.should.equal(calendarEvents.length);
     res.status.should.equal(200);
 
-    const sortedRes = (res.body as CalendarEvent[]).sort(
+    const sortedRes = body.payload!.sort(
       (a, b) => Number(a.eventId) - Number(b.eventId)
     );
 
-    for (let i: number = 0; i < sortedEvents.length; i++) {
-      Object.keys(sortedEvents[i]).forEach((key: string) => {
-        // FIXME: Remove ts-ignore
-        // @ts-ignore
-        should.exist(sortedRes[i][key]);
-        if (key === "created_at" || key === "updated_at") {
-          return;
-        }
-        if (key === "startTime" || key === "endTime") {
-          new Date(sortedEvents[i][key])
-            .toISOString()
-            .should.equal(new Date(sortedRes[i][key]).toISOString());
-          return;
-        }
-        // @ts-ignore
-        sortedEvents[i][key].should.equal(sortedRes[i][key]);
-      });
+    for (let i = 0; i < sortedRes.length; i++) {
+      const event = sortedRes[i];
+      const calendarEvent = sortedEvents[i];
+
+      event.addedBy.should.equal(calendarEvent.addedBy);
+      event.created_at.should.equal(calendarEvent.created_at);
+      event.description.should.equal(calendarEvent.description);
+      event.endTime.should.equal(calendarEvent.endTime);
+      event.eventId.should.equal(calendarEvent.eventId);
+      event.locationId.should.equal(calendarEvent.locationId);
+      event.name.should.equal(calendarEvent.name);
+      event.restricted.should.equal(calendarEvent.restricted);
+      event.startTime.should.equal(calendarEvent.startTime);
+      event.unionId.should.equal(calendarEvent.unionId);
+      event.updated_at.should.equal(calendarEvent.updated_at);
     }
   }).timeout(5000);
 
@@ -164,15 +172,19 @@ describe("CalendarEventController", () => {
         test: "Something"
       })
       .end((err: any, res: ChaiHttp.Response) => {
-        should.exist(res.body.error);
-        should.exist(res.body.errors);
-        res.body.errors.length.should.equal(1);
-        res.body.errors[0].should.equal(
+        const body = res.body as ApiResponse<undefined>;
+        should.exist(body.error);
+        should.exist(body.success);
+        body.success.should.equal(false);
+        should.exist(body.error!.errors);
+        should.exist(body.error!.message);
+        body.error!.errors!.length.should.equal(1);
+        body.error!.errors![0].should.equal(
           "Missing: description, endTime, locationId, name, restricted, startTime, unionId"
         );
-        should.not.exist(res.body.token);
+        should.not.exist(res.body.payload);
         res.status.should.equal(400);
-        res.body.error.should.equal("Missing request body parameters");
+        body.error!.message.should.equal("Missing request body parameters");
         done();
       });
   }).timeout(5000);

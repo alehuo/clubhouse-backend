@@ -77,19 +77,25 @@ export default class CalendarEventController extends Controller {
           const calendarEvent = await this.calendarEventDao.save(
             calendarEventData
           );
-          return res.status(201).json({
-            ...{},
-            ...calendarEventData,
-            ...{
-              eventId: calendarEvent[0]
-            }
-          });
+          return res.status(201).json(
+            MessageFactory.createResponse<CalendarEvent>(
+              true,
+              "Succesfully saved calendar event",
+              {
+                ...{},
+                ...calendarEventData,
+                ...{
+                  eventId: calendarEvent[0]
+                }
+              }
+            )
+          );
         } catch (ex) {
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot add a new event",
+                "Server error: Cannot add a new event",
                 ex as Error
               )
             );
@@ -100,13 +106,21 @@ export default class CalendarEventController extends Controller {
     this.router.get("", async (req: express.Request, res: express.Response) => {
       try {
         const events = await this.calendarEventDao.findAll();
-        return res.status(200).json(events);
+        return res
+          .status(200)
+          .json(
+            MessageFactory.createResponse<CalendarEvent[]>(
+              true,
+              "Succesfully fetched calendar events",
+              events
+            )
+          );
       } catch (ex) {
         return res
           .status(500)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot get all events",
+              "Server error: Cannot get all events",
               ex as Error
             )
           );
@@ -130,7 +144,7 @@ export default class CalendarEventController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get all events",
+                "Server error: Cannot get all events",
                 ex as Error
               )
             );
@@ -158,14 +172,22 @@ export default class CalendarEventController extends Controller {
               .status(404)
               .json(MessageFactory.createError("Calendar event not found"));
           } else {
-            return res.status(200).json(event);
+            return res
+              .status(200)
+              .json(
+                MessageFactory.createResponse<CalendarEvent>(
+                  true,
+                  "Succesfully fetched single calendar event",
+                  event
+                )
+              );
           }
         } catch (ex) {
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get a single event",
+                "Server error: Cannot get a single event",
                 ex as Error
               )
             );
@@ -205,7 +227,7 @@ export default class CalendarEventController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot delete a single event",
+                "Server error: Cannot delete a single event",
                 ex as Error
               )
             );
@@ -237,7 +259,7 @@ export default class CalendarEventController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get a single event as iCal",
+                "Server error: Cannot get a single event in iCal format",
                 ex as Error
               )
             );

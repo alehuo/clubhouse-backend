@@ -32,7 +32,15 @@ export default class SessionController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const sessions = await this.sessionDao.findAllOngoing();
-          return res.status(200).json(sessions.map(sessionFilter));
+          return res
+            .status(200)
+            .json(
+              MessageFactory.createResponse<Session[]>(
+                true,
+                "",
+                sessions.map(sessionFilter)
+              )
+            );
         } catch (err) {
           return res
             .status(500)
@@ -52,13 +60,21 @@ export default class SessionController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const sessions = await this.sessionDao.findByUser(req.params.userId);
-          return res.status(200).json(sessions.map(sessionFilter));
+          return res
+            .status(200)
+            .json(
+              MessageFactory.createResponse<Session[]>(
+                true,
+                "",
+                sessions.map(sessionFilter)
+              )
+            );
         } catch (err) {
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot get sessions from a single user",
+                "Server error: Cannot get sessions from a single user",
                 err as Error
               )
             );
@@ -74,13 +90,21 @@ export default class SessionController extends Controller {
           const sessions = await this.sessionDao.findOngoingByUser(
             req.params.userId
           );
-          return res.status(200).json(sessions.map(sessionFilter));
+          return res
+            .status(200)
+            .json(
+              MessageFactory.createResponse<Session[]>(
+                true,
+                "",
+                sessions.map(sessionFilter)
+              )
+            );
         } catch (err) {
           return res
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error:" +
+                "Server error:" +
                   " Cannot get current running sessions from a single user",
                 err as Error
               )
@@ -186,7 +210,7 @@ export default class SessionController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot start a session",
+                "Server error: Cannot start a session",
                 err as Error
               )
             );
@@ -301,7 +325,7 @@ export default class SessionController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Can't end a session",
+                "Server error: Can't end a session",
                 err as Error
               )
             );
@@ -333,9 +357,7 @@ export default class SessionController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(
-              MessageFactory.createError("Internal server error", err as Error)
-            );
+            .json(MessageFactory.createError("Server error", err as Error));
         }
       }
     );

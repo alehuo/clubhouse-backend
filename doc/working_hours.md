@@ -52,9 +52,10 @@
 | 10.12.2018 | 1.0h  | Refactored code as TypeScript can determine types automatically with type inheritance. Fixed tests.                                                                                                                                                                                              |
 | 11.12.2018 | 2.0h  | Changed model imports to use shared library. Refactored code to remove redundant typings. Changed Date type from 'Date' to 'string' and enabled moment.js library.                                                                                                                               |
 | 13.12.2018 | 2.0h  | Implemented strict object validation for all models. Created validators for all models.                                                                                                                                                                                                          |
+| 14.12.2018 | 2.0h  | Implemented ApiResponse interface and updated message creator functions to use a standardized API schema. Started implementing new response function to controllers and fixing tests.                                                                                                            |
 
 Total:
 
 61.0 h (part 1)
 
-33.0 h (part 2)
+35.0 h (part 2)

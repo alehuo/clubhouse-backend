@@ -1,5 +1,5 @@
-export interface IError {
-  error: string;
+export interface ApiError {
+  message: string;
   exception?: Error;
   errors?: string[];
 }
@@ -9,16 +9,43 @@ export interface ApiMessage {
 }
 
 export interface ApiResponse<T> {
-  payload: T;
+  payload?: T;
+  success: boolean;
+  message?: string;
+  error?: ApiError;
 }
 
-const createError: (
+/**
+ * Creates an API response.
+ *
+ * @export
+ * @template T Type of the payload
+ * @param {T} payload Payload
+ * @param {boolean} [success=true] Was the request successful or not
+ * @param {IError} [error] Error object
+ * @returns {ApiResponse<T>} API response
+ */
+function createResponse<T>(
+  success: boolean = true,
+  message: string = "",
+  payload?: T,
+  error?: ApiError
+): ApiResponse<T> {
+  return {
+    success,
+    message,
+    payload,
+    error
+  };
+}
+
+const createError = (
   error: string,
   exception?: Error,
   errors?: string[]
-) => IError = (error: string, exception?: Error, errors?: string[]): IError => {
-  const errorObject: IError = {
-    error,
+): ApiResponse<undefined> => {
+  const errorObject: ApiError = {
+    message: error,
     errors
   };
 
@@ -26,23 +53,21 @@ const createError: (
     errorObject.exception = exception;
   }
 
-  return errorObject;
+  const apiResponse = createResponse<undefined>(
+    false, // Unsuccessful
+    error, // Empty message
+    undefined, // Payload
+    errorObject // Error object
+  );
+
+  return apiResponse;
 };
 
-const createMessage: (message: string) => ApiMessage = (
-  message: string
-): ApiMessage => {
-  return {
-    message
-  };
-};
+const createMessage = (message: string): ApiResponse<undefined> =>
+  createResponse<undefined>(true, message);
 
-interface MsgFactory {
-  createError: (error: string, exception?: Error, errors?: string[]) => IError;
-  createMessage: (message: string) => ApiMessage;
-}
-
-export const MessageFactory: MsgFactory = {
+export const MessageFactory = {
   createError,
-  createMessage
+  createMessage,
+  createResponse
 };

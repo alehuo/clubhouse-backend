@@ -58,7 +58,15 @@ export default class AuthController extends Controller {
                   lastName: user.lastName,
                   permissions: user.permissions
                 });
-                return res.status(200).json({ ...{ token } });
+                return res
+                  .status(200)
+                  .json(
+                    MessageFactory.createResponse<{ token: string }>(
+                      true,
+                      "Authentication successful",
+                      { ...{ token } }
+                    )
+                  );
               } else {
                 return res
                   .status(400)
@@ -71,7 +79,7 @@ export default class AuthController extends Controller {
                 .status(500)
                 .json(
                   MessageFactory.createError(
-                    "Internal server error: Cannot authenticate user",
+                    "Server error: Cannot authenticate user",
                     ex as Error
                   )
                 );
@@ -82,7 +90,7 @@ export default class AuthController extends Controller {
             .status(500)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot authenticate user",
+                "Server error: Cannot authenticate user",
                 err as Error
               )
             );

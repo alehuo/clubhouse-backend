@@ -8,6 +8,7 @@ import * as Database from "../../src/Database";
 import app from "../../src/index";
 
 import { StudentUnion } from "@alehuo/clubhouse-shared";
+import { ApiResponse } from "../../src/utils/MessageFactory";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
@@ -81,9 +82,11 @@ describe("StudentUnionController", () => {
         .request(app)
         .get(url)
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(403);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Missing Authorization header");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Missing Authorization header");
           done();
         });
     });
@@ -94,9 +97,11 @@ describe("StudentUnionController", () => {
         .get(url)
         .set("Authorization", "Bearer HelloWorld")
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(403);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Malformed Authorization header");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Malformed Authorization header");
           done();
         });
     });
@@ -109,12 +114,18 @@ describe("StudentUnionController", () => {
         .get(url)
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<StudentUnion[]>;
+          should.exist(body.payload);
+          should.not.exist(body.error);
+          should.exist(body.success);
+          body.success.should.equal(true);
+
           res.status.should.equal(200);
           // Number of student unions returned
-          res.body.length.should.equal(unions.length);
+          body.payload!.length.should.equal(unions.length);
           for (let i: number = 0; i < unions.length; i++) {
-            should.exist(res.body[i]);
-            const stdu: StudentUnion = res.body[i];
+            should.exist(body.payload![i]);
+            const stdu = body.payload![i];
             stdu.description.should.equal(unions[i].description);
             stdu.name.should.equal(unions[i].name);
             Number(stdu.unionId).should.equal(i + 1);
@@ -135,8 +146,10 @@ describe("StudentUnionController", () => {
         )
         .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Unauthorized");
+          const body = res.body as ApiResponse<undefined>;
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Unauthorized");
           done();
         });
     });
@@ -147,13 +160,19 @@ describe("StudentUnionController", () => {
         .get(url + "/1")
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<StudentUnion>;
+          should.exist(body.payload);
+          should.not.exist(body.error);
+          const stdu = body.payload!;
           res.status.should.equal(200);
-          should.exist(res.body.unionId);
-          res.body.unionId.should.equal(unions[0].unionId);
-          should.exist(res.body.name);
-          res.body.name.should.equal(unions[0].name);
-          should.exist(res.body.description);
-          res.body.description.should.equal(unions[0].description);
+          should.exist(stdu.unionId);
+          stdu.unionId.should.equal(unions[0].unionId);
+          should.exist(stdu.name);
+          stdu.name.should.equal(unions[0].name);
+          should.exist(stdu.description);
+          stdu.description.should.equal(unions[0].description);
+          should.exist(stdu.created_at); // TODO: check timestamp
+          should.exist(stdu.updated_at); // TODO: check timestamp
           done();
         });
     });
@@ -169,9 +188,11 @@ describe("StudentUnionController", () => {
           })
         )
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Unauthorized");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Unauthorized");
           done();
         });
     });
@@ -183,8 +204,10 @@ describe("StudentUnionController", () => {
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
           res.status.should.equal(404);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Student union not found");
+          const body = res.body as ApiResponse<undefined>;
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Student union not found");
           done();
         });
     });
@@ -201,13 +224,16 @@ describe("StudentUnionController", () => {
           description: "Union description"
         })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<StudentUnion>;
+          should.exist(body.payload);
+          const stdu = body.payload!;
           res.status.should.equal(201);
-          should.exist(res.body.name);
-          res.body.name.should.equal("TestUnion");
-          should.exist(res.body.description);
-          res.body.description.should.equal("Union description");
-          should.exist(res.body.unionId);
-          res.body.unionId.should.equal(unions.length + 1);
+          should.exist(stdu.name);
+          stdu.name.should.equal("TestUnion");
+          should.exist(stdu.description);
+          stdu.description.should.equal("Union description");
+          should.exist(stdu.unionId);
+          stdu.unionId.should.equal(unions.length + 1);
           done();
         });
     });
@@ -222,12 +248,14 @@ describe("StudentUnionController", () => {
           description: "Union description"
         })
         .end((err: any, res: ChaiHttp.Response) => {
-          should.exist(res.body.error);
+          const body = res.body as ApiResponse<undefined>;
+          should.exist(body.error);
+          should.exist(body.error!.message);
           res.status.should.equal(400);
-          should.not.exist(res.body.name);
-          should.not.exist(res.body.description);
-          should.not.exist(res.body.unionId);
-          res.body.error.should.equal("Name or description cannot be empty");
+          should.not.exist(body.payload);
+          body.error!.message.should.equal(
+            "Name or description cannot be empty"
+          );
           done();
         });
     });
@@ -242,12 +270,14 @@ describe("StudentUnionController", () => {
           description: ""
         })
         .end((err: any, res: ChaiHttp.Response) => {
-          should.exist(res.body.error);
+          const body = res.body as ApiResponse<undefined>;
+          should.exist(body.error);
+          should.exist(body.error!.message);
           res.status.should.equal(400);
-          should.not.exist(res.body.name);
-          should.not.exist(res.body.description);
-          should.not.exist(res.body.unionId);
-          res.body.error.should.equal("Name or description cannot be empty");
+          should.not.exist(body.payload);
+          body.error!.message.should.equal(
+            "Name or description cannot be empty"
+          );
           done();
         });
     });
@@ -267,9 +297,12 @@ describe("StudentUnionController", () => {
           description: "Union description"
         })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
+          should.exist(body.error);
+          should.exist(body.error!.message);
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Unauthorized");
+          should.not.exist(body.payload);
+          body.error!.message.should.equal("Unauthorized");
           done();
         });
     });
@@ -283,12 +316,14 @@ describe("StudentUnionController", () => {
           name: "TestUnion"
         })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Missing request body parameters");
-          should.exist(res.body.errors);
-          res.body.errors.length.should.equal(1);
-          res.body.errors[0].should.equal("Missing: description");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message.should.equal("Missing request body parameters");
+          should.exist(body.error!.errors);
+          body.error!.errors!.length.should.equal(1);
+          body.error!.errors![0].should.equal("Missing: description");
           done();
         });
     });
@@ -301,18 +336,21 @@ describe("StudentUnionController", () => {
         .del(url + "/5")
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(200);
-          should.not.exist(res.body.error);
-          should.exist(res.body.message);
-          res.body.message.should.equal("Student union removed");
+          should.not.exist(body.error);
+          should.exist(body.message);
+          body.message!.should.equal("Student union removed");
           // Check that the union was really removed
           chai
             .request(app)
             .get(url + "/5")
             .set("Authorization", generateToken())
             .end((err2: any, res2: ChaiHttp.Response) => {
-              should.exist(res2.body.error);
-              res2.body.error.should.equal("Student union not found");
+              const body2 = res2.body as ApiResponse<undefined>;
+              should.exist(body2.error);
+              should.exist(body2.error!.message);
+              body2.error!.message.should.equal("Student union not found");
               res2.status.should.equal(404);
               done();
             });
@@ -330,9 +368,10 @@ describe("StudentUnionController", () => {
           })
         )
         .end((err: any, res: ChaiHttp.Response) => {
-          res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Unauthorized");
+          const body = res.body as ApiResponse<undefined>;
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          body.error!.message!.should.equal("Unauthorized");
           done();
         });
     });

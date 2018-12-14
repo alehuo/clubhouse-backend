@@ -5,6 +5,7 @@ import * as Knex from "knex";
 import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
+import { ApiResponse } from "../../src/utils/MessageFactory";
 
 const knex: Knex = Database.connect();
 const chai: Chai.ChaiStatic = require("chai");
@@ -47,9 +48,12 @@ describe("AuthController", () => {
       .post(authUrl)
       .send(correctCreds)
       .end((err: any, res: ChaiHttp.Response) => {
+        const body = res.body as ApiResponse<{ token: string }>;
         should.not.exist(err);
         res.status.should.equal(200);
-        should.exist(res.body.token);
+        should.not.exist(body.error);
+        should.exist(body.payload);
+        should.exist(body.payload!.token);
         done();
       });
   }).timeout(10000);
@@ -60,10 +64,12 @@ describe("AuthController", () => {
       .post(authUrl)
       .send(incorrectCreds)
       .end((err: any, res: ChaiHttp.Response) => {
-        should.exist(res.body.error);
-        should.not.exist(res.body.token);
+        const body = res.body as ApiResponse<undefined>;
+        should.exist(body.error);
+        should.exist(body.error!.message);
+        should.not.exist(body.payload);
         res.status.should.equal(400);
-        res.body.error.should.equal("Invalid username or password");
+        body.error!.message.should.equal("Invalid username or password");
         done();
       });
   }).timeout(10000);
@@ -77,10 +83,12 @@ describe("AuthController", () => {
         password: "something"
       })
       .end((err: any, res: ChaiHttp.Response) => {
-        should.exist(res.body.error);
-        should.not.exist(res.body.token);
+        const body = res.body as ApiResponse<undefined>;
+        should.exist(body.error);
+        should.exist(body.error!.message);
+        should.not.exist(body.payload);
         res.status.should.equal(400);
-        res.body.error.should.equal("Invalid username or password");
+        body.error!.message.should.equal("Invalid username or password");
         done();
       });
   }).timeout(10000);
@@ -93,10 +101,12 @@ describe("AuthController", () => {
         email: "something"
       })
       .end((err: any, res: ChaiHttp.Response) => {
-        should.exist(res.body.error);
+        const body = res.body as ApiResponse<undefined>;
+        should.exist(body.error);
+        should.exist(body.error!.message);
         should.not.exist(res.body.token);
         res.status.should.equal(400);
-        res.body.error.should.equal("Missing request body parameters");
+        body.error!.message.should.equal("Missing request body parameters");
         done();
       });
   }).timeout(5000);

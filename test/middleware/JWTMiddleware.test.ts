@@ -4,7 +4,7 @@ import { expect } from "chai";
 import "mocha";
 import * as httpMocks from "node-mocks-http";
 import { JWTMiddleware } from "../../src/middleware/JWTMiddleware";
-import { IError } from "../../src/utils/MessageFactory";
+import { ApiResponse } from "../../src/utils/MessageFactory";
 import { generateToken } from "../TestUtils";
 
 process.env.JWT_SECRET = "testSecret";
@@ -14,10 +14,7 @@ describe("JWTMiddleware", () => {
     let nextCalled: number = 0;
     const request: httpMocks.MockRequest<any> = httpMocks.createRequest({
       method: "GET",
-      url: "/user/42",
-      params: {
-        id: 42
-      }
+      url: "/user/42"
     });
     const response: httpMocks.MockResponse<any> = httpMocks.createResponse();
 
@@ -26,8 +23,8 @@ describe("JWTMiddleware", () => {
       nextCalled += 1;
     });
     expect(nextCalled).to.equal(0);
-    const data: IError = JSON.parse(response._getData());
-    expect(data.error).to.equal("Missing Authorization header");
+    const data: ApiResponse<undefined> = JSON.parse(response._getData());
+    expect(data.error!.message).to.equal("Missing Authorization header");
     expect(response.statusCode).to.equal(403);
   });
 
@@ -36,9 +33,6 @@ describe("JWTMiddleware", () => {
     const request: httpMocks.MockRequest<any> = httpMocks.createRequest({
       method: "GET",
       url: "/user/42",
-      params: {
-        id: 42
-      },
       headers: {
         Authorization: "Test"
       }
@@ -50,8 +44,8 @@ describe("JWTMiddleware", () => {
       nextCalled += 1;
     });
     expect(nextCalled).to.equal(0);
-    const data: IError = JSON.parse(response._getData());
-    expect(data.error).to.equal("Malformed Authorization header");
+    const data: ApiResponse<undefined> = JSON.parse(response._getData());
+    expect(data.error!.message).to.equal("Malformed Authorization header");
     expect(response.statusCode).to.equal(403);
   });
 
@@ -60,9 +54,6 @@ describe("JWTMiddleware", () => {
     const request: httpMocks.MockRequest<any> = httpMocks.createRequest({
       method: "GET",
       url: "/user/42",
-      params: {
-        id: 42
-      },
       headers: {
         Authorization: "Bearer malformedToken1234"
       }
@@ -73,8 +64,8 @@ describe("JWTMiddleware", () => {
       nextCalled += 1;
     });
     expect(nextCalled).to.equal(0);
-    const data: IError = JSON.parse(response._getData());
-    expect(data.error).to.equal("Malformed Authorization header");
+    const data: ApiResponse<undefined> = JSON.parse(response._getData());
+    expect(data.error!.message).to.equal("Malformed Authorization header");
     expect(response.statusCode).to.equal(403);
   });
 

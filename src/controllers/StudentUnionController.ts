@@ -8,6 +8,7 @@ import Controller from "./Controller";
 
 import { Permissions, StudentUnion } from "@alehuo/clubhouse-shared";
 import { isStudentUnion } from "@alehuo/clubhouse-shared/dist/Models";
+import moment = require("moment");
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
@@ -27,13 +28,17 @@ export default class StudentUnionController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const result = await this.studentUnionDao.findAll();
-          return res.json(result.map(studentUnionFilter));
+          return res.json(
+            MessageFactory.createResponse<StudentUnion[]>(
+              true,
+              "Succesfully fetched student unions",
+              result.map(studentUnionFilter)
+            )
+          );
         } catch (err) {
           return res
             .status(500)
-            .json(
-              MessageFactory.createError("Internal server error", err as Error)
-            );
+            .json(MessageFactory.createError("Server error", err as Error));
         }
       }
     );
@@ -48,7 +53,15 @@ export default class StudentUnionController extends Controller {
             req.params.studentUnionId
           );
           if (studentUnion) {
-            return res.status(200).json(studentUnionFilter(studentUnion));
+            return res
+              .status(200)
+              .json(
+                MessageFactory.createResponse<StudentUnion>(
+                  true,
+                  "",
+                  studentUnionFilter(studentUnion)
+                )
+              );
           } else {
             return res
               .status(404)
@@ -57,9 +70,7 @@ export default class StudentUnionController extends Controller {
         } catch (ex) {
           return res
             .status(500)
-            .json(
-              MessageFactory.createError("Internal server error", ex as Error)
-            );
+            .json(MessageFactory.createError("Server error", ex as Error));
         }
       }
     );
@@ -109,18 +120,22 @@ export default class StudentUnionController extends Controller {
 
             const savedStudentUnion = await this.studentUnionDao.save(newStdu);
 
-            return res.status(201).json({
-              ...{ name, description },
-              ...{
-                unionId: savedStudentUnion[0]
-              }
-            });
+            return res.status(201).json(
+              MessageFactory.createResponse<StudentUnion>(true, "", {
+                ...{ name, description },
+                ...{
+                  unionId: savedStudentUnion[0],
+                  created_at: moment().toISOString(),
+                  updated_at: moment().toISOString()
+                }
+              })
+            );
           }
         } catch (err) {
           return res
             .status(500)
             .json(
-              MessageFactory.createError("Internal server error", err as Error)
+              MessageFactory.createError("Server error", err as Error)
             );
         }
       }
@@ -155,7 +170,7 @@ export default class StudentUnionController extends Controller {
               .status(500)
               .json(
                 MessageFactory.createError(
-                  "Internal server error: Cannot remove student union",
+                  "Server error: Cannot remove student union",
                   err as Error
                 )
               );
