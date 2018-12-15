@@ -43,6 +43,7 @@ const ws: WebSocketServer = new WebSocketServer(server);
 app.use(helmet());
 
 // Middleware to set Access-Control origin
+// TODO: Replace with cors middleware
 if (process.env.NODE_ENV !== "test") {
   app.use(
     (
@@ -78,13 +79,16 @@ const API_VERSION: string = "v1";
 app.use(express.json());
 
 // Morgan
-app.use(
-  morgan("dev", {
-    skip(req: express.Request, res: express.Response): boolean {
-      return res.statusCode < 400;
-    }
-  })
-);
+// Show failed requests only in development
+if (process.env.NODE_ENV === "development") {
+  app.use(
+    morgan("dev", {
+      skip(req: express.Request, res: express.Response): boolean {
+        return res.statusCode < 400;
+      }
+    })
+  );
+}
 app.use(
   morgan("common", {
     stream: fs.createWriteStream(path.join(__dirname, "..", "access.log"), {
