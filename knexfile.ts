@@ -1,6 +1,6 @@
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 dotenv.config();
-import * as Knex from "knex";
+import Knex from "knex";
 
 const testConnectionObject: Knex.MySqlConnectionConfig = {
   host: process.env.MYSQL_HOST,
@@ -33,7 +33,7 @@ const prodConnectionObject: Knex.MySqlConnectionConfig = {
 };
 
 const development: Knex.Config = {
-  dialect: "mysql2",
+  client: "mysql2",
   version: "5.6",
   connection: devConnectionObject,
   seeds: {
@@ -46,7 +46,7 @@ const development: Knex.Config = {
 };
 
 const test: Knex.Config = {
-  dialect: "mysql2",
+  client: "mysql2",
   version: "5.6",
   connection: testConnectionObject,
   seeds: {
@@ -59,7 +59,7 @@ const test: Knex.Config = {
 };
 
 const production: Knex.Config = {
-  dialect: "mysql2",
+  client: "mysql2",
   version: "5.6",
   connection: prodConnectionObject,
   seeds: {
