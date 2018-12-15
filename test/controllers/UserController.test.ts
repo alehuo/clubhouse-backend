@@ -2,10 +2,12 @@ process.env.NODE_ENV = "test";
 process.env.PORT = "5090";
 process.env.JWT_SECRET = "HelloWorld";
 
+import { User } from "@alehuo/clubhouse-shared";
 import * as Knex from "knex";
 import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
+import { ApiResponse } from "../../src/utils/MessageFactory";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
@@ -41,9 +43,12 @@ describe("UserController", () => {
         .request(app)
         .get(url)
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(403);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Missing Authorization header");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          should.not.exist(body.payload);
+          body.error!.message.should.equal("Missing Authorization header");
           done();
         });
     });
@@ -54,9 +59,12 @@ describe("UserController", () => {
         .get(url)
         .set("Authorization", "Bearer HelloWorld")
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(403);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Malformed Authorization header");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          should.not.exist(body.payload);
+          body.error!.message.should.equal("Malformed Authorization header");
           done();
         });
     });
@@ -69,21 +77,26 @@ describe("UserController", () => {
         .get(url)
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<User[]>;
+
           res.status.should.equal(200);
+          should.exist(body.payload);
+          should.not.exist(body.error);
           // Number of users returned
-          res.body.length.should.equal(2);
+          body.payload!.length.should.equal(2);
+          const pload = body.payload!;
           // First
-          res.body[0].userId.should.equal(1);
-          res.body[0].email.should.equal("testuser@email.com");
-          res.body[0].firstName.should.equal("Test");
-          res.body[0].lastName.should.equal("User");
-          res.body[0].permissions.should.equal(67108863);
+          pload[0].userId.should.equal(1);
+          pload[0].email.should.equal("testuser@email.com");
+          pload[0].firstName.should.equal("Test");
+          pload[0].lastName.should.equal("User");
+          pload[0].permissions.should.equal(67108863);
           // Second
-          res.body[1].userId.should.equal(2);
-          res.body[1].email.should.equal("testuser2@email.com");
-          res.body[1].firstName.should.equal("Test2");
-          res.body[1].lastName.should.equal("User2");
-          res.body[1].permissions.should.equal(8);
+          pload[1].userId.should.equal(2);
+          pload[1].email.should.equal("testuser2@email.com");
+          pload[1].firstName.should.equal("Test2");
+          pload[1].lastName.should.equal("User2");
+          pload[1].permissions.should.equal(8);
           done();
         });
     });
@@ -94,17 +107,19 @@ describe("UserController", () => {
         .get(url + "/1")
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<User>;
           res.status.should.equal(200);
-          should.exist(res.body.userId);
-          res.body.userId.should.equal(1);
-          should.exist(res.body.email);
-          res.body.email.should.equal("testuser@email.com");
-          should.exist(res.body.firstName);
-          res.body.firstName.should.equal("Test");
-          should.exist(res.body.lastName);
-          res.body.lastName.should.equal("User");
-          should.exist(res.body.permissions);
-          res.body.permissions.should.equal(67108863);
+          should.exist(body.payload);
+          should.not.exist(body.error);
+          body.payload!.userId.should.equal(1);
+          should.exist(body.payload!.email);
+          body.payload!.email.should.equal("testuser@email.com");
+          should.exist(body.payload!.firstName);
+          body.payload!.firstName.should.equal("Test");
+          should.exist(body.payload!.lastName);
+          body.payload!.lastName.should.equal("User");
+          should.exist(body.payload!.permissions);
+          body.payload!.permissions.should.equal(67108863);
           done();
         });
     });
@@ -115,9 +130,12 @@ describe("UserController", () => {
         .get(url + "/100")
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(404);
-          should.exist(res.body.error);
-          res.body.error.should.equal("User not found");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          should.not.exist(body.payload);
+          body.error!.message.should.equal("User not found");
           done();
         });
     });
@@ -138,9 +156,12 @@ describe("UserController", () => {
           email: "testuser2@email.com"
         })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.error.should.equal("Email address is already in use");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          should.not.exist(body.payload);
+          body.error!.message.should.equal("Email address is already in use");
           done();
         });
     });
@@ -154,12 +175,21 @@ describe("UserController", () => {
           email: "testemail@email.com"
         })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<User>;
+          should.exist(body.payload);
+          const usr = body.payload!;
+          should.not.exist(body.error);
           res.status.should.equal(200);
-          res.body.userId.should.equal(1);
-          res.body.email.should.equal("testemail@email.com");
-          res.body.firstName.should.equal("Test");
-          res.body.lastName.should.equal("User");
-          res.body.permissions.should.equal(67108863);
+          should.exist(usr.userId);
+          usr.userId.should.equal(1);
+          should.exist(usr.email);
+          usr.email.should.equal("testemail@email.com");
+          should.exist(usr.firstName);
+          usr.firstName.should.equal("Test");
+          should.exist(usr.lastName);
+          usr.lastName.should.equal("User");
+          should.exist(usr.permissions);
+          usr.permissions.should.equal(67108863);
           done();
         });
     });
@@ -178,15 +208,19 @@ describe("UserController", () => {
           password: "JohnDoe123"
         })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<User>;
+          should.exist(body.payload);
+          const usr = body.payload!;
+          should.not.exist(body.error);
           res.status.should.equal(201);
-          should.exist(res.body.email);
-          res.body.email.should.equal("test@test.com");
-          should.exist(res.body.firstName);
-          res.body.firstName.should.equal("John");
-          should.exist(res.body.lastName);
-          res.body.lastName.should.equal("Doe");
-          should.exist(res.body.userId);
-          res.body.userId.should.equal(3);
+          should.exist(usr.email);
+          usr.email.should.equal("test@test.com");
+          should.exist(usr.firstName);
+          usr.firstName.should.equal("John");
+          should.exist(usr.lastName);
+          usr.lastName.should.equal("Doe");
+          should.exist(usr.userId);
+          usr.userId.should.equal(3);
           done();
         });
     }).timeout(5000);
@@ -202,37 +236,19 @@ describe("UserController", () => {
           password: "JohnDoe"
         })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.errors.length.should.equal(1);
-          res.body.errors[0].should.equal(
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          should.exist(body.error!.errors);
+          should.not.exist(body.payload);
+          body.error!.errors!.length.should.equal(1);
+          body.error!.errors![0].should.equal(
             "Password cannot be empty or shorter than 8 characters"
           );
           done();
         });
     });
-
-    /*
-    it("Can't register a new user with an unknown student union", (done: Mocha.Done) => {
-      chai
-        .request(app)
-        .post(url)
-        .send({
-          email: "test@test.com",
-          firstName: "John",
-          lastName: "Doe",
-          password: "JohnDoe123"
-        })
-        .end((err: any, res: ChaiHttp.Response) => {
-          res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.errors.length.should.equal(1);
-          res.body.error.should.equal("Error registering user");
-          res.body.errors[0].should.equal("Student union does not exist");
-          done();
-        });
-    });
-    */
 
     it("Can't register a new user with an invalid email address", (done: Mocha.Done) => {
       chai
@@ -245,11 +261,15 @@ describe("UserController", () => {
           password: "JohnDoe123"
         })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          res.body.errors.length.should.equal(1);
-          res.body.error.should.equal("Error registering user");
-          res.body.errors[0].should.equal("Email address is invalid");
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          should.exist(body.error!.errors);
+          should.not.exist(body.payload);
+          body.error!.errors!.length.should.equal(1);
+          body.error!.message.should.equal("Error registering user");
+          body.error!.errors![0].should.equal("Email address is invalid");
           done();
         });
     });
@@ -263,12 +283,15 @@ describe("UserController", () => {
           firstName: "John"
         })
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          res.body.error.should.equal("Missing request body parameters");
-          should.exist(res.body.errors);
-          res.body.errors.length.should.equal(1);
-          res.body.errors[0].should.equal("Missing: lastName, password");
-          should.exist(res.body.error);
+          should.exist(body.error);
+          should.exist(body.error!.message);
+          should.exist(body.error!.errors);
+          should.not.exist(body.payload);
+          body!.error!.message.should.equal("Missing request body parameters");
+          body.error!.errors!.length.should.equal(1);
+          body.error!.errors![0].should.equal("Missing: lastName, password");
           done();
         });
     });
@@ -281,10 +304,15 @@ describe("UserController", () => {
         .del(url + "/1")
         .set("Authorization", generateToken())
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
-          should.exist(res.body.error);
-          should.not.exist(res.body.message);
-          res.body.error.should.equal(
+          should.exist(body.error);
+          should.exist(body.message);
+          should.exist(body.success);
+          body.success.should.equal(false);
+          should.exist(body.error!.message);
+          should.not.exist(body.payload);
+          body.error!.message.should.equal(
             "You cannot delete yourself. Please contact a server admin to do this operation."
           );
           done();
@@ -297,10 +325,11 @@ describe("UserController", () => {
         .del(url + "/1")
         .set("Authorization", generateToken({ userId: 2 }))
         .end((err: any, res: ChaiHttp.Response) => {
+          const body = res.body as ApiResponse<User>;
+          should.exist(body.message);
+          should.not.exist(body.error);
           res.status.should.equal(200);
-          should.not.exist(res.body.error);
-          should.exist(res.body.message);
-          res.body.message.should.equal(
+          body.message!.should.equal(
             "User deleted from the server (including his/her created calendar " +
               "events, messages, sessions and newsposts.)"
           );

@@ -9,7 +9,7 @@ import Controller from "./Controller";
 import CalendarEventDao from "../dao/CalendarEventDao";
 
 import { DbUser, Permissions } from "@alehuo/clubhouse-shared";
-import { isDbUser } from "@alehuo/clubhouse-shared/dist/Models";
+import { isDbUser, User } from "@alehuo/clubhouse-shared/dist/Models";
 import Validator from "validator";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
@@ -36,7 +36,13 @@ export default class UserController extends Controller {
       async (req: express.Request, res: express.Response) => {
         try {
           const result = await this.userDao.findAll();
-          return res.json(result.map(userFilter));
+          return res.json(
+            MessageFactory.createResponse<User[]>(
+              true,
+              "Succesfully fetched users",
+              result.map(userFilter)
+            )
+          );
         } catch (err) {
           return res
             .status(500)
@@ -62,7 +68,11 @@ export default class UserController extends Controller {
               .status(404)
               .json(MessageFactory.createError("User not found"));
           } else {
-            return res.status(200).json(userFilter(user));
+            return res
+              .status(200)
+              .json(
+                MessageFactory.createResponse<User>(true, "", userFilter(user))
+              );
           }
         } catch (ex) {
           return res
@@ -88,7 +98,11 @@ export default class UserController extends Controller {
               .status(404)
               .json(MessageFactory.createError("User not found"));
           } else {
-            return res.status(200).json(userFilter(user));
+            return res
+              .status(200)
+              .json(
+                MessageFactory.createResponse<User>(true, "", userFilter(user))
+              );
           }
         } catch (ex) {
           return res
@@ -187,7 +201,15 @@ export default class UserController extends Controller {
               const result: boolean = await this.userDao.update(user);
               if (result) {
                 const updatedUser = await this.userDao.findOne(userId);
-                return res.status(200).json(userFilter(updatedUser));
+                return res
+                  .status(200)
+                  .json(
+                    MessageFactory.createResponse<User>(
+                      true,
+                      "",
+                      userFilter(updatedUser)
+                    )
+                  );
               } else {
                 return res
                   .status(400)
@@ -280,7 +302,6 @@ export default class UserController extends Controller {
               password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
               permissions: 8,
               created_at: "",
-              hidden: 0,
               updated_at: "",
               userId: -1
             };
@@ -295,11 +316,11 @@ export default class UserController extends Controller {
             }
 
             const savedUser = await this.userDao.save(userToSave);
+            const savedDbUser = await this.userDao.findOne(savedUser[0]);
 
-            return res.status(201).json({
-              ...{ email, firstName, lastName },
-              ...{ userId: savedUser[0] }
-            });
+            return res
+              .status(201)
+              .json(MessageFactory.createResponse<User>(true, "", savedDbUser));
           }
         } catch (err) {
           return res
