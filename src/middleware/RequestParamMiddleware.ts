@@ -1,7 +1,7 @@
 import * as express from "express";
 import { MessageFactory } from "../utils/MessageFactory";
 
-export const RequestParamMiddleware: any = (...params: string[]) => (
+export const RequestParamMiddleware = (...params: string[]) => (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
@@ -16,9 +16,11 @@ export const RequestParamMiddleware: any = (...params: string[]) => (
     return res
       .status(400)
       .json(
-        MessageFactory.createError("Missing request body parameters", undefined, [
-          "Missing: " + missing.sort().join(", ")
-        ])
+        MessageFactory.createError(
+          "Missing request body parameters",
+          undefined,
+          ["Missing: " + missing.sort().join(", ")]
+        )
       );
   }
   next();
