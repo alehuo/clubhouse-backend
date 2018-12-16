@@ -24,11 +24,7 @@ function createResponse<T>(
   };
 }
 
-const createError = (
-  error: string,
-  exception?: Error,
-  errors?: string[]
-): ApiResponse<undefined> => {
+const createError = (error: string, exception?: Error, errors?: string[]) => {
   const errorObject: ApiError = {
     message: error,
     errors
@@ -48,7 +44,7 @@ const createError = (
   return apiResponse;
 };
 
-const createMessage = (message: string): ApiResponse<undefined> =>
+const createMessage = (message: string) =>
   createResponse<undefined>(true, message);
 
 export const MessageFactory = {

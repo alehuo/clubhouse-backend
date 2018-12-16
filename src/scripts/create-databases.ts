@@ -1,13 +1,12 @@
-// This script creates databases that are needed by the back-end.
-
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 // @ts-ignore
 import { createConnection } from "mysql2/promise";
 
-async function createTables(): Promise<void> {
+async function createTables() {
   // Create connection
-  const con: any = await createConnection({
+  const con = await createConnection({
     host: process.env.MYSQL_HOST,
     port: process.env.MYSQL_POST,
     user: process.env.MYSQL_USER,

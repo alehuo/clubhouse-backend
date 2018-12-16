@@ -18,7 +18,7 @@ export default class PermissionController extends Controller {
       "",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_VIEW_PERMISSIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           return res.json(
             MessageFactory.createResponse<typeof Permission>(
@@ -41,29 +41,25 @@ export default class PermissionController extends Controller {
     );
 
     // Return permissions of the logged in user.
-    this.router.get(
-      "/user",
-      JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
-        const permissions: number = res.locals.token.data.permissions;
-        const permlist = getPermissions(permissions);
-        return res.status(200).json(
-          MessageFactory.createResponse<{
-            permissions: number;
-            permission_list: string[];
-          }>(true, "", {
-            permissions,
-            permission_list: permlist
-          })
-        );
-      }
-    );
+    this.router.get("/user", JWTMiddleware, async (req, res) => {
+      const permissions: number = res.locals.token.data.permissions;
+      const permlist = getPermissions(permissions);
+      return res.status(200).json(
+        MessageFactory.createResponse<{
+          permissions: number;
+          permission_list: string[];
+        }>(true, "", {
+          permissions,
+          permission_list: permlist
+        })
+      );
+    });
     /*
     this.router.get(
       "/:permissionId(\\d+)",
       JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_VIEW_PERMISSIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         if (!isNumber(req.params.permissionId)) {
           return res
             .status(400)
@@ -99,7 +95,7 @@ export default class PermissionController extends Controller {
       RequestParamMiddleware("name", "value"),
       JWTMiddleware,
       PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_PERMISSIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const { name, value }: Permission = req.body;
           const perm = await this.permissionDao.findByValue(value);

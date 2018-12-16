@@ -1,20 +1,19 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import { DbUser } from "@alehuo/clubhouse-shared";
 import bcrypt from "bcrypt";
-import Knex from "knex";
 import moment from "moment";
 import UserDao from "../dao/UserDao";
 import * as Database from "../Database";
 
-const knex: Knex = Database.connect();
-const userDao: UserDao = new UserDao(knex);
+const knex = Database.connect();
+const userDao = new UserDao(knex);
 
-const adminEmail: string = process.env.ADMIN_EMAIL || "admin@localhost.com";
-const adminPassword: string = process.env.ADMIN_PASSWORD || "abcd1234";
+const adminEmail = process.env.ADMIN_EMAIL || "admin@localhost.com";
+const adminPassword = process.env.ADMIN_PASSWORD || "abcd1234";
 
-const createAdminUser: (
-  email: string,
-  password: string
-) => Promise<void> = async (email: string, password: string): Promise<void> => {
+const createAdminUser = async (email: string, password: string) => {
   console.log("Creating admin user");
   const user: DbUser = {
     userId: -1,

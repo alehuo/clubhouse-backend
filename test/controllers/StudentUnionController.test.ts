@@ -2,7 +2,6 @@ process.env.NODE_ENV = "test";
 process.env.PORT = "5090";
 process.env.JWT_SECRET = "HelloWorld";
 
-import * as Knex from "knex";
 import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
@@ -10,13 +9,13 @@ import app from "../../src/index";
 import { ApiResponse, StudentUnion } from "@alehuo/clubhouse-shared";
 import { generateToken } from "../TestUtils";
 
-const knex: Knex = Database.connect();
+const knex = Database.connect();
 import chai from "chai";
-const should: Chai.Should = chai.should();
+const should = chai.should();
 import chaiHttp from "chai-http";
 chai.use(chaiHttp);
 
-const url: string = "/api/v1/studentunion";
+const url = "/api/v1/studentunion";
 
 const unions: StudentUnion[] = [
   {
@@ -80,7 +79,7 @@ describe("StudentUnionController", () => {
       chai
         .request(app)
         .get(url)
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(403);
           should.exist(body.error);
@@ -95,7 +94,7 @@ describe("StudentUnionController", () => {
         .request(app)
         .get(url)
         .set("Authorization", "Bearer HelloWorld")
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(403);
           should.exist(body.error);
@@ -112,7 +111,7 @@ describe("StudentUnionController", () => {
         .request(app)
         .get(url)
         .set("Authorization", generateToken())
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<StudentUnion[]>;
           should.exist(body.payload);
           should.not.exist(body.error);
@@ -122,7 +121,7 @@ describe("StudentUnionController", () => {
           res.status.should.equal(200);
           // Number of student unions returned
           body.payload!.length.should.equal(unions.length);
-          for (let i: number = 0; i < unions.length; i++) {
+          for (let i = 0; i < unions.length; i++) {
             should.exist(body.payload![i]);
             const stdu = body.payload![i];
             stdu.description.should.equal(unions[i].description);
@@ -143,7 +142,7 @@ describe("StudentUnionController", () => {
             permissions: Math.pow(2, 2)
           })
         )
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           res.status.should.equal(400);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
@@ -158,7 +157,7 @@ describe("StudentUnionController", () => {
         .request(app)
         .get(url + "/1")
         .set("Authorization", generateToken())
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<StudentUnion>;
           should.exist(body.payload);
           should.not.exist(body.error);
@@ -186,7 +185,7 @@ describe("StudentUnionController", () => {
             permissions: Math.pow(2, 2)
           })
         )
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
           should.exist(body.error);
@@ -201,7 +200,7 @@ describe("StudentUnionController", () => {
         .request(app)
         .get(url + "/100")
         .set("Authorization", generateToken())
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           res.status.should.equal(404);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
@@ -222,7 +221,7 @@ describe("StudentUnionController", () => {
           name: "TestUnion",
           description: "Union description"
         })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<StudentUnion>;
           should.exist(body.payload);
           const stdu = body.payload!;
@@ -246,7 +245,7 @@ describe("StudentUnionController", () => {
           name: "",
           description: "Union description"
         })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
@@ -268,7 +267,7 @@ describe("StudentUnionController", () => {
           name: "Union title",
           description: ""
         })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
@@ -295,7 +294,7 @@ describe("StudentUnionController", () => {
           name: "TestUnion",
           description: "Union description"
         })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
@@ -314,7 +313,7 @@ describe("StudentUnionController", () => {
         .send({
           name: "TestUnion"
         })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
           should.exist(body.error);
@@ -334,7 +333,7 @@ describe("StudentUnionController", () => {
         .request(app)
         .del(url + "/5")
         .set("Authorization", generateToken())
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(200);
           should.not.exist(body.error);
@@ -345,7 +344,7 @@ describe("StudentUnionController", () => {
             .request(app)
             .get(url + "/5")
             .set("Authorization", generateToken())
-            .end((err2: any, res2: ChaiHttp.Response) => {
+            .end((err2, res2: ChaiHttp.Response) => {
               const body2 = res2.body as ApiResponse<undefined>;
               should.exist(body2.error);
               should.exist(body2.error!.message);
@@ -366,7 +365,7 @@ describe("StudentUnionController", () => {
             permissions: Math.pow(2, 2)
           })
         )
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);

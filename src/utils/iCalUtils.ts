@@ -1,25 +1,20 @@
 import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 
-import Knex from "knex";
 import LocationDao from "../dao/LocationDao";
 import * as Database from "../Database";
 
-const knex: Knex = Database.connect();
+const knex = Database.connect();
 
-const locationDao: LocationDao = new LocationDao(knex);
+const locationDao = new LocationDao(knex);
 
-export const createICal: (
+export const createICal = async (
   data: CalendarEvent,
-  dtStamp?: Date,
-  uidStamp?: Date
-) => Promise<string> = async (
-  data: CalendarEvent,
-  dtStamp: Date = new Date(),
-  uidStamp: Date = new Date()
-): Promise<string> => {
-  const dStart = moment(new Date(data.startTime)).format("YYYYMMDDTHHmmss");
-  const dEnd = moment(new Date(data.endTime)).format("YYYYMMDDTHHmmss");
+  dtStamp: string = moment().format("YYYYMMDDTHHmmss"),
+  uidStamp: string = moment().format("YYYYMMDDTHHmmss")
+) => {
+  const dStart = moment(data.startTime).format("YYYYMMDDTHHmmss");
+  const dEnd = moment(data.endTime).format("YYYYMMDDTHHmmss");
 
   // Let's construct a valid iCal formatted string.
 
@@ -55,15 +50,11 @@ export const createICal: (
   return iCalData;
 };
 
-export const createICalStream: (
+export const createICalStream = async (
   data: CalendarEvent[],
-  dtStamp?: Date,
-  uidStamp?: Date
-) => Promise<string> = async (
-  data: CalendarEvent[],
-  dtStamp: Date = new Date(),
-  uidStamp: Date = new Date()
-): Promise<string> => {
+  dtStamp: string = moment().format("YYYYMMDDTHHmmss"),
+  uidStamp: string = moment().format("YYYYMMDDTHHmmss")
+) => {
   let iCalData = "";
   iCalData += "BEGIN:VCALENDAR\r\n";
   iCalData += "VERSION:2.0\r\n";
@@ -71,8 +62,8 @@ export const createICalStream: (
   iCalData += "METHOD:PUBLISH\r\n";
 
   for (const event of data) {
-    const dStart = moment(new Date(event.startTime)).format("YYYYMMDDTHHmmss");
-    const dEnd = moment(new Date(event.endTime)).format("YYYYMMDDTHHmmss");
+    const dStart = moment(event.startTime).format("YYYYMMDDTHHmmss");
+    const dEnd = moment(event.endTime).format("YYYYMMDDTHHmmss");
 
     // Let's construct a valid iCal formatted string.
 
@@ -105,10 +96,10 @@ export const createICalStream: (
   return iCalData;
 };
 
-export const iCalFilter: (cal: string) => string = (cal: string) =>
+export const iCalFilter = (cal: string) =>
   cal
     .split("\r\n")
-    .filter((line) => {
-      return !(line.indexOf("DTSTAMP:") > -1 || line.indexOf("UID:") > -1);
-    })
+    .filter(
+      (line) => !(line.indexOf("DTSTAMP:") > -1 || line.indexOf("UID:") > -1)
+    )
     .join("\r\n");

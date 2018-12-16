@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-let transporter: any = nodemailer.createTransport({
+let transporter = nodemailer.createTransport({
   host: process.env.SMTP_SERVER,
   port: process.env.SMTP_PORT || "587",
   auth: {
@@ -16,17 +16,12 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-export const sendEmail: (
+export const sendEmail = async (
   to: string[],
   subject: string,
   text: string,
   htmlString: string
-) => Promise<any> = async (
-  to: string[],
-  subject: string,
-  text: string,
-  htmlString: string
-): Promise<any> => {
+) => {
   const addr = process.env.MAIL_FROM_ADDRESS || "clubhouse.example.com";
   const name = process.env.MAIL_FROM_NAME || "Clubhouse";
   const from = '"' + name + '" <' + addr + ">";

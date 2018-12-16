@@ -7,13 +7,13 @@ import { MessageFactory } from "../utils/MessageFactory";
  * @param res Express response.
  * @param next Express NextFunction
  */
-export const JWTMiddleware: any = async (
+export const JWTMiddleware = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
 ) => {
   // Extract auth header
-  const authHeader: string | undefined = req.get("Authorization");
+  const authHeader = req.get("Authorization");
   if (authHeader === undefined) {
     // If the token is undefined, return an error.
     return res
@@ -21,11 +21,11 @@ export const JWTMiddleware: any = async (
       .json(MessageFactory.createError("Missing Authorization header"));
   }
   // Split header into parts to extract token & check for Bearer
-  const headerParts: string[] = authHeader.split(" ");
+  const headerParts = authHeader.split(" ");
   if (headerParts.length === 2 && headerParts[0] === "Bearer") {
     try {
       // Verify the token.
-      const token: string | object = VerifyToken(headerParts[1]);
+      const token = VerifyToken(headerParts[1]);
       // Everything is ok. Set the JWT and pass it forwards.
       res.locals.token = token;
       next();

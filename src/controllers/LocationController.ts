@@ -25,7 +25,7 @@ export default class LocationController extends Controller {
       "",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_VIEW_LOCATIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const result = await this.locationDao.findAll();
           return res.json(result.map(locationFilter));
@@ -46,7 +46,7 @@ export default class LocationController extends Controller {
       "/:locationId(\\d+)",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_VIEW_LOCATIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         if (!isNumber(req.params.locationId)) {
           return res
             .status(400)
@@ -80,7 +80,7 @@ export default class LocationController extends Controller {
       RequestParamMiddleware("name", "address"),
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const { name, address }: { name: string; address: string } = req.body;
           const location = await this.locationDao.findByName(name);
@@ -132,7 +132,7 @@ export default class LocationController extends Controller {
       "/:locationId(\\d+)",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         if (!isNumber(req.params.locationId)) {
           return res
             .status(400)

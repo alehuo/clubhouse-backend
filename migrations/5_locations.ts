@@ -1,6 +1,6 @@
 import Knex from "knex";
 
-export async function up(knex: Knex): Promise<void> {
+export async function up(knex: Knex) {
   const exists = await knex.schema.hasTable("locations");
   if (!exists) {
     await knex.schema.createTable("locations", (table) => {
@@ -15,7 +15,7 @@ export async function up(knex: Knex): Promise<void> {
   }
 }
 
-export async function down(knex: Knex): Promise<void> {
+export async function down(knex: Knex) {
   if (process.env.NODE_ENV === "production") {
     throw new Error("Do not drop tables in a production environment.");
   }

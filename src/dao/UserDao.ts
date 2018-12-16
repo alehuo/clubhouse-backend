@@ -1,6 +1,9 @@
 import { DbUser } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { addTimestamps, updateOnUpdateTimestamp } from "../utils/TimestampGenerator";
+import {
+  addTimestamps,
+  updateOnUpdateTimestamp
+} from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
 const TABLE_NAME = "users";

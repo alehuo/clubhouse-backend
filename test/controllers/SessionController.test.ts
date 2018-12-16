@@ -2,7 +2,6 @@ process.env.NODE_ENV = "test";
 process.env.PORT = "5090";
 process.env.JWT_SECRET = "HelloWorld";
 
-import * as Knex from "knex";
 import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
@@ -11,7 +10,7 @@ import { ApiResponse, Session } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { SignToken } from "../../src/utils/JwtUtils";
 
-const validUser: any = {
+const validUser = {
   userId: 1,
   email: "testuser@email.com",
   firstName: "Test",
@@ -20,21 +19,21 @@ const validUser: any = {
   permissions: 67108863
 };
 
-const generateToken: (userData?: any) => string = (userData?: any): string => {
+const generateToken: (userData?: any) => string = (userData?: any) => {
   if (userData) {
-    return "Bearer " + SignToken(Object.assign({}, validUser, userData));
+    return "Bearer " + SignToken({ ...{}, ...validUser, ...userData });
   } else {
     return "Bearer " + SignToken(validUser);
   }
 };
 
-const knex: Knex = Database.connect();
-const chai: Chai.ChaiStatic = require("chai");
-const should: Chai.Should = chai.should();
-const chaiHttp: Chai.ChaiHttpRequest = require("chai-http");
+const knex = Database.connect();
+import chai from "chai";
+const should = chai.should();
+import chaiHttp from "chai-http";
 chai.use(chaiHttp);
 
-const url: string = "/api/v1/session";
+const url = "/api/v1/session";
 
 describe("SessionController", () => {
   // Roll back
@@ -60,7 +59,7 @@ describe("SessionController", () => {
       chai
         .request(app)
         .get(url + "/ongoing")
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           res.status.should.equal(403);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
@@ -75,7 +74,7 @@ describe("SessionController", () => {
         .request(app)
         .get(url + "/ongoing")
         .set("Authorization", "Bearer HelloWorld")
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           res.status.should.equal(403);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
@@ -92,7 +91,7 @@ describe("SessionController", () => {
         .request(app)
         .get(url + "/ongoing")
         .set("Authorization", generateToken())
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<Session[]>;
           res.status.should.equal(200);
           body.payload!.length.should.equal(1);
@@ -115,7 +114,7 @@ describe("SessionController", () => {
         .request(app)
         .get(url + "/user/1")
         .set("Authorization", generateToken())
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<Session[]>;
           res.status.should.equal(200);
           should.not.exist(body.error);
@@ -157,7 +156,7 @@ describe("SessionController", () => {
         .request(app)
         .get(url + "/ongoing/user/1")
         .set("Authorization", generateToken())
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<Session[]>;
           const sessions = body.payload!;
           res.status.should.equal(200);
@@ -187,7 +186,7 @@ describe("SessionController", () => {
         .post(url + "/start")
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ startMessage: "Let's rock and roll!" })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(201);
           should.not.exist(body.error);
@@ -218,7 +217,7 @@ describe("SessionController", () => {
         .post(url + "/start")
         .set("Authorization", generateToken())
         .send({ startMessage: "Let's rock and roll!" })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
           should.exist(body.error);
@@ -236,7 +235,7 @@ describe("SessionController", () => {
         .post(url + "/stop")
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ endMessage: "Let's rock and roll!" })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
           should.exist(body.error);
@@ -254,7 +253,7 @@ describe("SessionController", () => {
         .post(url + "/start")
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ test: "Let's rock and roll!" })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
           should.exist(body.error);
@@ -273,7 +272,7 @@ describe("SessionController", () => {
         .post(url + "/stop")
         .set("Authorization", generateToken({ userId: 2 }))
         .send({ test: "Let's rock and roll!" })
-        .end((err: any, res: ChaiHttp.Response) => {
+        .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
           res.status.should.equal(400);
           should.exist(body.error);

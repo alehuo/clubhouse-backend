@@ -1,8 +1,6 @@
 import { SignToken } from "../src/utils/JwtUtils";
 
-export const generateToken: (userData?: any) => string = (
-  userData?: any
-): string => {
+export const generateToken = (userData?: any) => {
   if (userData) {
     return (
       "Bearer " +

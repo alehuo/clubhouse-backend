@@ -2,23 +2,22 @@ process.env.NODE_ENV = "test";
 process.env.PORT = "5090";
 
 import { ApiResponse } from "@alehuo/clubhouse-shared";
-import * as Knex from "knex";
 import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 
-const knex: Knex = Database.connect();
+const knex = Database.connect();
 import chai from "chai";
-const should: Chai.Should = chai.should();
+const should = chai.should();
 import chaiHttp from "chai-http";
 chai.use(chaiHttp);
 
-const authUrl: string = "/api/v1/authenticate";
-const correctCreds: any = {
+const authUrl = "/api/v1/authenticate";
+const correctCreds = {
   email: "testuser@email.com",
   password: "testuser"
 };
-const incorrectCreds: any = {
+const incorrectCreds = {
   email: "wronguser@email.com",
   password: "wrongpassword"
 };
@@ -47,7 +46,7 @@ describe("AuthController", () => {
       .request(app)
       .post(authUrl)
       .send(correctCreds)
-      .end((err: any, res: ChaiHttp.Response) => {
+      .end((err, res: ChaiHttp.Response) => {
         const body = res.body as ApiResponse<{ token: string }>;
         should.not.exist(err);
         res.status.should.equal(200);
@@ -63,7 +62,7 @@ describe("AuthController", () => {
       .request(app)
       .post(authUrl)
       .send(incorrectCreds)
-      .end((err: any, res: ChaiHttp.Response) => {
+      .end((err, res: ChaiHttp.Response) => {
         const body = res.body as ApiResponse<undefined>;
         should.exist(body.error);
         should.exist(body.error!.message);
@@ -82,7 +81,7 @@ describe("AuthController", () => {
         email: "something",
         password: "something"
       })
-      .end((err: any, res: ChaiHttp.Response) => {
+      .end((err, res: ChaiHttp.Response) => {
         const body = res.body as ApiResponse<undefined>;
         should.exist(body.error);
         should.exist(body.error!.message);
@@ -100,7 +99,7 @@ describe("AuthController", () => {
       .send({
         email: "something"
       })
-      .end((err: any, res: ChaiHttp.Response) => {
+      .end((err, res: ChaiHttp.Response) => {
         const body = res.body as ApiResponse<undefined>;
         should.exist(body.error);
         should.exist(body.error!.message);

@@ -16,62 +16,54 @@ export default class MessageController extends Controller {
 
   public routes(): express.Router {
     // All messages
-    this.router.get(
-      "",
-      JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const messages = await this.messageDao.findAll();
-          return res.status(200).json(messages);
-        } catch (err) {
-          return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Internal server error: Cannot get all messages",
-                err as Error
-              )
-            );
-        }
+    this.router.get("", JWTMiddleware, async (req, res) => {
+      try {
+        const messages = await this.messageDao.findAll();
+        return res.status(200).json(messages);
+      } catch (err) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Internal server error: Cannot get all messages",
+              err as Error
+            )
+          );
       }
-    );
+    });
     // A single message
-    this.router.get(
-      "/:messageId(\\d+)",
-      JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
-        if (!isNumber(req.params.messageId)) {
-          return res
-            .status(400)
-            .json(MessageFactory.createError("Invalid message ID"));
-        }
-        try {
-          const message = await this.messageDao.findOne(req.params.messageId);
-          if (message) {
-            return res.status(200).json(message);
-          } else {
-            return res
-              .status(404)
-              .json(MessageFactory.createError("Message not found"));
-          }
-        } catch (err) {
-          return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Internal server error: Cannot get a single message",
-                err as Error
-              )
-            );
-        }
+    this.router.get("/:messageId(\\d+)", JWTMiddleware, async (req, res) => {
+      if (!isNumber(req.params.messageId)) {
+        return res
+          .status(400)
+          .json(MessageFactory.createError("Invalid message ID"));
       }
-    );
+      try {
+        const message = await this.messageDao.findOne(req.params.messageId);
+        if (message) {
+          return res.status(200).json(message);
+        } else {
+          return res
+            .status(404)
+            .json(MessageFactory.createError("Message not found"));
+        }
+      } catch (err) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Internal server error: Cannot get a single message",
+              err as Error
+            )
+          );
+      }
+    });
     // Add a message
     this.router.post(
       "",
       RequestParamMiddleware("message"),
       JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const userId: number = res.locals.token.data.userId;
 
@@ -141,45 +133,41 @@ export default class MessageController extends Controller {
       }
     );
 
-    this.router.delete(
-      "/:messageId(\\d+)",
-      JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
-        if (!isNumber(req.params.messageId)) {
-          return res
-            .status(400)
-            .json(MessageFactory.createError("Invalid message ID"));
-        }
-        try {
-          const message = await this.messageDao.findOne(req.params.messageId);
-          if (message) {
-            const result = await this.messageDao.remove(req.params.messageId);
-            if (result) {
-              return res
-                .status(200)
-                .json(MessageFactory.createError("Message removed"));
-            } else {
-              return res
-                .status(400)
-                .json(MessageFactory.createError("Failed to remove message"));
-            }
+    this.router.delete("/:messageId(\\d+)", JWTMiddleware, async (req, res) => {
+      if (!isNumber(req.params.messageId)) {
+        return res
+          .status(400)
+          .json(MessageFactory.createError("Invalid message ID"));
+      }
+      try {
+        const message = await this.messageDao.findOne(req.params.messageId);
+        if (message) {
+          const result = await this.messageDao.remove(req.params.messageId);
+          if (result) {
+            return res
+              .status(200)
+              .json(MessageFactory.createError("Message removed"));
           } else {
             return res
-              .status(404)
-              .json(MessageFactory.createError("Message not found"));
+              .status(400)
+              .json(MessageFactory.createError("Failed to remove message"));
           }
-        } catch (err) {
+        } else {
           return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Internal server error: Cannot delete a message",
-                err as Error
-              )
-            );
+            .status(404)
+            .json(MessageFactory.createError("Message not found"));
         }
+      } catch (err) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Internal server error: Cannot delete a message",
+              err as Error
+            )
+          );
       }
-    );
+    });
 
     return this.router;
   }

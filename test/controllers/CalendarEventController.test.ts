@@ -2,7 +2,6 @@ process.env.NODE_ENV = "test";
 process.env.PORT = "5090";
 
 import { ApiResponse, CalendarEvent } from "@alehuo/clubhouse-shared";
-import * as Knex from "knex";
 import "mocha";
 import CalendarEventDao from "../../src/dao/CalendarEventDao";
 import * as Database from "../../src/Database";
@@ -10,15 +9,16 @@ import app from "../../src/index";
 import { createICal, iCalFilter } from "../../src/utils/iCalUtils";
 import { generateToken } from "../TestUtils";
 
-const knex: Knex = Database.connect();
+const knex = Database.connect();
 import chai from "chai";
-const should: Chai.Should = chai.should();
+const should = chai.should();
 import chaiHttp from "chai-http";
+import moment from "moment";
 chai.use(chaiHttp);
 
-const calendarEventDao: CalendarEventDao = new CalendarEventDao(knex);
+const calendarEventDao = new CalendarEventDao(knex);
 
-const calendarUrl: string = "/api/v1/calendar";
+const calendarUrl = "/api/v1/calendar";
 
 describe("CalendarEventController", () => {
   // Roll back
@@ -103,13 +103,13 @@ describe("CalendarEventController", () => {
 
   it("Returns a single calendar event as iCal", async () => {
     const calendarEvent = await calendarEventDao.findOne(1);
-    const mockDate: Date = new Date(2015, 1, 1);
-    const calendarEventString: string = await createICal(
+    const mockDate = moment(new Date(2015, 1, 1)).toISOString();
+    const calendarEventString = await createICal(
       calendarEvent,
       mockDate,
       mockDate
     );
-    const parsedString: string = iCalFilter(calendarEventString);
+    const parsedString = iCalFilter(calendarEventString);
 
     const res = await chai
       .request(app)
@@ -117,7 +117,7 @@ describe("CalendarEventController", () => {
       .set("Authorization", generateToken());
     res.type.should.equal("text/calendar");
     res.charset.should.equal("utf-8");
-    const parsedBodyString: string = iCalFilter(res.text);
+    const parsedBodyString = iCalFilter(res.text);
 
     parsedBodyString.should.equal(parsedString);
     should.not.exist(res.body.error);
@@ -126,9 +126,7 @@ describe("CalendarEventController", () => {
 
   it("Returns all calendar events", async () => {
     const calendarEvents = await calendarEventDao.findAll();
-    const sortedEvents = calendarEvents.sort(
-      (a, b) => Number(a.eventId) - Number(b.eventId)
-    );
+    const sortedEvents = calendarEvents.sort((a, b) => a.eventId - b.eventId);
     const res = await chai
       .request(app)
       .get(calendarUrl)
@@ -141,9 +139,7 @@ describe("CalendarEventController", () => {
     body.payload!.length.should.equal(calendarEvents.length);
     res.status.should.equal(200);
 
-    const sortedRes = body.payload!.sort(
-      (a, b) => Number(a.eventId) - Number(b.eventId)
-    );
+    const sortedRes = body.payload!.sort((a, b) => a.eventId - b.eventId);
 
     for (let i = 0; i < sortedRes.length; i++) {
       const event = sortedRes[i];
@@ -170,7 +166,7 @@ describe("CalendarEventController", () => {
       .send({
         test: "Something"
       })
-      .end((err: any, res: ChaiHttp.Response) => {
+      .end((err, res: ChaiHttp.Response) => {
         const body = res.body as ApiResponse<undefined>;
         should.exist(body.error);
         should.exist(body.success);

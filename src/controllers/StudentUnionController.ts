@@ -28,7 +28,7 @@ export default class StudentUnionController extends Controller {
       "",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_VIEW_STUDENT_UNIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const result = await this.studentUnionDao.findAll();
           return res.json(
@@ -50,7 +50,7 @@ export default class StudentUnionController extends Controller {
       "/:studentUnionId(\\d+)",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_VIEW_STUDENT_UNIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const studentUnion = await this.studentUnionDao.findOne(
             req.params.studentUnionId
@@ -83,7 +83,7 @@ export default class StudentUnionController extends Controller {
       RequestParamMiddleware("name", "description"),
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const { name, description }: StudentUnion = req.body;
           const studentUnion = await this.studentUnionDao.findByName(name);
@@ -146,7 +146,7 @@ export default class StudentUnionController extends Controller {
       "/:studentUnionId(\\d+)",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         const studentUnion = await this.studentUnionDao.findOne(
           req.params.studentUnionId
         );

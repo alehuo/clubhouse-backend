@@ -30,7 +30,7 @@ export default class CalendarEventController extends Controller {
       ),
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_EVENTS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         const {
           name,
           description,
@@ -103,7 +103,7 @@ export default class CalendarEventController extends Controller {
       }
     );
 
-    this.router.get("", async (req: express.Request, res: express.Response) => {
+    this.router.get("", async (req, res) => {
       try {
         const events = await this.calendarEventDao.findAll();
         return res
@@ -127,79 +127,73 @@ export default class CalendarEventController extends Controller {
       }
     });
 
-    this.router.get(
-      "/ical",
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const events = await this.calendarEventDao.findAll();
-          const ical = await createICalStream(events);
-          res.setHeader(
-            "Content-disposition",
-            "attachment; filename=events_all.ics"
+    this.router.get("/ical", async (req, res) => {
+      try {
+        const events = await this.calendarEventDao.findAll();
+        const ical = await createICalStream(events);
+        res.setHeader(
+          "Content-disposition",
+          "attachment; filename=events_all.ics"
+        );
+        res.setHeader("Content-type", "text/calendar");
+        return res.send(ical);
+      } catch (ex) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Server error: Cannot get all events",
+              ex as Error
+            )
           );
-          res.setHeader("Content-type", "text/calendar");
-          return res.send(ical);
-        } catch (ex) {
+      }
+    });
+
+    this.router.get("/:eventId(\\d+)", async (req, res) => {
+      try {
+        const event = await this.calendarEventDao.findOne(req.params.eventId);
+        if (!isCalendarEvent(event)) {
           return res
-            .status(500)
+            .status(400)
             .json(
               MessageFactory.createError(
-                "Server error: Cannot get all events",
-                ex as Error
+                "The calendar event that was returned is invalid. Please contact a system administrator."
               )
             );
         }
-      }
-    );
 
-    this.router.get(
-      "/:eventId(\\d+)",
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const event = await this.calendarEventDao.findOne(req.params.eventId);
-          if (!isCalendarEvent(event)) {
-            return res
-              .status(400)
-              .json(
-                MessageFactory.createError(
-                  "The calendar event that was returned is invalid. Please contact a system administrator."
-                )
-              );
-          }
-
-          if (!event) {
-            return res
-              .status(404)
-              .json(MessageFactory.createError("Calendar event not found"));
-          } else {
-            return res
-              .status(200)
-              .json(
-                MessageFactory.createResponse<CalendarEvent>(
-                  true,
-                  "Succesfully fetched single calendar event",
-                  event
-                )
-              );
-          }
-        } catch (ex) {
+        if (!event) {
           return res
-            .status(500)
+            .status(404)
+            .json(MessageFactory.createError("Calendar event not found"));
+        } else {
+          return res
+            .status(200)
             .json(
-              MessageFactory.createError(
-                "Server error: Cannot get a single event",
-                ex as Error
+              MessageFactory.createResponse<CalendarEvent>(
+                true,
+                "Succesfully fetched single calendar event",
+                event
               )
             );
         }
+      } catch (ex) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Server error: Cannot get a single event",
+              ex as Error
+            )
+          );
       }
-    );
+    });
 
     this.router.delete(
       "/:eventId(\\d+)",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_EVENTS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const event = await this.calendarEventDao.findOne(req.params.eventId);
           if (!event) {
@@ -236,36 +230,33 @@ export default class CalendarEventController extends Controller {
     );
 
     // iCal
-    this.router.get(
-      "/:eventId(\\d+)/ical",
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const event = await this.calendarEventDao.findOne(req.params.eventId);
-          if (!event) {
-            return res
-              .status(404)
-              .json(MessageFactory.createError("Event not found"));
-          } else {
-            const calData = await createICal(event);
-            res.setHeader(
-              "Content-disposition",
-              "attachment; filename=event_" + event.eventId + ".ics"
-            );
-            res.setHeader("Content-type", "text/calendar");
-            return res.send(calData);
-          }
-        } catch (ex) {
+    this.router.get("/:eventId(\\d+)/ical", async (req, res) => {
+      try {
+        const event = await this.calendarEventDao.findOne(req.params.eventId);
+        if (!event) {
           return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Server error: Cannot get a single event in iCal format",
-                ex as Error
-              )
-            );
+            .status(404)
+            .json(MessageFactory.createError("Event not found"));
+        } else {
+          const calData = await createICal(event);
+          res.setHeader(
+            "Content-disposition",
+            "attachment; filename=event_" + event.eventId + ".ics"
+          );
+          res.setHeader("Content-type", "text/calendar");
+          return res.send(calData);
         }
+      } catch (ex) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Server error: Cannot get a single event in iCal format",
+              ex as Error
+            )
+          );
       }
-    );
+    });
 
     return this.router;
   }

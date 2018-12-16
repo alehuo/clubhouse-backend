@@ -24,66 +24,58 @@ export default class SessionController extends Controller {
 
   public routes(): express.Router {
     // All session that are currently running
-    this.router.get(
-      "/ongoing",
-      JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const sessions = await this.sessionDao.findAllOngoing();
-          return res
-            .status(200)
-            .json(
-              MessageFactory.createResponse<Session[]>(
-                true,
-                "",
-                sessions.map(sessionFilter)
-              )
-            );
-        } catch (err) {
-          return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Internal server error: Cannot get ongoing sessions",
-                err as Error
-              )
-            );
-        }
+    this.router.get("/ongoing", JWTMiddleware, async (req, res) => {
+      try {
+        const sessions = await this.sessionDao.findAllOngoing();
+        return res
+          .status(200)
+          .json(
+            MessageFactory.createResponse<Session[]>(
+              true,
+              "",
+              sessions.map(sessionFilter)
+            )
+          );
+      } catch (err) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Internal server error: Cannot get ongoing sessions",
+              err as Error
+            )
+          );
       }
-    );
+    });
     // All sessions from a single user
-    this.router.get(
-      "/user/:userId(\\d+)",
-      JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const sessions = await this.sessionDao.findByUser(req.params.userId);
-          return res
-            .status(200)
-            .json(
-              MessageFactory.createResponse<Session[]>(
-                true,
-                "",
-                sessions.map(sessionFilter)
-              )
-            );
-        } catch (err) {
-          return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Server error: Cannot get sessions from a single user",
-                err as Error
-              )
-            );
-        }
+    this.router.get("/user/:userId(\\d+)", JWTMiddleware, async (req, res) => {
+      try {
+        const sessions = await this.sessionDao.findByUser(req.params.userId);
+        return res
+          .status(200)
+          .json(
+            MessageFactory.createResponse<Session[]>(
+              true,
+              "",
+              sessions.map(sessionFilter)
+            )
+          );
+      } catch (err) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Server error: Cannot get sessions from a single user",
+              err as Error
+            )
+          );
       }
-    );
+    });
     // All sessions from a single user that are currently running
     this.router.get(
       "/ongoing/user/:userId(\\d+)",
       JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const sessions = await this.sessionDao.findOngoingByUser(
             req.params.userId
@@ -115,7 +107,7 @@ export default class SessionController extends Controller {
       "/start",
       RequestParamMiddleware("startMessage"),
       JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         const { startMessage }: { startMessage: string } = req.body;
 
         if (!isString(startMessage)) {
@@ -220,7 +212,7 @@ export default class SessionController extends Controller {
       "/stop",
       RequestParamMiddleware("endMessage"),
       JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         const { endMessage }: { endMessage: string } = req.body;
         try {
           const userId: number = res.locals.token.data.userId;
@@ -330,39 +322,35 @@ export default class SessionController extends Controller {
         }
       }
     );
-    this.router.get(
-      "/ownstatus",
-      JWTMiddleware,
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const userId: number = res.locals.token.data.userId;
-          // This should return only one session, as only one active is permitted
-          const sessions = await this.sessionDao.findOngoingByUser(userId);
-          const otherSessions = await this.sessionDao.findAllOngoing();
-          const peopleCount = otherSessions.length;
-          if (sessions.length === 0) {
-            return res.status(200).json(
-              MessageFactory.createResponse<any>(true, "", {
-                running: sessions && sessions.length !== 0,
-                peopleCount
-              })
-            );
-          } else {
-            return res.status(200).json(
-              MessageFactory.createResponse<any>(true, "", {
-                running: sessions && sessions.length !== 0,
-                peopleCount,
-                startTime: sessions[0].startTime
-              })
-            );
-          }
-        } catch (err) {
-          return res
-            .status(500)
-            .json(MessageFactory.createError("Server error", err as Error));
+    this.router.get("/ownstatus", JWTMiddleware, async (req, res) => {
+      try {
+        const userId: number = res.locals.token.data.userId;
+        // This should return only one session, as only one active is permitted
+        const sessions = await this.sessionDao.findOngoingByUser(userId);
+        const otherSessions = await this.sessionDao.findAllOngoing();
+        const peopleCount = otherSessions.length;
+        if (sessions.length === 0) {
+          return res.status(200).json(
+            MessageFactory.createResponse<any>(true, "", {
+              running: sessions && sessions.length !== 0,
+              peopleCount
+            })
+          );
+        } else {
+          return res.status(200).json(
+            MessageFactory.createResponse<any>(true, "", {
+              running: sessions && sessions.length !== 0,
+              peopleCount,
+              startTime: sessions[0].startTime
+            })
+          );
         }
+      } catch (err) {
+        return res
+          .status(500)
+          .json(MessageFactory.createError("Server error", err as Error));
       }
-    );
+    });
     return this.router;
   }
 }

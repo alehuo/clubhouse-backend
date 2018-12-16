@@ -3,17 +3,17 @@ process.env.JWT_SECRET = "testSecret";
 
 import { ApiResponse, Permission } from "@alehuo/clubhouse-shared";
 import { expect } from "chai";
+import chai from "chai";
 import "mocha";
 import * as httpMocks from "node-mocks-http";
 import { PermissionMiddleware } from "../../src/middleware/PermissionMiddleware";
 import { VerifyToken } from "../../src/utils/JwtUtils";
 import { generateToken } from "../TestUtils";
-const chai: Chai.ChaiStatic = require("chai");
-const should: Chai.Should = chai.should();
+const should = chai.should();
 
 describe("PermissionMiddleware", () => {
   it("Should return an error if the token is not set", async () => {
-    let nextCalled: number = 0;
+    let nextCalled = 0;
     const request: httpMocks.MockRequest<any> = httpMocks.createRequest({
       method: "GET",
       url: "/user/42",
@@ -26,7 +26,7 @@ describe("PermissionMiddleware", () => {
     PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_EVENTS)(
       request,
       response,
-      function(): void {
+      function() {
         nextCalled += 1;
       }
     );
@@ -40,7 +40,7 @@ describe("PermissionMiddleware", () => {
   });
 
   it("Should return an error if the user has no permissions", async () => {
-    let nextCalled: number = 0;
+    let nextCalled = 0;
     const token: string | object = VerifyToken(
       generateToken({
         permissions: 2
@@ -62,7 +62,7 @@ describe("PermissionMiddleware", () => {
     PermissionMiddleware(Permission.ALLOW_VIEW_STUDENT_UNIONS)(
       request,
       response,
-      function(): void {
+      function() {
         nextCalled += 1;
       }
     );
@@ -76,7 +76,7 @@ describe("PermissionMiddleware", () => {
   });
 
   it("Should call next() if the user has permissions", async () => {
-    let nextCalled: number = 0;
+    let nextCalled = 0;
     const token: string | object = VerifyToken(
       generateToken({
         permissions: Permission.ALLOW_ADD_REMOVE_KEYS
@@ -98,7 +98,7 @@ describe("PermissionMiddleware", () => {
     PermissionMiddleware(Permission.ALLOW_ADD_REMOVE_KEYS)(
       request,
       response,
-      function(): void {
+      function() {
         nextCalled += 1;
       }
     );

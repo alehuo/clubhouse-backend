@@ -11,22 +11,22 @@ export class WebSocketServer {
       // @ts-ignore
       ws.isAlive = true;
       ws.on("pong", heartbeat);
-      ws.on("message", (message: string) => {
+      ws.on("message", (message) => {
         ws.send(`You sent ${message}`);
       });
       ws.send("Connection established to WebSocket server");
     });
 
-    function noop(): void {}
+    function noop() {}
 
-    function heartbeat(): void {
+    function heartbeat() {
       this.isAlive = true;
     }
 
     // Pings websocket clients to make sure they are alive
-    setInterval(function ping(): void {
+    setInterval(function ping() {
       if (this.wss) {
-        this.wss.clients.forEach(function each(ws: WebSocket): void {
+        this.wss.clients.forEach(function each(ws: WebSocket) {
           // @ts-ignore
           if (ws.isAlive === false) {
             return ws.terminate();
@@ -46,13 +46,13 @@ export class WebSocketServer {
    * @returns {Promise<void>} Promise
    * @memberof WebSocketServer
    */
-  public async broadcastMessage(message: string): Promise<void> {
+  public async broadcastMessage(message: string) {
     if (this.wss) {
       if (this.wss.clients.size > 0) {
         await Promise.all(
-          Array.from(this.wss.clients).map((ws: WebSocket) => {
-            return new Promise((resolve: any, reject: any) => {
-              ws.send(message, (err: Error) => {
+          Array.from(this.wss.clients).map((ws) => {
+            return new Promise((resolve, reject) => {
+              ws.send(message, (err) => {
                 if (err) {
                   reject(err);
                 } else {
@@ -75,13 +75,8 @@ export enum MessageType {
   Message
 }
 
-export const WsMessage: (
+export const WsMessage = (
   messageType: MessageType,
   message: string,
   userId?: number
-) => string = (
-  messageType: MessageType,
-  message: string,
-  userId?: number
-): string =>
-  JSON.stringify({ messageType, message, userId, timestamp: moment() });
+) => JSON.stringify({ messageType, message, userId, timestamp: moment() });

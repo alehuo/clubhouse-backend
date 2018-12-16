@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import express from "express";
 import UserDao from "../dao/UserDao";
 import { SignToken } from "../utils/JwtUtils";
 import Controller from "./Controller";
@@ -13,11 +12,11 @@ export default class AuthController extends Controller {
     super();
   }
 
-  public routes(): express.Router {
+  public routes() {
     this.router.post(
       "",
       RequestParamMiddleware("email", "password"),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const {
             email,

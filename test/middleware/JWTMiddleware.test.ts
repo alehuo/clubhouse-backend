@@ -29,7 +29,7 @@ describe("JWTMiddleware", () => {
   });
 
   it("Should return an error if the Authorization -header is malformed (Case 1)", async () => {
-    let nextCalled: number = 0;
+    let nextCalled = 0;
     const request: httpMocks.MockRequest<any> = httpMocks.createRequest({
       method: "GET",
       url: "/user/42",
@@ -40,7 +40,7 @@ describe("JWTMiddleware", () => {
     const response: httpMocks.MockResponse<any> = httpMocks.createResponse();
 
     expect(true).to.equal(true);
-    await JWTMiddleware(request, response, function(): void {
+    await JWTMiddleware(request, response, function() {
       nextCalled += 1;
     });
     expect(nextCalled).to.equal(0);
@@ -50,7 +50,7 @@ describe("JWTMiddleware", () => {
   });
 
   it("Should return an error if the Authorization -header is malformed (Case 2)", async () => {
-    let nextCalled: number = 0;
+    let nextCalled = 0;
     const request: httpMocks.MockRequest<any> = httpMocks.createRequest({
       method: "GET",
       url: "/user/42",
@@ -60,7 +60,7 @@ describe("JWTMiddleware", () => {
     });
     const response: httpMocks.MockResponse<any> = httpMocks.createResponse();
 
-    await JWTMiddleware(request, response, function(): void {
+    await JWTMiddleware(request, response, function() {
       nextCalled += 1;
     });
     expect(nextCalled).to.equal(0);
@@ -70,8 +70,8 @@ describe("JWTMiddleware", () => {
   });
 
   it("Should call next() if the token is valid", async () => {
-    let nextCalled: number = 0;
-    const token: string = generateToken();
+    let nextCalled = 0;
+    const token = generateToken();
     const request: httpMocks.MockRequest<any> = httpMocks.createRequest({
       method: "GET",
       url: "/user/42",
@@ -84,7 +84,7 @@ describe("JWTMiddleware", () => {
     });
     const response: httpMocks.MockResponse<any> = httpMocks.createResponse();
 
-    await JWTMiddleware(request, response, function(): void {
+    await JWTMiddleware(request, response, function() {
       nextCalled += 1;
     });
     expect(nextCalled).to.equal(1);

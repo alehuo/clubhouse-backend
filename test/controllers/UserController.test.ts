@@ -3,19 +3,18 @@ process.env.PORT = "5090";
 process.env.JWT_SECRET = "HelloWorld";
 
 import { ApiResponse, User } from "@alehuo/clubhouse-shared";
-import * as Knex from "knex";
 import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 import { generateToken } from "../TestUtils";
 
-const knex: Knex = Database.connect();
+const knex = Database.connect();
 import chai from "chai";
-const should: Chai.Should = chai.should();
+const should = chai.should();
 import chaiHttp from "chai-http";
 chai.use(chaiHttp);
 
-const url: string = "/api/v1/users";
+const url = "/api/v1/users";
 
 describe("UserController", () => {
   // Roll back

@@ -9,7 +9,6 @@ import express from "express";
 import fs from "fs";
 import helmet from "helmet";
 import http from "http";
-import Knex from "knex";
 import morgan from "morgan";
 import path from "path";
 import AuthController from "./controllers/AuthController";
@@ -35,12 +34,12 @@ import { apiHeader, apiUrl } from "./utils/ApiUtils";
 import { WebSocketServer } from "./WebSocket";
 
 // Express instance
-const app: express.Application = express();
+const app = express();
 
-const server: http.Server = http.createServer(app);
+const server = http.createServer(app);
 
 // initialize WebSocket server
-const ws: WebSocketServer = new WebSocketServer(server);
+const ws = new WebSocketServer(server);
 
 // Use Helmet
 app.use(helmet());
@@ -48,35 +47,29 @@ app.use(helmet());
 // Middleware to set Access-Control origin
 // TODO: Replace with cors middleware
 if (process.env.NODE_ENV !== "test") {
-  app.use(
-    (
-      req: express.Request,
-      res: express.Response,
-      next: express.NextFunction
-    ) => {
-      res.setHeader(
-        "Access-Control-Allow-Origin",
-        req.headers.origin || "localhost"
-      );
-      res.setHeader(
-        "Access-Control-Allow-Methods",
-        "POST, GET, PUT, PATCH, OPTIONS, DELETE"
-      );
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Accept, X-Requested-With, Authorization"
-      );
-      res.setHeader("Access-Control-Max-Age", "3600");
-      next();
-    }
-  );
+  app.use((req, res, next) => {
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      req.headers.origin || "localhost"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "POST, GET, PUT, PATCH, OPTIONS, DELETE"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Accept, X-Requested-With, Authorization"
+    );
+    res.setHeader("Access-Control-Max-Age", "3600");
+    next();
+  });
 }
 
 // Knex instance
-const knex: Knex = Database.connect();
+const knex = Database.connect();
 
 // API version
-const API_VERSION: string = "v1";
+const API_VERSION = "v1";
 
 // JSON parser
 app.use(express.json());
@@ -86,7 +79,7 @@ app.use(express.json());
 if (process.env.NODE_ENV === "development") {
   app.use(
     morgan("dev", {
-      skip(req: express.Request, res: express.Response): boolean {
+      skip(req, res) {
         return res.statusCode < 400;
       }
     })
@@ -101,17 +94,15 @@ app.use(
 );
 
 // API version header
-app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    res.setHeader("X-Latest-API-Version", API_VERSION);
-    next();
-  }
-);
+app.use((req, res, next) => {
+  res.setHeader("X-Latest-API-Version", API_VERSION);
+  next();
+});
 
 // Users route
 app.use(
   apiUrl("users", API_VERSION),
-  apiHeader("users", API_VERSION),
+  apiHeader(API_VERSION),
   new UserController(
     new UserDao(knex),
     new CalendarEventDao(knex),
@@ -130,56 +121,56 @@ app.use(
 // Student unions route
 app.use(
   apiUrl("studentunion", API_VERSION),
-  apiHeader("studentunion", API_VERSION),
+  apiHeader(API_VERSION),
   new StudentUnionController(new StudentUnionDao(knex)).routes()
 );
 
 // Calendar route
 app.use(
   apiUrl("calendar", API_VERSION),
-  apiHeader("calendar", API_VERSION),
+  apiHeader(API_VERSION),
   new CalendarEventController(new CalendarEventDao(knex)).routes()
 );
 
 // Location route
 app.use(
   apiUrl("location", API_VERSION),
-  apiHeader("location", API_VERSION),
+  apiHeader(API_VERSION),
   new LocationController(new LocationDao(knex)).routes()
 );
 
 // Permission route
 app.use(
   apiUrl("permission", API_VERSION),
-  apiHeader("permission", API_VERSION),
+  apiHeader(API_VERSION),
   new PermissionController().routes()
 );
 
 // Watch route
 app.use(
   apiUrl("session", API_VERSION),
-  apiHeader("session", API_VERSION),
+  apiHeader(API_VERSION),
   new SessionController(new SessionDao(knex), new UserDao(knex), ws).routes()
 );
 
 // Message route
 app.use(
   apiUrl("message", API_VERSION),
-  apiHeader("message", API_VERSION),
+  apiHeader(API_VERSION),
   new MessageController(new MessageDao(knex), new UserDao(knex)).routes()
 );
 
 // Newspost route
 app.use(
   apiUrl("newspost", API_VERSION),
-  apiHeader("newspost", API_VERSION),
+  apiHeader(API_VERSION),
   new NewsPostController(new NewsPostDao(knex)).routes()
 );
 
 // Statistics route
 app.use(
   apiUrl("statistics", API_VERSION),
-  apiHeader("statistics", API_VERSION),
+  apiHeader(API_VERSION),
   new StatisticsController(new StatisticsDao(knex), new UserDao(knex)).routes()
 );
 
@@ -201,9 +192,11 @@ app.use(
   }
 );
 
+const port = Number(process.env.PORT || 3001);
+
 // Listen
-server.listen(process.env.PORT, () => {
-  console.log("Server running at ::%d", process.env.PORT);
+server.listen(port, () => {
+  console.log("Server running at ::%d", port);
 });
 
 export default server;

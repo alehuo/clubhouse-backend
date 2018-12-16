@@ -1,7 +1,7 @@
 import Knex from "knex";
 import * as knexfile from "../knexfile";
 
-export function connect(): Knex {
+export function connect() {
   if (process.env.NODE_ENV === undefined) {
     throw new Error("NODE_ENV is not defined!");
   }

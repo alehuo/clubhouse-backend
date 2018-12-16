@@ -16,7 +16,7 @@ export default class NewsPostController extends Controller {
 
   public routes(): express.Router {
     // All newsposts
-    this.router.get("", async (req: express.Request, res: express.Response) => {
+    this.router.get("", async (req, res) => {
       try {
         const newsPosts = await this.newsPostDao.findAll();
         return res
@@ -34,61 +34,47 @@ export default class NewsPostController extends Controller {
       }
     });
     // A single newspost
-    this.router.get(
-      "/:newsPostId(\\d+)",
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const newsPost = await this.newsPostDao.findOne(
-            req.params.newsPostId
-          );
-          if (newsPost) {
-            return res
-              .status(200)
-              .json(
-                MessageFactory.createResponse<Newspost>(true, "", newsPost)
-              );
-          } else {
-            return res
-              .status(404)
-              .json(MessageFactory.createError("Newspost not found"));
-          }
-        } catch (err) {
-          return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Internal server error: Cannot get a single newspost",
-                err as Error
-              )
-            );
-        }
-      }
-    );
-    // All newsposts by a single user
-    this.router.get(
-      "/user/:userId(\\d+)",
-      async (req: express.Request, res: express.Response) => {
-        try {
-          const newsPost = await this.newsPostDao.findByAuthor(
-            req.params.userId
-          );
+    this.router.get("/:newsPostId(\\d+)", async (req, res) => {
+      try {
+        const newsPost = await this.newsPostDao.findOne(req.params.newsPostId);
+        if (newsPost) {
           return res
             .status(200)
-            .json(
-              MessageFactory.createResponse<Newspost[]>(true, "", newsPost)
-            );
-        } catch (err) {
+            .json(MessageFactory.createResponse<Newspost>(true, "", newsPost));
+        } else {
           return res
-            .status(500)
-            .json(
-              MessageFactory.createError(
-                "Internal server error: Cannot get newspost from a single user",
-                err as Error
-              )
-            );
+            .status(404)
+            .json(MessageFactory.createError("Newspost not found"));
         }
+      } catch (err) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Internal server error: Cannot get a single newspost",
+              err as Error
+            )
+          );
       }
-    );
+    });
+    // All newsposts by a single user
+    this.router.get("/user/:userId(\\d+)", async (req, res) => {
+      try {
+        const newsPost = await this.newsPostDao.findByAuthor(req.params.userId);
+        return res
+          .status(200)
+          .json(MessageFactory.createResponse<Newspost[]>(true, "", newsPost));
+      } catch (err) {
+        return res
+          .status(500)
+          .json(
+            MessageFactory.createError(
+              "Internal server error: Cannot get newspost from a single user",
+              err as Error
+            )
+          );
+      }
+    });
 
     // Add a newspost
     this.router.post(
@@ -96,7 +82,7 @@ export default class NewsPostController extends Controller {
       RequestParamMiddleware("title", "message"),
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_POSTS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const userId: number = res.locals.token.data.userId;
 
@@ -152,7 +138,7 @@ export default class NewsPostController extends Controller {
       "/:newsPostId(\\d+)",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_POSTS),
-      async (req: express.Request, res: express.Response) => {
+      async (req, res) => {
         try {
           const newsPost = await this.newsPostDao.findOne(
             req.params.newsPostId
