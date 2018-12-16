@@ -1,15 +1,19 @@
 import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { addTimestamps } from "../utils/TimestampGenerator";
+import moment from "moment";
 import Dao from "./Dao";
 
-const TABLE_NAME: string = "calendarEvents";
+const TABLE_NAME = "calendarEvents";
 
 export default class CalendarEventDao implements Dao<CalendarEvent> {
   constructor(private readonly knex: Knex) {}
 
   public findAll(): PromiseLike<CalendarEvent[]> {
-    return Promise.resolve(this.knex(TABLE_NAME).select());
+    return Promise.resolve(
+      this.knex(TABLE_NAME)
+        .select()
+        .orderBy("eventId", "ASC")
+    );
   }
 
   public findOne(eventId: number): PromiseLike<CalendarEvent> {
@@ -36,7 +40,8 @@ export default class CalendarEventDao implements Dao<CalendarEvent> {
     if (calendarEvent.eventId) {
       delete calendarEvent.eventId;
     }
-    addTimestamps(calendarEvent);
+    calendarEvent.created_at = moment().toISOString();
+    calendarEvent.updated_at = moment().toISOString();
     return Promise.resolve(this.knex(TABLE_NAME).insert(calendarEvent));
   }
 

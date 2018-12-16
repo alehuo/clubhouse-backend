@@ -1,9 +1,9 @@
 import { Location } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { addTimestamps } from "../utils/TimestampGenerator";
+import moment from "moment";
 import Dao from "./Dao";
 
-const TABLE_NAME: string = "locations";
+const TABLE_NAME = "locations";
 
 export default class LocationDao implements Dao<Location> {
   constructor(private readonly knex: Knex) {}
@@ -34,7 +34,8 @@ export default class LocationDao implements Dao<Location> {
     if (location.locationId) {
       delete location.locationId;
     }
-    addTimestamps(location);
+    location.created_at = moment().toISOString();
+    location.updated_at = moment().toISOString();
     return Promise.resolve(this.knex(TABLE_NAME).insert(location));
   }
 

@@ -3,7 +3,7 @@ import Knex from "knex";
 import { addTimestamps } from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
-const TABLE_NAME: string = "studentUnions";
+const TABLE_NAME = "studentUnions";
 
 export default class StudentUnionDao implements Dao<StudentUnion> {
   constructor(private readonly knex: Knex) {}

@@ -1,6 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import moment from "moment";
+import "moment/locale/fi";
+moment.locale("fi");
+
 import express from "express";
 import fs from "fs";
 import helmet from "helmet";

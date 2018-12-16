@@ -1,9 +1,9 @@
 import { Message } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { addTimestamps } from "../utils/TimestampGenerator";
+import moment from "moment";
 import Dao from "./Dao";
 
-const TABLE_NAME: string = "messages";
+const TABLE_NAME = "messages";
 
 /**
  * DAO used to handle messages that people send to the system.
@@ -55,7 +55,8 @@ export default class MessageDao implements Dao<Message> {
     if (message.messageId) {
       delete message.messageId;
     }
-    addTimestamps(message);
+    message.created_at = moment().toISOString();
+    message.updated_at = moment().toISOString();
     return Promise.resolve(this.knex(TABLE_NAME).insert(message));
   }
 

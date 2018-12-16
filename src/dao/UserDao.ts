@@ -3,7 +3,7 @@ import Knex from "knex";
 import { addTimestamps, updateOnUpdateTimestamp } from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
-const TABLE_NAME: string = "users";
+const TABLE_NAME = "users";
 
 export default class UserDao implements Dao<DbUser> {
   constructor(private readonly knex: Knex) {}

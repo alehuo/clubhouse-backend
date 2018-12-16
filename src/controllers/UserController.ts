@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import express from "express";
-import { userFilter } from "../models/IUser";
 
 import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
@@ -8,7 +7,13 @@ import Controller from "./Controller";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
 
-import { DbUser, isDbUser, Permission, User } from "@alehuo/clubhouse-shared";
+import {
+  DbUser,
+  isDbUser,
+  Permission,
+  User,
+  userFilter
+} from "@alehuo/clubhouse-shared";
 import Validator from "validator";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";

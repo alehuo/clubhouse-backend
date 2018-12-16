@@ -10,16 +10,16 @@ import app from "../../src/index";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
-const chai: Chai.ChaiStatic = require("chai");
+import chai from "chai";
 const should: Chai.Should = chai.should();
-const chaiHttp: Chai.ChaiHttpRequest = require("chai-http");
+import chaiHttp from "chai-http";
 chai.use(chaiHttp);
 
 const url: string = "/api/v1/users";
 
 describe("UserController", () => {
   // Roll back
-  beforeEach((done: Mocha.Done) => {
+  beforeEach((done) => {
     knex.migrate.rollback().then(() => {
       knex.migrate.latest().then(() => {
         knex.seed.run().then(() => {
@@ -30,14 +30,14 @@ describe("UserController", () => {
   });
 
   // After each
-  afterEach((done: Mocha.Done) => {
+  afterEach((done) => {
     knex.migrate.rollback().then(() => {
       done();
     });
   });
 
   describe("API endpoint protection", () => {
-    it("Missing Authorization header should throw an error", (done: Mocha.Done) => {
+    it("Missing Authorization header should throw an error", (done) => {
       chai
         .request(app)
         .get(url)
@@ -52,7 +52,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Malformed Authorization header should throw an error", (done: Mocha.Done) => {
+    it("Malformed Authorization header should throw an error", (done) => {
       chai
         .request(app)
         .get(url)
@@ -70,7 +70,7 @@ describe("UserController", () => {
   });
 
   describe("GET /api/v1/users", () => {
-    it("Returns all users", (done: Mocha.Done) => {
+    it("Returns all users", (done) => {
       chai
         .request(app)
         .get(url)
@@ -100,7 +100,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Returns a single user", (done: Mocha.Done) => {
+    it("Returns a single user", (done) => {
       chai
         .request(app)
         .get(url + "/1")
@@ -123,7 +123,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Returns an error if a user does not exist", (done: Mocha.Done) => {
+    it("Returns an error if a user does not exist", (done) => {
       chai
         .request(app)
         .get(url + "/100")
@@ -146,7 +146,7 @@ describe("UserController", () => {
     // 2. Invalid first name
     // 3. Invalid last name
     // 4. Invalid password
-    it("User can not edit his/her email to something that already exists", (done: Mocha.Done) => {
+    it("User can not edit his/her email to something that already exists", (done) => {
       chai
         .request(app)
         .put(url + "/1")
@@ -165,7 +165,7 @@ describe("UserController", () => {
         });
     });
 
-    it("User can edit his/her information", (done: Mocha.Done) => {
+    it("User can edit his/her information", (done) => {
       chai
         .request(app)
         .put(url + "/1")
@@ -195,7 +195,7 @@ describe("UserController", () => {
   });
 
   describe("POST /api/v1/users", () => {
-    it("Can register a new user with valid information", (done: Mocha.Done) => {
+    it("Can register a new user with valid information", (done) => {
       chai
         .request(app)
         .post(url)
@@ -224,7 +224,7 @@ describe("UserController", () => {
         });
     }).timeout(5000);
 
-    it("Can't register a new user with too short password", (done: Mocha.Done) => {
+    it("Can't register a new user with too short password", (done) => {
       chai
         .request(app)
         .post(url)
@@ -249,7 +249,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Can't register a new user with an invalid email address", (done: Mocha.Done) => {
+    it("Can't register a new user with an invalid email address", (done) => {
       chai
         .request(app)
         .post(url)
@@ -273,7 +273,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Can't register a new user with missing request params", (done: Mocha.Done) => {
+    it("Can't register a new user with missing request params", (done) => {
       chai
         .request(app)
         .post(url)
@@ -297,7 +297,7 @@ describe("UserController", () => {
   });
 
   describe("DELETE /api/v1/users", () => {
-    it("User can't delete him/herself", (done: Mocha.Done) => {
+    it("User can't delete him/herself", (done) => {
       chai
         .request(app)
         .del(url + "/1")
@@ -318,7 +318,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Administrator can delete another user", (done: Mocha.Done) => {
+    it("Administrator can delete another user", (done) => {
       chai
         .request(app)
         .del(url + "/1")

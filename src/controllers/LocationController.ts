@@ -1,5 +1,4 @@
 import express from "express";
-import { locationFilter } from "../models/ILocation";
 
 import LocationDao from "../dao/LocationDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
@@ -10,6 +9,7 @@ import {
   isLocation,
   isNumber,
   Location,
+  locationFilter,
   Permission
 } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";

@@ -11,9 +11,9 @@ import { createICal, iCalFilter } from "../../src/utils/iCalUtils";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
-const chai: Chai.ChaiStatic = require("chai");
+import chai from "chai";
 const should: Chai.Should = chai.should();
-const chaiHttp: Chai.ChaiHttpRequest = require("chai-http");
+import chaiHttp from "chai-http";
 chai.use(chaiHttp);
 
 const calendarEventDao: CalendarEventDao = new CalendarEventDao(knex);
@@ -22,7 +22,7 @@ const calendarUrl: string = "/api/v1/calendar";
 
 describe("CalendarEventController", () => {
   // Roll back
-  beforeEach((done: Mocha.Done) => {
+  beforeEach((done) => {
     knex.migrate.rollback().then(() => {
       knex.migrate.latest().then(() => {
         knex.seed.run().then(() => {
@@ -33,14 +33,14 @@ describe("CalendarEventController", () => {
   });
 
   // After each
-  afterEach((done: Mocha.Done) => {
+  afterEach((done) => {
     knex.migrate.rollback().then(() => {
       done();
     });
   });
   /*
   describe("API endpoint protection", () => {
-    it("Missing Authorization header should throw an error", (done: Mocha.Done) => {
+    it("Missing Authorization header should throw an error", (done) => {
       chai
         .request(app)
         .get(calendarUrl)
@@ -52,7 +52,7 @@ describe("CalendarEventController", () => {
         });
     });
 
-    it("Malformed Authorization header should throw an error", (done: Mocha.Done) => {
+    it("Malformed Authorization header should throw an error", (done) => {
       chai
         .request(app)
         .get(calendarUrl)
@@ -163,7 +163,7 @@ describe("CalendarEventController", () => {
     }
   }).timeout(5000);
 
-  it("Returns an error if request parameters are missing", (done: Mocha.Done) => {
+  it("Returns an error if request parameters are missing", (done) => {
     chai
       .request(app)
       .post(calendarUrl)

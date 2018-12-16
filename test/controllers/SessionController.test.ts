@@ -38,7 +38,7 @@ const url: string = "/api/v1/session";
 
 describe("SessionController", () => {
   // Roll back
-  beforeEach((done: Mocha.Done) => {
+  beforeEach((done) => {
     knex.migrate.rollback().then(() => {
       knex.migrate.latest().then(() => {
         knex.seed.run().then(() => {
@@ -49,14 +49,14 @@ describe("SessionController", () => {
   });
 
   // After each
-  afterEach((done: Mocha.Done) => {
+  afterEach((done) => {
     knex.migrate.rollback().then(() => {
       done();
     });
   });
 
   describe("API endpoint protection", () => {
-    it("Missing Authorization header should throw an error", (done: Mocha.Done) => {
+    it("Missing Authorization header should throw an error", (done) => {
       chai
         .request(app)
         .get(url + "/ongoing")
@@ -70,7 +70,7 @@ describe("SessionController", () => {
         });
     });
 
-    it("Malformed Authorization header should throw an error", (done: Mocha.Done) => {
+    it("Malformed Authorization header should throw an error", (done) => {
       chai
         .request(app)
         .get(url + "/ongoing")
@@ -87,7 +87,7 @@ describe("SessionController", () => {
   });
 
   describe("GET /api/v1/session/ongoing", () => {
-    it("Returns all ongoing sessions", (done: Mocha.Done) => {
+    it("Returns all ongoing sessions", (done) => {
       chai
         .request(app)
         .get(url + "/ongoing")
@@ -110,7 +110,7 @@ describe("SessionController", () => {
   });
 
   describe("GET /api/v1/session/user/:userId", () => {
-    it("Returns sessions (old and ongoing) by a single user", (done: Mocha.Done) => {
+    it("Returns sessions (old and ongoing) by a single user", (done) => {
       chai
         .request(app)
         .get(url + "/user/1")
@@ -152,7 +152,7 @@ describe("SessionController", () => {
   });
 
   describe("GET /api/v1/session/ongoing/user/:userId", () => {
-    it("Returns all ongoing sessions by a single user.", (done: Mocha.Done) => {
+    it("Returns all ongoing sessions by a single user.", (done) => {
       chai
         .request(app)
         .get(url + "/ongoing/user/1")
@@ -180,7 +180,7 @@ describe("SessionController", () => {
   });
 
   describe("POST /api/v1/session/start & POST /api/v1/session/stop", () => {
-    it("User can start and stop a session.", (done: Mocha.Done) => {
+    it("User can start and stop a session.", (done) => {
       // Start the watch
       chai
         .request(app)
@@ -212,7 +212,7 @@ describe("SessionController", () => {
         });
     });
 
-    it("User can not start a session if he/she already has an ongoing session.", (done: Mocha.Done) => {
+    it("User can not start a session if he/she already has an ongoing session.", (done) => {
       chai
         .request(app)
         .post(url + "/start")
@@ -230,7 +230,7 @@ describe("SessionController", () => {
         });
     });
 
-    it("User can not stop a session if he/she doesn't have an ongoing session.", (done: Mocha.Done) => {
+    it("User can not stop a session if he/she doesn't have an ongoing session.", (done) => {
       chai
         .request(app)
         .post(url + "/stop")
@@ -248,7 +248,7 @@ describe("SessionController", () => {
         });
     });
 
-    it("User can not start a session with missing request parameters.", (done: Mocha.Done) => {
+    it("User can not start a session with missing request parameters.", (done) => {
       chai
         .request(app)
         .post(url + "/start")
@@ -267,7 +267,7 @@ describe("SessionController", () => {
         });
     });
 
-    it("User can not stop a session with missing request parameters.", (done: Mocha.Done) => {
+    it("User can not stop a session with missing request parameters.", (done) => {
       chai
         .request(app)
         .post(url + "/stop")

@@ -5,12 +5,7 @@ import NewsPostDao from "../dao/NewsPostDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 
-import {
-  isNewspost,
-  isNumber,
-  Newspost,
-  Permission
-} from "@alehuo/clubhouse-shared";
+import { isNewspost, Newspost, Permission } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
@@ -42,11 +37,6 @@ export default class NewsPostController extends Controller {
     this.router.get(
       "/:newsPostId(\\d+)",
       async (req: express.Request, res: express.Response) => {
-        if (!isNumber(req.params.newsPostId)) {
-          return res
-            .status(400)
-            .json(MessageFactory.createError("Invalid newspost ID"));
-        }
         try {
           const newsPost = await this.newsPostDao.findOne(
             req.params.newsPostId
@@ -78,11 +68,6 @@ export default class NewsPostController extends Controller {
     this.router.get(
       "/user/:userId(\\d+)",
       async (req: express.Request, res: express.Response) => {
-        if (!isNumber(req.params.userId)) {
-          return res
-            .status(400)
-            .json(MessageFactory.createError("Invalid user ID"));
-        }
         try {
           const newsPost = await this.newsPostDao.findByAuthor(
             req.params.userId
@@ -123,6 +108,8 @@ export default class NewsPostController extends Controller {
             title: req.body.title,
             author: userId
           };
+
+          console.log(savedPost);
 
           if (!isNewspost(savedPost)) {
             return res
@@ -166,11 +153,6 @@ export default class NewsPostController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_POSTS),
       async (req: express.Request, res: express.Response) => {
-        if (!isNumber(req.params.newsPostId)) {
-          return res
-            .status(400)
-            .json(MessageFactory.createError("Invalid newspost ID"));
-        }
         try {
           const newsPost = await this.newsPostDao.findOne(
             req.params.newsPostId

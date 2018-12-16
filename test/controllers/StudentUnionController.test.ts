@@ -11,9 +11,9 @@ import { ApiResponse, StudentUnion } from "@alehuo/clubhouse-shared";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();
-const chai: Chai.ChaiStatic = require("chai");
+import chai from "chai";
 const should: Chai.Should = chai.should();
-const chaiHttp: Chai.ChaiHttpRequest = require("chai-http");
+import chaiHttp from "chai-http";
 chai.use(chaiHttp);
 
 const url: string = "/api/v1/studentunion";
@@ -58,7 +58,7 @@ const unions: StudentUnion[] = [
 
 describe("StudentUnionController", () => {
   // Roll back
-  beforeEach((done: Mocha.Done) => {
+  beforeEach((done) => {
     knex.migrate.rollback().then(() => {
       knex.migrate.latest().then(() => {
         knex.seed.run().then(() => {
@@ -69,14 +69,14 @@ describe("StudentUnionController", () => {
   });
 
   // After each
-  afterEach((done: Mocha.Done) => {
+  afterEach((done) => {
     knex.migrate.rollback().then(() => {
       done();
     });
   });
 
   describe("API endpoint protection", () => {
-    it("Missing Authorization header should throw an error", (done: Mocha.Done) => {
+    it("Missing Authorization header should throw an error", (done) => {
       chai
         .request(app)
         .get(url)
@@ -90,7 +90,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("Malformed Authorization header should throw an error", (done: Mocha.Done) => {
+    it("Malformed Authorization header should throw an error", (done) => {
       chai
         .request(app)
         .get(url)
@@ -107,7 +107,7 @@ describe("StudentUnionController", () => {
   });
 
   describe("GET /api/v1/studentunion", () => {
-    it("Returns all student unions", (done: Mocha.Done) => {
+    it("Returns all student unions", (done) => {
       chai
         .request(app)
         .get(url)
@@ -133,7 +133,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("Returns all student unions : Wrong permissions should return unauthorized", (done: Mocha.Done) => {
+    it("Returns all student unions : Wrong permissions should return unauthorized", (done) => {
       chai
         .request(app)
         .get(url)
@@ -153,7 +153,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("Returns a single student union", (done: Mocha.Done) => {
+    it("Returns a single student union", (done) => {
       chai
         .request(app)
         .get(url + "/1")
@@ -176,7 +176,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("Returns a single student union : Wrong permissions should return unauthorized", (done: Mocha.Done) => {
+    it("Returns a single student union : Wrong permissions should return unauthorized", (done) => {
       chai
         .request(app)
         .get(url + "/1")
@@ -196,7 +196,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("Returns an error if a student union does not exist", (done: Mocha.Done) => {
+    it("Returns an error if a student union does not exist", (done) => {
       chai
         .request(app)
         .get(url + "/100")
@@ -213,7 +213,7 @@ describe("StudentUnionController", () => {
   });
 
   describe("POST /api/v1/studentunion", () => {
-    it("Can add a new student union", (done: Mocha.Done) => {
+    it("Can add a new student union", (done) => {
       chai
         .request(app)
         .post(url)
@@ -237,7 +237,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("Can't add a new student union with an empty name", (done: Mocha.Done) => {
+    it("Can't add a new student union with an empty name", (done) => {
       chai
         .request(app)
         .post(url)
@@ -259,7 +259,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("Can't add a new student union with an empty description", (done: Mocha.Done) => {
+    it("Can't add a new student union with an empty description", (done) => {
       chai
         .request(app)
         .post(url)
@@ -281,7 +281,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("Can add a new student union : Wrong permissions should return unauthorized", (done: Mocha.Done) => {
+    it("Can add a new student union : Wrong permissions should return unauthorized", (done) => {
       chai
         .request(app)
         .post(url)
@@ -306,7 +306,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("Can't add a new student union with missing parameters", (done: Mocha.Done) => {
+    it("Can't add a new student union with missing parameters", (done) => {
       chai
         .request(app)
         .post(url)
@@ -329,7 +329,7 @@ describe("StudentUnionController", () => {
   });
 
   describe("DELETE /api/v1/studentunion", () => {
-    it("A student union can be removed", (done: Mocha.Done) => {
+    it("A student union can be removed", (done) => {
       chai
         .request(app)
         .del(url + "/5")
@@ -356,7 +356,7 @@ describe("StudentUnionController", () => {
         });
     });
 
-    it("A student union can be removed : Wrong permissions should return unauthorized", (done: Mocha.Done) => {
+    it("A student union can be removed : Wrong permissions should return unauthorized", (done) => {
       chai
         .request(app)
         .del(url + "/5")

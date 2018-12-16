@@ -1,9 +1,9 @@
 import { Newspost } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { addTimestamps } from "../utils/TimestampGenerator";
+import moment from "moment";
 import Dao from "./Dao";
 
-const TABLE_NAME: string = "newsposts";
+const TABLE_NAME = "newsposts";
 
 export default class NewsPostDao implements Dao<Newspost> {
   constructor(private readonly knex: Knex) {}
@@ -31,7 +31,8 @@ export default class NewsPostDao implements Dao<Newspost> {
     if (newsPost.postId) {
       delete newsPost.postId;
     }
-    addTimestamps(newsPost);
+    newsPost.created_at = moment().toISOString();
+    newsPost.updated_at = moment().toISOString();
     return Promise.resolve(this.knex(TABLE_NAME).insert(newsPost));
   }
 

@@ -5,12 +5,11 @@ import Controller from "./Controller";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 
-import { isSession, Session } from "@alehuo/clubhouse-shared";
+import { isSession, Session, sessionFilter } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { isString } from "util";
 import UserDao from "../dao/UserDao";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
-import { sessionFilter } from "../models/ISession";
 import { sendEmail } from "../utils/Mailer";
 import { MessageType, WebSocketServer, WsMessage } from "../WebSocket";
 

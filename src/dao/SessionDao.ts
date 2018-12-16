@@ -1,12 +1,9 @@
 import { Session } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
-import {
-  addTimestamps,
-} from "../utils/TimestampGenerator";
 import Dao from "./Dao";
 
-const TABLE_NAME: string = "sessions";
+const TABLE_NAME = "sessions";
 
 /**
  * DAO used to handle sessions.
@@ -52,11 +49,15 @@ export default class SessionDao implements Dao<Session> {
     if (session.sessionId) {
       delete session.sessionId;
     }
-    addTimestamps(session);
+    session.created_at = moment().toISOString();
+    session.updated_at = moment().toISOString();
     return Promise.resolve(this.knex(TABLE_NAME).insert(session));
   }
 
-  public endSession(sessionId: number, endMessage: string): PromiseLike<Session> {
+  public endSession(
+    sessionId: number,
+    endMessage: string
+  ): PromiseLike<Session> {
     const currentTimestamp = moment().toISOString();
     return Promise.resolve(
       this.knex(TABLE_NAME)

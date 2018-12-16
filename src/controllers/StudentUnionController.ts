@@ -2,14 +2,14 @@ import express from "express";
 
 import StudentUnionDao from "../dao/StudentUnionDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
-import { studentUnionFilter } from "../models/IStudentUnion";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import {
   isStudentUnion,
   Permission,
-  StudentUnion
+  StudentUnion,
+  studentUnionFilter
 } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
