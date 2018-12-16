@@ -24,7 +24,9 @@ export default class NewsPostController extends Controller {
     this.router.get("", async (req: express.Request, res: express.Response) => {
       try {
         const newsPosts = await this.newsPostDao.findAll();
-        return res.status(200).json(newsPosts);
+        return res
+          .status(200)
+          .json(MessageFactory.createResponse<Newspost[]>(true, "", newsPosts));
       } catch (err) {
         return res
           .status(500)
@@ -50,7 +52,11 @@ export default class NewsPostController extends Controller {
             req.params.newsPostId
           );
           if (newsPost) {
-            return res.status(200).json(newsPost);
+            return res
+              .status(200)
+              .json(
+                MessageFactory.createResponse<Newspost>(true, "", newsPost)
+              );
           } else {
             return res
               .status(404)
@@ -81,7 +87,11 @@ export default class NewsPostController extends Controller {
           const newsPost = await this.newsPostDao.findByAuthor(
             req.params.userId
           );
-          return res.status(200).json(newsPost);
+          return res
+            .status(200)
+            .json(
+              MessageFactory.createResponse<Newspost[]>(true, "", newsPost)
+            );
         } catch (err) {
           return res
             .status(500)
@@ -126,9 +136,12 @@ export default class NewsPostController extends Controller {
 
           const newsPost = await this.newsPostDao.save(savedPost);
           if (newsPost.length > 0) {
-            return res
-              .status(201)
-              .json({ ...savedPost, ...{ postId: newsPost[0] } });
+            return res.status(201).json(
+              MessageFactory.createResponse<Newspost>(true, "", {
+                ...savedPost,
+                ...{ postId: newsPost[0] }
+              })
+            );
           } else {
             return res
               .status(400)

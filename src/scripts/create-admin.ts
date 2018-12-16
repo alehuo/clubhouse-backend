@@ -1,8 +1,9 @@
+import { DbUser } from "@alehuo/clubhouse-shared";
 import bcrypt from "bcrypt";
 import Knex from "knex";
+import moment from "moment";
 import UserDao from "../dao/UserDao";
 import * as Database from "../Database";
-import { IUser } from "../models/IUser";
 
 const knex: Knex = Database.connect();
 const userDao: UserDao = new UserDao(knex);
@@ -15,12 +16,15 @@ const createAdminUser: (
   password: string
 ) => Promise<void> = async (email: string, password: string): Promise<void> => {
   console.log("Creating admin user");
-  const user: IUser = {
+  const user: DbUser = {
+    userId: -1,
     email,
     firstName: "Admin",
     lastName: "Admin",
     password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-    permissions: 67108863
+    permissions: 67108863,
+    created_at: moment().toISOString(),
+    updated_at: moment().toISOString()
   };
   await userDao.save(user);
   console.log("Created admin user");
