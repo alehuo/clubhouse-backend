@@ -1,10 +1,10 @@
 process.env.NODE_ENV = "test";
 
+import { ApiResponse } from "@alehuo/clubhouse-shared";
 import { expect } from "chai";
 import "mocha";
 import * as httpMocks from "node-mocks-http";
 import { JWTMiddleware } from "../../src/middleware/JWTMiddleware";
-import { ApiResponse } from "../../src/utils/MessageFactory";
 import { generateToken } from "../TestUtils";
 
 process.env.JWT_SECRET = "testSecret";

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
+    "lib": ["es6", "dom", "esnext"],
     "module": "commonjs",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -13,7 +14,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "./dist/",
-    "rootDirs": ["src"],
+    "rootDirs": ["src"]
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist"]

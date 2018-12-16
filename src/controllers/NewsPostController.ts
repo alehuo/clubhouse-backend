@@ -5,12 +5,12 @@ import NewsPostDao from "../dao/NewsPostDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 
-import { Permissions } from "@alehuo/clubhouse-shared";
 import {
   isNewspost,
   isNumber,
-  Newspost
-} from "@alehuo/clubhouse-shared/dist/Models";
+  Newspost,
+  Permission
+} from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
@@ -100,7 +100,7 @@ export default class NewsPostController extends Controller {
       "",
       RequestParamMiddleware("title", "message"),
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_POSTS),
+      PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_POSTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const userId: number = res.locals.token.data.userId;
@@ -151,7 +151,7 @@ export default class NewsPostController extends Controller {
     this.router.delete(
       "/:newsPostId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_POSTS),
+      PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_POSTS),
       async (req: express.Request, res: express.Response) => {
         if (!isNumber(req.params.newsPostId)) {
           return res

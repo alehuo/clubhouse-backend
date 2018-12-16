@@ -1,18 +1,15 @@
 import express from "express";
 
-import PermissionDao from "../dao/PermissionDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { Permission, Permissions } from "@alehuo/clubhouse-shared";
-import { isNumber, isPermission } from "@alehuo/clubhouse-shared/dist/Models";
+import { Permission } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
-import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { getPermissions } from "../utils/PermissionUtils";
 
 export default class PermissionController extends Controller {
-  constructor(private permissionDao: PermissionDao) {
+  constructor() {
     super();
   }
 
@@ -20,11 +17,16 @@ export default class PermissionController extends Controller {
     this.router.get(
       "",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_PERMISSIONS),
+      PermissionMiddleware(Permission.ALLOW_VIEW_PERMISSIONS),
       async (req: express.Request, res: express.Response) => {
         try {
-          const result = await this.permissionDao.findAll();
-          return res.json(result);
+          return res.json(
+            MessageFactory.createResponse<typeof Permission>(
+              true,
+              "",
+              Permission
+            )
+          );
         } catch (err) {
           return res
             .status(500)
@@ -44,19 +46,19 @@ export default class PermissionController extends Controller {
       JWTMiddleware,
       async (req: express.Request, res: express.Response) => {
         const permissions: number = res.locals.token.data.permissions;
-        const permlist = await getPermissions(permissions);
-        return res.status(200).json({
-          permissions,
-          permission_list: permlist.map((permission) => {
-            delete permission.created_at;
-            delete permission.updated_at;
-            delete permission.permissionId;
-            return permission;
+        const permlist = getPermissions(permissions);
+        return res.status(200).json(
+          MessageFactory.createResponse<{
+            permissions: number;
+            permission_list: string[];
+          }>(true, "", {
+            permissions,
+            permission_list: permlist
           })
-        });
+        );
       }
     );
-
+    /*
     this.router.get(
       "/:permissionId(\\d+)",
       JWTMiddleware,
@@ -90,7 +92,8 @@ export default class PermissionController extends Controller {
         }
       }
     );
-
+      */
+    /*
     this.router.post(
       "",
       RequestParamMiddleware("name", "value"),
@@ -145,7 +148,7 @@ export default class PermissionController extends Controller {
         }
       }
     );
-
+      */
     return this.router;
   }
 }

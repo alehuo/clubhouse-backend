@@ -2,12 +2,11 @@ process.env.NODE_ENV = "test";
 process.env.PORT = "5090";
 process.env.JWT_SECRET = "HelloWorld";
 
-import { User } from "@alehuo/clubhouse-shared";
+import { ApiResponse, User } from "@alehuo/clubhouse-shared";
 import * as Knex from "knex";
 import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
-import { ApiResponse } from "../../src/utils/MessageFactory";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();

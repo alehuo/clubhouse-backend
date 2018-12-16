@@ -6,9 +6,12 @@ import { studentUnionFilter } from "../models/IStudentUnion";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { Permissions, StudentUnion } from "@alehuo/clubhouse-shared";
-import { isStudentUnion } from "@alehuo/clubhouse-shared/dist/Models";
-import moment = require("moment");
+import {
+  isStudentUnion,
+  Permission,
+  StudentUnion
+} from "@alehuo/clubhouse-shared";
+import moment from "moment";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
@@ -24,7 +27,7 @@ export default class StudentUnionController extends Controller {
     this.router.get(
       "",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_STUDENT_UNIONS),
+      PermissionMiddleware(Permission.ALLOW_VIEW_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const result = await this.studentUnionDao.findAll();
@@ -46,7 +49,7 @@ export default class StudentUnionController extends Controller {
     this.router.get(
       "/:studentUnionId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_STUDENT_UNIONS),
+      PermissionMiddleware(Permission.ALLOW_VIEW_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const studentUnion = await this.studentUnionDao.findOne(
@@ -79,7 +82,7 @@ export default class StudentUnionController extends Controller {
       "",
       RequestParamMiddleware("name", "description"),
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
+      PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const { name, description }: StudentUnion = req.body;
@@ -134,9 +137,7 @@ export default class StudentUnionController extends Controller {
         } catch (err) {
           return res
             .status(500)
-            .json(
-              MessageFactory.createError("Server error", err as Error)
-            );
+            .json(MessageFactory.createError("Server error", err as Error));
         }
       }
     );
@@ -144,7 +145,7 @@ export default class StudentUnionController extends Controller {
     this.router.delete(
       "/:studentUnionId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
+      PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req: express.Request, res: express.Response) => {
         const studentUnion = await this.studentUnionDao.findOne(
           req.params.studentUnionId

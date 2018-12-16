@@ -4,7 +4,7 @@ import UserDao from "../dao/UserDao";
 import { SignToken } from "../utils/JwtUtils";
 import Controller from "./Controller";
 
-import { isString } from "@alehuo/clubhouse-shared/dist/Models";
+import { isString } from "@alehuo/clubhouse-shared";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 

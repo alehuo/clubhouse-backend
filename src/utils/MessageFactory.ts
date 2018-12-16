@@ -1,19 +1,4 @@
-export interface ApiError {
-  message: string;
-  exception?: Error;
-  errors?: string[];
-}
-
-export interface ApiMessage {
-  message: string;
-}
-
-export interface ApiResponse<T> {
-  payload?: T;
-  success: boolean;
-  message?: string;
-  error?: ApiError;
-}
+import { ApiError, ApiResponse } from "@alehuo/clubhouse-shared";
 
 /**
  * Creates an API response.

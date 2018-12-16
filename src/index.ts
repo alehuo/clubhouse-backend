@@ -22,7 +22,6 @@ import CalendarEventDao from "./dao/CalendarEventDao";
 import LocationDao from "./dao/LocationDao";
 import MessageDao from "./dao/MessageDao";
 import NewsPostDao from "./dao/NewsPostDao";
-import PermissionDao from "./dao/PermissionDao";
 import SessionDao from "./dao/SessionDao";
 import StatisticsDao from "./dao/StatisticsDao";
 import StudentUnionDao from "./dao/StudentUnionDao";
@@ -149,7 +148,7 @@ app.use(
 app.use(
   apiUrl("permission", API_VERSION),
   apiHeader("permission", API_VERSION),
-  new PermissionController(new PermissionDao(knex)).routes()
+  new PermissionController().routes()
 );
 
 // Watch route

@@ -7,8 +7,7 @@ import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 
-import { StudentUnion } from "@alehuo/clubhouse-shared";
-import { ApiResponse } from "../../src/utils/MessageFactory";
+import { ApiResponse, StudentUnion } from "@alehuo/clubhouse-shared";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();

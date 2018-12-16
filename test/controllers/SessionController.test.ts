@@ -7,10 +7,9 @@ import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 
-import { Session } from "@alehuo/clubhouse-shared";
+import { ApiResponse, Session } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { SignToken } from "../../src/utils/JwtUtils";
-import { ApiResponse } from "../../src/utils/MessageFactory";
 
 const validUser: any = {
   userId: 1,

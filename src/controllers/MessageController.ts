@@ -1,8 +1,7 @@
 import express from "express";
 import Controller from "./Controller";
 
-import { Message } from "@alehuo/clubhouse-shared";
-import { isMessage, isNumber } from "@alehuo/clubhouse-shared/dist/Models";
+import { isMessage, isNumber, Message } from "@alehuo/clubhouse-shared";
 import MessageDao from "../dao/MessageDao";
 import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";

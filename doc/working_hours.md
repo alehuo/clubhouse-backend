@@ -53,10 +53,11 @@
 | 11.12.2018 | 2.0h  | Changed model imports to use shared library. Refactored code to remove redundant typings. Changed Date type from 'Date' to 'string' and enabled moment.js library.                                                                                                                               |
 | 13.12.2018 | 2.0h  | Implemented strict object validation for all models. Created validators for all models.                                                                                                                                                                                                          |
 | 14.12.2018 | 2.0h  | Implemented ApiResponse interface and updated message creator functions to use a standardized API schema. Started implementing new response function to controllers and fixing tests.                                                                                                            |
-| 15.12.2018 | 2.5h  | Fixed tests and implemented new API schema for all controller routes. Upgraded dependencies. Converted migration and seed files to TypeScript.                                                                                                                                                            |
+| 15.12.2018 | 2.5h  | Fixed tests and implemented new API schema for all controller routes. Upgraded dependencies. Converted migration and seed files to TypeScript.                                                                                                                                                   |
+| 16.12.2018 | 2.0h  | Refactored shared library structure. Modified permissions structure. Added some missing API schemas. Removed PermissionDao and migration & seed for Permissions.                                                                                                                                 |
 
 Total:
 
 61.0 h (part 1)
 
-37.5 h (part 2)
+39.5 h (part 2)

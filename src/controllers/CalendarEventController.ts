@@ -7,8 +7,8 @@ import { createICal, createICalStream } from "../utils/iCalUtils";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { CalendarEvent, Permissions } from "@alehuo/clubhouse-shared";
-import { isCalendarEvent } from "@alehuo/clubhouse-shared/dist/Models";
+import { CalendarEvent, Permission } from "@alehuo/clubhouse-shared";
+import { isCalendarEvent } from "@alehuo/clubhouse-shared/dist/Validators";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
 export default class CalendarEventController extends Controller {
@@ -29,7 +29,7 @@ export default class CalendarEventController extends Controller {
         "unionId"
       ),
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_EVENTS),
+      PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req: express.Request, res: express.Response) => {
         const {
           name,
@@ -198,7 +198,7 @@ export default class CalendarEventController extends Controller {
     this.router.delete(
       "/:eventId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_EVENTS),
+      PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req: express.Request, res: express.Response) => {
         try {
           const event = await this.calendarEventDao.findOne(req.params.eventId);

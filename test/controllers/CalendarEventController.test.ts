@@ -1,14 +1,13 @@
 process.env.NODE_ENV = "test";
 process.env.PORT = "5090";
 
-import { CalendarEvent } from "@alehuo/clubhouse-shared";
+import { ApiResponse, CalendarEvent } from "@alehuo/clubhouse-shared";
 import * as Knex from "knex";
 import "mocha";
 import CalendarEventDao from "../../src/dao/CalendarEventDao";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
 import { createICal, iCalFilter } from "../../src/utils/iCalUtils";
-import { ApiResponse } from "../../src/utils/MessageFactory";
 import { generateToken } from "../TestUtils";
 
 const knex: Knex = Database.connect();

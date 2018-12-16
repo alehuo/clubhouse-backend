@@ -1,13 +1,12 @@
 process.env.NODE_ENV = "test";
 process.env.JWT_SECRET = "testSecret";
 
-import { Permissions } from "@alehuo/clubhouse-shared";
+import { ApiResponse, Permission } from "@alehuo/clubhouse-shared";
 import { expect } from "chai";
 import "mocha";
 import * as httpMocks from "node-mocks-http";
 import { PermissionMiddleware } from "../../src/middleware/PermissionMiddleware";
 import { VerifyToken } from "../../src/utils/JwtUtils";
-import { ApiResponse } from "../../src/utils/MessageFactory";
 import { generateToken } from "../TestUtils";
 const chai: Chai.ChaiStatic = require("chai");
 const should: Chai.Should = chai.should();
@@ -24,7 +23,7 @@ describe("PermissionMiddleware", () => {
     });
     const response: httpMocks.MockResponse<any> = httpMocks.createResponse();
 
-    await PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_EVENTS)(
+    PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_EVENTS)(
       request,
       response,
       function(): void {
@@ -60,7 +59,7 @@ describe("PermissionMiddleware", () => {
         token
       }
     });
-    await PermissionMiddleware(Permissions.ALLOW_VIEW_STUDENT_UNIONS)(
+    PermissionMiddleware(Permission.ALLOW_VIEW_STUDENT_UNIONS)(
       request,
       response,
       function(): void {
@@ -80,7 +79,7 @@ describe("PermissionMiddleware", () => {
     let nextCalled: number = 0;
     const token: string | object = VerifyToken(
       generateToken({
-        permissions: Permissions.ALLOW_ADD_REMOVE_KEYS.value
+        permissions: Permission.ALLOW_ADD_REMOVE_KEYS
       }).replace("Bearer ", "")
     );
 
@@ -96,7 +95,7 @@ describe("PermissionMiddleware", () => {
         token
       }
     });
-    await PermissionMiddleware(Permissions.ALLOW_ADD_REMOVE_KEYS)(
+    PermissionMiddleware(Permission.ALLOW_ADD_REMOVE_KEYS)(
       request,
       response,
       function(): void {

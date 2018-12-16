@@ -1,11 +1,11 @@
 process.env.NODE_ENV = "test";
 process.env.PORT = "5090";
 
+import { ApiResponse } from "@alehuo/clubhouse-shared";
 import * as Knex from "knex";
 import "mocha";
 import * as Database from "../../src/Database";
 import app from "../../src/index";
-import { ApiResponse } from "../../src/utils/MessageFactory";
 
 const knex: Knex = Database.connect();
 const chai: Chai.ChaiStatic = require("chai");

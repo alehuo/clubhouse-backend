@@ -5,8 +5,7 @@ import Controller from "./Controller";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 
-import { Session } from "@alehuo/clubhouse-shared";
-import { isSession } from "@alehuo/clubhouse-shared/dist/Models";
+import { isSession, Session } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { isString } from "util";
 import UserDao from "../dao/UserDao";
@@ -343,16 +342,20 @@ export default class SessionController extends Controller {
           const otherSessions = await this.sessionDao.findAllOngoing();
           const peopleCount = otherSessions.length;
           if (sessions.length === 0) {
-            return res.status(200).json({
-              running: sessions && sessions.length !== 0,
-              peopleCount
-            });
+            return res.status(200).json(
+              MessageFactory.createResponse<any>(true, "", {
+                running: sessions && sessions.length !== 0,
+                peopleCount
+              })
+            );
           } else {
-            return res.status(200).json({
-              running: sessions && sessions.length !== 0,
-              peopleCount,
-              startTime: sessions[0].startTime
-            });
+            return res.status(200).json(
+              MessageFactory.createResponse<any>(true, "", {
+                running: sessions && sessions.length !== 0,
+                peopleCount,
+                startTime: sessions[0].startTime
+              })
+            );
           }
         } catch (err) {
           return res

@@ -8,8 +8,7 @@ import Controller from "./Controller";
 
 import CalendarEventDao from "../dao/CalendarEventDao";
 
-import { DbUser, Permissions } from "@alehuo/clubhouse-shared";
-import { isDbUser, User } from "@alehuo/clubhouse-shared/dist/Models";
+import { DbUser, isDbUser, Permission, User } from "@alehuo/clubhouse-shared";
 import Validator from "validator";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
@@ -338,7 +337,7 @@ export default class UserController extends Controller {
     this.router.delete(
       "/:userId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_REMOVE_USER),
+      PermissionMiddleware(Permission.ALLOW_REMOVE_USER),
       async (req: express.Request, res: express.Response) => {
         try {
           const user = await this.userDao.findOne(req.params.userId);

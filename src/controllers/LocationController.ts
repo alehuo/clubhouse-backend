@@ -6,8 +6,12 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { Location, Permissions } from "@alehuo/clubhouse-shared";
-import { isLocation, isNumber } from "@alehuo/clubhouse-shared/dist/Models";
+import {
+  isLocation,
+  isNumber,
+  Location,
+  Permission
+} from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 
@@ -20,7 +24,7 @@ export default class LocationController extends Controller {
     this.router.get(
       "",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_LOCATIONS),
+      PermissionMiddleware(Permission.ALLOW_VIEW_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const result = await this.locationDao.findAll();
@@ -41,7 +45,7 @@ export default class LocationController extends Controller {
     this.router.get(
       "/:locationId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_VIEW_LOCATIONS),
+      PermissionMiddleware(Permission.ALLOW_VIEW_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         if (!isNumber(req.params.locationId)) {
           return res
@@ -75,7 +79,7 @@ export default class LocationController extends Controller {
       "",
       RequestParamMiddleware("name", "address"),
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
+      PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         try {
           const { name, address }: { name: string; address: string } = req.body;
@@ -127,7 +131,7 @@ export default class LocationController extends Controller {
     this.router.delete(
       "/:locationId(\\d+)",
       JWTMiddleware,
-      PermissionMiddleware(Permissions.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
+      PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req: express.Request, res: express.Response) => {
         if (!isNumber(req.params.locationId)) {
           return res
