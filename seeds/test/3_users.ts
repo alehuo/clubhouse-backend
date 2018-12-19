@@ -13,7 +13,7 @@ export async function seed(knex: Knex): Promise<void> {
       email: "testuser@email.com",
       firstName: "Test",
       lastName: "User",
-      permissions: 67108863,
+      permissions: 524287,
       password: bcrypt.hashSync("testuser", salt)
     },
     {

@@ -55,9 +55,10 @@
 | 14.12.2018 | 2.0h  | Implemented ApiResponse interface and updated message creator functions to use a standardized API schema. Started implementing new response function to controllers and fixing tests.                                                                                                                                                                     |
 | 15.12.2018 | 2.5h  | Fixed tests and implemented new API schema for all controller routes. Upgraded dependencies. Converted migration and seed files to TypeScript.                                                                                                                                                                                                            |
 | 16.12.2018 | 4.0h  | Refactored shared library structure. Modified permissions structure. Added some missing API schemas. Removed PermissionDao and migration & seed for Permissions. Moved filters and their tests to shared library. Code cleanup. Removed unnecessary type assignments as TypeScript can automatically detect return types of functions and function calls. |
+| 17.12.2018 | 3.0h  | Implemented Spotify API support.                                                                                                                                                                                                                                                                                                                          |
 
 Total:
 
 61.0 h (part 1)
 
-41.5 h (part 2)
+44.5 h (part 2)

@@ -5,6 +5,7 @@ import moment from "moment";
 import "moment/locale/fi";
 moment.locale("fi");
 
+import cookieParser from "cookie-parser";
 import express from "express";
 import fs from "fs";
 import helmet from "helmet";
@@ -35,6 +36,8 @@ import { WebSocketServer } from "./WebSocket";
 
 // Express instance
 const app = express();
+
+app.use(cookieParser());
 
 const server = http.createServer(app);
 

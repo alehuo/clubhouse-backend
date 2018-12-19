@@ -21,7 +21,7 @@ const createAdminUser = async (email: string, password: string) => {
     firstName: "Admin",
     lastName: "Admin",
     password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-    permissions: 67108863,
+    permissions: 524287,
     created_at: moment().toISOString(),
     updated_at: moment().toISOString()
   };
