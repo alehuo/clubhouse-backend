@@ -88,7 +88,7 @@ describe("UserController", () => {
           pload[0].email.should.equal("testuser@email.com");
           pload[0].firstName.should.equal("Test");
           pload[0].lastName.should.equal("User");
-          pload[0].permissions.should.equal(67108863);
+          pload[0].permissions.should.equal(524287);
           // Second
           pload[1].userId.should.equal(2);
           pload[1].email.should.equal("testuser2@email.com");
@@ -117,7 +117,7 @@ describe("UserController", () => {
           should.exist(body.payload!.lastName);
           body.payload!.lastName.should.equal("User");
           should.exist(body.payload!.permissions);
-          body.payload!.permissions.should.equal(67108863);
+          body.payload!.permissions.should.equal(524287);
           done();
         });
     });
@@ -187,7 +187,7 @@ describe("UserController", () => {
           should.exist(usr.lastName);
           usr.lastName.should.equal("User");
           should.exist(usr.permissions);
-          usr.permissions.should.equal(67108863);
+          usr.permissions.should.equal(524287);
           done();
         });
     });
