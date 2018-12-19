@@ -56,9 +56,10 @@
 | 15.12.2018 | 2.5h  | Fixed tests and implemented new API schema for all controller routes. Upgraded dependencies. Converted migration and seed files to TypeScript.                                                                                                                                                                                                            |
 | 16.12.2018 | 4.0h  | Refactored shared library structure. Modified permissions structure. Added some missing API schemas. Removed PermissionDao and migration & seed for Permissions. Moved filters and their tests to shared library. Code cleanup. Removed unnecessary type assignments as TypeScript can automatically detect return types of functions and function calls. |
 | 17.12.2018 | 3.0h  | Implemented Spotify API support.                                                                                                                                                                                                                                                                                                                          |
+| 19.12.2018 | 1.0h  | Implemented Rule migration, seed, Dao and Controller. Added CORS middleware.                                                                                                                                                                                                                                                                              |
 
 Total:
 
 61.0 h (part 1)
 
-44.5 h (part 2)
+45.5 h (part 2)

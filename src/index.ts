@@ -6,6 +6,7 @@ import "moment/locale/fi";
 moment.locale("fi");
 
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
 import fs from "fs";
 import helmet from "helmet";
@@ -18,6 +19,7 @@ import LocationController from "./controllers/LocationController";
 import MessageController from "./controllers/MessageController";
 import NewsPostController from "./controllers/NewsPostController";
 import PermissionController from "./controllers/PermissionController";
+import RuleController from "./controllers/RuleController";
 import SessionController from "./controllers/SessionController";
 import StatisticsController from "./controllers/StatisticsController";
 import StudentUnionController from "./controllers/StudentUnionController";
@@ -26,6 +28,7 @@ import CalendarEventDao from "./dao/CalendarEventDao";
 import LocationDao from "./dao/LocationDao";
 import MessageDao from "./dao/MessageDao";
 import NewsPostDao from "./dao/NewsPostDao";
+import RuleDao from "./dao/RuleDao";
 import SessionDao from "./dao/SessionDao";
 import StatisticsDao from "./dao/StatisticsDao";
 import StudentUnionDao from "./dao/StudentUnionDao";
@@ -36,6 +39,8 @@ import { WebSocketServer } from "./WebSocket";
 
 // Express instance
 const app = express();
+
+app.use(cors());
 
 app.use(cookieParser());
 
@@ -48,7 +53,7 @@ const ws = new WebSocketServer(server);
 app.use(helmet());
 
 // Middleware to set Access-Control origin
-// TODO: Replace with cors middleware
+/*
 if (process.env.NODE_ENV !== "test") {
   app.use((req, res, next) => {
     res.setHeader(
@@ -66,7 +71,7 @@ if (process.env.NODE_ENV !== "test") {
     res.setHeader("Access-Control-Max-Age", "3600");
     next();
   });
-}
+}*/
 
 // Knex instance
 const knex = Database.connect();
@@ -175,6 +180,13 @@ app.use(
   apiUrl("statistics", API_VERSION),
   apiHeader(API_VERSION),
   new StatisticsController(new StatisticsDao(knex), new UserDao(knex)).routes()
+);
+
+// Rules route
+app.use(
+  apiUrl("rule", API_VERSION),
+  apiHeader(API_VERSION),
+  new RuleController(new RuleDao(knex)).routes()
 );
 
 app.use(
