@@ -57,9 +57,10 @@
 | 16.12.2018 | 4.0h  | Refactored shared library structure. Modified permissions structure. Added some missing API schemas. Removed PermissionDao and migration & seed for Permissions. Moved filters and their tests to shared library. Code cleanup. Removed unnecessary type assignments as TypeScript can automatically detect return types of functions and function calls. |
 | 17.12.2018 | 3.0h  | Implemented Spotify API support.                                                                                                                                                                                                                                                                                                                          |
 | 19.12.2018 | 1.0h  | Implemented Rule migration, seed, Dao and Controller. Added CORS middleware.                                                                                                                                                                                                                                                                              |
+| 20.12.2018 | 1.5h  | Created enum for HTTP status codes. Implemented routes for getting all rules, a single rule and swapping two rules' orders. Created "createModelValidationError" method for creating a HTTP response for handling model validation errors.                                                                                                                |
 
 Total:
 
 61.0 h (part 1)
 
-45.5 h (part 2)
+47.0 h (part 2)

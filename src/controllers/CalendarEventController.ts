@@ -10,6 +10,7 @@ import Controller from "./Controller";
 import { CalendarEvent, Permission } from "@alehuo/clubhouse-shared";
 import { isCalendarEvent } from "@alehuo/clubhouse-shared/dist/Validators";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
+import { StatusCode } from "../utils/StatusCodes";
 
 export default class CalendarEventController extends Controller {
   constructor(private calendarEventDao: CalendarEventDao) {
@@ -65,19 +66,15 @@ export default class CalendarEventController extends Controller {
 
         if (!isCalendarEvent(calendarEventData)) {
           return res
-            .status(400)
-            .json(
-              MessageFactory.createError(
-                "The request did not contain a valid calendar event."
-              )
-            );
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("CalendarEvent"));
         }
 
         try {
           const calendarEvent = await this.calendarEventDao.save(
             calendarEventData
           );
-          return res.status(201).json(
+          return res.status(StatusCode.CREATED).json(
             MessageFactory.createResponse<CalendarEvent>(
               true,
               "Succesfully saved calendar event",
@@ -92,7 +89,7 @@ export default class CalendarEventController extends Controller {
           );
         } catch (ex) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Server error: Cannot add a new event",
@@ -106,8 +103,9 @@ export default class CalendarEventController extends Controller {
     this.router.get("", async (req, res) => {
       try {
         const events = await this.calendarEventDao.findAll();
+        // TODO: Add model validation
         return res
-          .status(200)
+          .status(StatusCode.OK)
           .json(
             MessageFactory.createResponse<CalendarEvent[]>(
               true,
@@ -117,7 +115,7 @@ export default class CalendarEventController extends Controller {
           );
       } catch (ex) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
               "Server error: Cannot get all events",
@@ -139,7 +137,7 @@ export default class CalendarEventController extends Controller {
         return res.send(ical);
       } catch (ex) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
               "Server error: Cannot get all events",
@@ -154,21 +152,17 @@ export default class CalendarEventController extends Controller {
         const event = await this.calendarEventDao.findOne(req.params.eventId);
         if (!isCalendarEvent(event)) {
           return res
-            .status(400)
-            .json(
-              MessageFactory.createError(
-                "The calendar event that was returned is invalid. Please contact a system administrator."
-              )
-            );
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("CalendarEvent"));
         }
 
         if (!event) {
           return res
-            .status(404)
+            .status(StatusCode.NOT_FOUND)
             .json(MessageFactory.createError("Calendar event not found"));
         } else {
           return res
-            .status(200)
+            .status(StatusCode.OK)
             .json(
               MessageFactory.createResponse<CalendarEvent>(
                 true,
@@ -179,7 +173,7 @@ export default class CalendarEventController extends Controller {
         }
       } catch (ex) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
               "Server error: Cannot get a single event",
@@ -198,7 +192,7 @@ export default class CalendarEventController extends Controller {
           const event = await this.calendarEventDao.findOne(req.params.eventId);
           if (!event) {
             return res
-              .status(404)
+              .status(StatusCode.NOT_FOUND)
               .json(MessageFactory.createError("Calendar event not found"));
           } else {
             const result = await this.calendarEventDao.remove(
@@ -206,11 +200,11 @@ export default class CalendarEventController extends Controller {
             );
             if (result) {
               return res
-                .status(200)
+                .status(StatusCode.OK)
                 .json(MessageFactory.createMessage("Calendar event removed"));
             } else {
               return res
-                .status(400)
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
                 .json(
                   MessageFactory.createError("Failed to remove calendar event")
                 );
@@ -218,7 +212,7 @@ export default class CalendarEventController extends Controller {
           }
         } catch (ex) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Server error: Cannot delete a single event",
@@ -235,7 +229,7 @@ export default class CalendarEventController extends Controller {
         const event = await this.calendarEventDao.findOne(req.params.eventId);
         if (!event) {
           return res
-            .status(404)
+            .status(StatusCode.NOT_FOUND)
             .json(MessageFactory.createError("Event not found"));
         } else {
           const calData = await createICal(event);
@@ -248,7 +242,7 @@ export default class CalendarEventController extends Controller {
         }
       } catch (ex) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
               "Server error: Cannot get a single event in iCal format",

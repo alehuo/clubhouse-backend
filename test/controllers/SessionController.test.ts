@@ -31,6 +31,7 @@ const knex = Database.connect();
 import chai from "chai";
 const should = chai.should();
 import chaiHttp from "chai-http";
+import { StatusCode } from "../../src/utils/StatusCodes";
 chai.use(chaiHttp);
 
 const url = "/api/v1/session";
@@ -60,7 +61,7 @@ describe("SessionController", () => {
         .request(app)
         .get(url + "/ongoing")
         .end((err, res: ChaiHttp.Response) => {
-          res.status.should.equal(403);
+          res.status.should.equal(StatusCode.FORBIDDEN);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
@@ -75,7 +76,7 @@ describe("SessionController", () => {
         .get(url + "/ongoing")
         .set("Authorization", "Bearer HelloWorld")
         .end((err, res: ChaiHttp.Response) => {
-          res.status.should.equal(403);
+          res.status.should.equal(StatusCode.FORBIDDEN);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
@@ -93,7 +94,7 @@ describe("SessionController", () => {
         .set("Authorization", generateToken())
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<Session[]>;
-          res.status.should.equal(200);
+          res.status.should.equal(StatusCode.OK);
           body.payload!.length.should.equal(1);
           body.payload![0].sessionId.should.equal(2);
           body.payload![0].userId.should.equal(1);
@@ -116,7 +117,7 @@ describe("SessionController", () => {
         .set("Authorization", generateToken())
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<Session[]>;
-          res.status.should.equal(200);
+          res.status.should.equal(StatusCode.OK);
           should.not.exist(body.error);
           body.payload!.length.should.equal(2);
 
@@ -160,7 +161,7 @@ describe("SessionController", () => {
           const body = res.body as ApiResponse<Session[]>;
           console.log(body);
           const sessions = body.payload!;
-          res.status.should.equal(200);
+          res.status.should.equal(StatusCode.OK);
           should.not.exist(body.error);
           sessions.length.should.equal(1);
 
@@ -189,7 +190,7 @@ describe("SessionController", () => {
         .send({ startMessage: "Let's rock and roll!" })
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(201);
+          res.status.should.equal(StatusCode.CREATED);
           should.not.exist(body.error);
           should.exist(body.message);
           body.message!.should.equal("Session started");
@@ -201,7 +202,7 @@ describe("SessionController", () => {
             .send({ endMessage: "Good night all!" })
             .end((err2: any, res2: ChaiHttp.Response) => {
               const body2 = res2.body as ApiResponse<undefined>;
-              res2.status.should.equal(200);
+              res2.status.should.equal(StatusCode.OK);
               should.not.exist(body2.error);
               should.exist(body2.message);
               body2.message!.should.equal(
@@ -220,7 +221,7 @@ describe("SessionController", () => {
         .send({ startMessage: "Let's rock and roll!" })
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(400);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.exist(body.error);
           should.exist(body.error!.message);
           body.error!.message.should.equal(
@@ -238,7 +239,7 @@ describe("SessionController", () => {
         .send({ endMessage: "Let's rock and roll!" })
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(400);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.exist(body.error);
           should.exist(body.error!.message);
           body.error!.message.should.equal(
@@ -256,7 +257,7 @@ describe("SessionController", () => {
         .send({ test: "Let's rock and roll!" })
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(400);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.exist(body.error);
           should.exist(body.error!.message);
           body.error!.message.should.equal("Missing request body parameters");
@@ -275,7 +276,7 @@ describe("SessionController", () => {
         .send({ test: "Let's rock and roll!" })
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(400);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.exist(body.error);
           should.exist(body.error!.message);
           body.error!.message.should.equal("Missing request body parameters");

@@ -10,6 +10,7 @@ const knex = Database.connect();
 import chai from "chai";
 const should = chai.should();
 import chaiHttp from "chai-http";
+import { StatusCode } from "../../src/utils/StatusCodes";
 chai.use(chaiHttp);
 
 const authUrl = "/api/v1/authenticate";
@@ -49,7 +50,7 @@ describe("AuthController", () => {
       .end((err, res: ChaiHttp.Response) => {
         const body = res.body as ApiResponse<{ token: string }>;
         should.not.exist(err);
-        res.status.should.equal(200);
+        res.status.should.equal(StatusCode.OK);
         should.not.exist(body.error);
         should.exist(body.payload);
         should.exist(body.payload!.token);
@@ -67,7 +68,7 @@ describe("AuthController", () => {
         should.exist(body.error);
         should.exist(body.error!.message);
         should.not.exist(body.payload);
-        res.status.should.equal(400);
+        res.status.should.equal(StatusCode.BAD_REQUEST);
         body.error!.message.should.equal("Invalid username or password");
         done();
       });
@@ -86,7 +87,7 @@ describe("AuthController", () => {
         should.exist(body.error);
         should.exist(body.error!.message);
         should.not.exist(body.payload);
-        res.status.should.equal(400);
+        res.status.should.equal(StatusCode.BAD_REQUEST);
         body.error!.message.should.equal("Invalid username or password");
         done();
       });
@@ -104,7 +105,7 @@ describe("AuthController", () => {
         should.exist(body.error);
         should.exist(body.error!.message);
         should.not.exist(res.body.token);
-        res.status.should.equal(400);
+        res.status.should.equal(StatusCode.BAD_REQUEST);
         body.error!.message.should.equal("Missing request body parameters");
         done();
       });

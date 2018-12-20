@@ -7,13 +7,13 @@ import Controller from "./Controller";
 
 import {
   isLocation,
-  isNumber,
   Location,
   locationFilter,
   Permission
 } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
+import { StatusCode } from "../utils/StatusCodes";
 
 export default class LocationController extends Controller {
   constructor(private locationDao: LocationDao) {
@@ -28,10 +28,16 @@ export default class LocationController extends Controller {
       async (req, res) => {
         try {
           const result = await this.locationDao.findAll();
-          return res.json(result.map(locationFilter));
+          if (result.every(isLocation)) {
+            return res.status(StatusCode.OK).json(result.map(locationFilter));
+          } else {
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("Location"));
+          }
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Server error: Cannot get all locations",
@@ -47,25 +53,25 @@ export default class LocationController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_VIEW_LOCATIONS),
       async (req, res) => {
-        if (!isNumber(req.params.locationId)) {
-          return res
-            .status(400)
-            .json(MessageFactory.createError("Invalid location ID"));
-        }
+        const locationId = Number(req.params.locationId);
         try {
-          const location = await this.locationDao.findOne(
-            req.params.locationId
-          );
+          const location = await this.locationDao.findOne(locationId);
           if (location) {
-            return res.status(200).json(locationFilter(location));
+            if (isLocation(location)) {
+              return res.status(StatusCode.OK).json(locationFilter(location));
+            } else {
+              return res
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(MessageFactory.createModelValidationError("Location"));
+            }
           } else {
             return res
-              .status(404)
+              .status(StatusCode.NOT_FOUND)
               .json(MessageFactory.createError("Location not found"));
           }
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Server error: Cannot get a single location"
@@ -86,7 +92,7 @@ export default class LocationController extends Controller {
           const location = await this.locationDao.findByName(name);
           if (location) {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Location already exists"));
           } else {
             const locationObj: Location = {
@@ -99,17 +105,13 @@ export default class LocationController extends Controller {
 
             if (!isLocation(locationObj)) {
               return res
-                .status(400)
-                .json(
-                  MessageFactory.createError(
-                    "The request did not contain a valid location."
-                  )
-                );
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(MessageFactory.createModelValidationError("Location"));
             }
 
             const savedLocation = await this.locationDao.save(locationObj);
 
-            return res.status(201).json({
+            return res.status(StatusCode.CREATED).json({
               ...locationObj,
               ...{
                 locationId: savedLocation[0]
@@ -118,7 +120,7 @@ export default class LocationController extends Controller {
           }
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Internal server error: Cannot add a new location"
@@ -133,39 +135,33 @@ export default class LocationController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req, res) => {
-        if (!isNumber(req.params.locationId)) {
-          return res
-            .status(400)
-            .json(MessageFactory.createError("Invalid location ID"));
-        }
+        const locationId = Number(req.params.locationId);
         try {
-          const locations = await this.locationDao.findOne(
-            req.params.locationId
-          );
+          const locations = await this.locationDao.findOne(locationId);
           if (locations) {
-            const result = await this.locationDao.remove(req.params.locationId);
+            const result = await this.locationDao.remove(locationId);
             if (result) {
               return res
-                .status(200)
+                .status(StatusCode.OK)
                 .json(MessageFactory.createMessage("Location removed"));
             } else {
               return res
-                .status(400)
+                .status(StatusCode.BAD_REQUEST)
                 .json(
                   MessageFactory.createMessage("Failed to remove location")
                 );
             }
           } else {
             return res
-              .status(404)
+              .status(StatusCode.NOT_FOUND)
               .json(MessageFactory.createError("Location not found"));
           }
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot delete a location"
+                "Server error: Cannot delete a location"
               )
             );
         }

@@ -47,8 +47,24 @@ const createError = (error: string, exception?: Error, errors?: string[]) => {
 const createMessage = (message: string) =>
   createResponse<undefined>(true, message);
 
+const createModelValidationError = (model: string) =>
+  createResponse<undefined>(
+    false,
+    "Model validation error: " +
+      model +
+      " returned from database is malformed.",
+    undefined,
+    {
+      message:
+        "Model validation error: " +
+        model +
+        " returned from database is malformed."
+    }
+  );
+
 export const MessageFactory = {
   createError,
   createMessage,
-  createResponse
+  createResponse,
+  createModelValidationError
 };

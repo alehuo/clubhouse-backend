@@ -14,6 +14,7 @@ import chai from "chai";
 const should = chai.should();
 import chaiHttp from "chai-http";
 import moment from "moment";
+import { StatusCode } from "../../src/utils/StatusCodes";
 chai.use(chaiHttp);
 
 const calendarEventDao = new CalendarEventDao(knex);
@@ -81,7 +82,7 @@ describe("CalendarEventController", () => {
     should.exist(body.success);
     body.success.should.equal(true);
 
-    res.status.should.equal(200);
+    res.status.should.equal(StatusCode.OK);
 
     Object.keys(calendarEvent).length.should.equal(
       Object.keys(body.payload!).length
@@ -121,7 +122,7 @@ describe("CalendarEventController", () => {
 
     parsedBodyString.should.equal(parsedString);
     should.not.exist(res.body.error);
-    res.status.should.equal(200);
+    res.status.should.equal(StatusCode.OK);
   }).timeout(5000);
 
   it("Returns all calendar events", async () => {
@@ -137,7 +138,7 @@ describe("CalendarEventController", () => {
     should.exist(body.success);
     body.success.should.equal(true);
     body.payload!.length.should.equal(calendarEvents.length);
-    res.status.should.equal(200);
+    res.status.should.equal(StatusCode.OK);
 
     const sortedRes = body.payload!.sort((a, b) => a.eventId - b.eventId);
 
@@ -178,7 +179,7 @@ describe("CalendarEventController", () => {
           "Missing: description, endTime, locationId, name, restricted, startTime, unionId"
         );
         should.not.exist(res.body.payload);
-        res.status.should.equal(400);
+        res.status.should.equal(StatusCode.BAD_REQUEST);
         body.error!.message.should.equal("Missing request body parameters");
         done();
       });

@@ -9,6 +9,7 @@ import uuid from "uuid/v4";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import { hasPermissions } from "../utils/PermissionUtils";
+import { StatusCode } from "../utils/StatusCodes";
 
 interface SpotifyAuth {
   access_token: string;
@@ -46,7 +47,7 @@ export default class AuthController extends Controller {
 
           if (!isString(email) || !isString(password)) {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(
                 MessageFactory.createError(
                   "Invalid request parameters: Email and password must be in correct format."
@@ -58,7 +59,7 @@ export default class AuthController extends Controller {
 
           if (!user) {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Invalid username or password"));
           } else {
             // User exists, check for pash
@@ -76,7 +77,7 @@ export default class AuthController extends Controller {
                   permissions: user.permissions
                 });
                 return res
-                  .status(200)
+                  .status(StatusCode.OK)
                   .json(
                     MessageFactory.createResponse<{ token: string }>(
                       true,
@@ -86,14 +87,14 @@ export default class AuthController extends Controller {
                   );
               } else {
                 return res
-                  .status(400)
+                  .status(StatusCode.BAD_REQUEST)
                   .json(
                     MessageFactory.createError("Invalid username or password")
                   );
               }
             } catch (ex) {
               return res
-                .status(500)
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
                 .json(
                   MessageFactory.createError(
                     "Server error: Cannot authenticate user",
@@ -104,7 +105,7 @@ export default class AuthController extends Controller {
           }
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Server error: Cannot authenticate user",
@@ -119,7 +120,7 @@ export default class AuthController extends Controller {
       const token = req.query.accessToken || null;
       // Check for token
       if (token === null) {
-        return res.status(400).send("Unauthorized (1)");
+        return res.status(StatusCode.UNAUTHORIZED).send("Unauthorized (1)");
       }
       // Validate token
       try {
@@ -127,10 +128,10 @@ export default class AuthController extends Controller {
         const permissions: number = tokenData.data.permissions;
         // If the user doesn't have the permission to use the Spotify API, return an error
         if (!hasPermissions(permissions, Permission.ACCESS_SPOTIFY_API)) {
-          return res.status(400).send("Unauthorized (2)");
+          return res.status(StatusCode.UNAUTHORIZED).send("Unauthorized (2)");
         }
       } catch (err) {
-        return res.status(400).send("Unauthorized (3)");
+        return res.status(StatusCode.UNAUTHORIZED).send("Unauthorized (3)");
       }
       // Generate secret
       const secret = uuid();
@@ -156,7 +157,7 @@ export default class AuthController extends Controller {
       const storedState = req.cookies ? req.cookies.spotify_auth_state : null;
       if (state === null || state !== storedState) {
         req.clearCookie("spotify_auth_state");
-        return res.status(400).send("Unauthorized (4)");
+        return res.status(StatusCode.UNAUTHORIZED).send("Unauthorized (4)");
       } else {
         res.clearCookie("spotify_auth_state");
         const headers = {
@@ -184,10 +185,10 @@ export default class AuthController extends Controller {
           // TODO: Store tokens & data in database
           // TODO: Add Cronjob to fetch latest data every minute
           console.log(response.data.access_token);
-          return res.send("OK");
+          return res.status(StatusCode.OK).send("OK");
         } catch (err) {
           console.error(err.response.data);
-          return res.status(400).send("Unauthorized (5)");
+          return res.status(StatusCode.UNAUTHORIZED).send("Unauthorized (5)");
         }
       }
     });
