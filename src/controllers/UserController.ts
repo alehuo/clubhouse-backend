@@ -21,6 +21,7 @@ import SessionDao from "../dao/SessionDao";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
+import { StatusCode } from "../utils/StatusCodes";
 
 export default class UserController extends Controller {
   constructor(
@@ -293,24 +294,20 @@ export default class UserController extends Controller {
             };
             if (!isDbUser(userToSave)) {
               return res
-                .status(400) // TODO: Should we return HTTP 500 on this kind of error?
-                .json(
-                  MessageFactory.createError(
-                    "The request did not contain a valid user object."
-                  )
-                );
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(MessageFactory.createModelValidationError("User"));
             }
 
             const savedUser = await this.userDao.save(userToSave);
             const savedDbUser = await this.userDao.findOne(savedUser[0]);
 
             return res
-              .status(201)
+              .status(StatusCode.CREATED)
               .json(MessageFactory.createResponse<User>(true, "", savedDbUser));
           }
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Internal server error: Cannot add user",

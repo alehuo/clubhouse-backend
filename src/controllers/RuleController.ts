@@ -14,6 +14,11 @@ export default class RuleController extends Controller {
     this.router.get("", async (req, res) => {
       try {
         const rules = await this.ruleDao.findAll();
+        if (!rules.every(isRule)) {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("Rule"));
+        }
         return res
           .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Rule[]>(true, "", rules));
@@ -37,6 +42,12 @@ export default class RuleController extends Controller {
             return res
               .status(StatusCode.NOT_FOUND)
               .json(MessageFactory.createError("Rule not found"));
+          }
+
+          if (!isRule(rule1) || !isRule(rule2)) {
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("Rule"));
           }
 
           const ruleOrder1 = rule1.order;
@@ -78,11 +89,7 @@ export default class RuleController extends Controller {
         if (!isRule(rule)) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
-            .json(
-              MessageFactory.createError(
-                "Server error: Database returned a malformed rule object."
-              )
-            );
+            .json(MessageFactory.createModelValidationError("Rule"));
         }
         if (!rule) {
           return res

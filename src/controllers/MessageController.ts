@@ -1,13 +1,14 @@
 import express from "express";
 import Controller from "./Controller";
 
-import { isMessage, isNumber, Message } from "@alehuo/clubhouse-shared";
+import { isMessage, Message } from "@alehuo/clubhouse-shared";
 import MessageDao from "../dao/MessageDao";
 import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { sendEmail } from "../utils/Mailer";
 import { MessageFactory } from "../utils/MessageFactory";
+import { StatusCode } from "../utils/StatusCodes";
 
 export default class MessageController extends Controller {
   constructor(private messageDao: MessageDao, private userDao: UserDao) {
@@ -19,13 +20,19 @@ export default class MessageController extends Controller {
     this.router.get("", JWTMiddleware, async (req, res) => {
       try {
         const messages = await this.messageDao.findAll();
-        return res.status(200).json(messages);
+        if (messages.every(isMessage)) {
+          return res.status(StatusCode.OK).json(messages);
+        } else {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("Message"));
+        }
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot get all messages",
+              "Server error: Cannot get all messages",
               err as Error
             )
           );
@@ -33,15 +40,18 @@ export default class MessageController extends Controller {
     });
     // A single message
     this.router.get("/:messageId(\\d+)", JWTMiddleware, async (req, res) => {
-      if (!isNumber(req.params.messageId)) {
-        return res
-          .status(400)
-          .json(MessageFactory.createError("Invalid message ID"));
-      }
       try {
         const message = await this.messageDao.findOne(req.params.messageId);
         if (message) {
-          return res.status(200).json(message);
+          if (isMessage(message)) {
+            return res
+              .status(StatusCode.OK)
+              .json(MessageFactory.createResponse<Message>(true, "", message));
+          } else {
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("Message"));
+          }
         } else {
           return res
             .status(404)
@@ -49,10 +59,10 @@ export default class MessageController extends Controller {
         }
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot get a single message",
+              "Server error: Cannot get a single message",
               err as Error
             )
           );
@@ -70,9 +80,9 @@ export default class MessageController extends Controller {
           const title = req.body.title ? String(req.body.title) : "(No title)";
 
           const msg: Message = {
-            created_at: "", // Placeholder
-            messageId: -1, // Placeholder
-            updated_at: "", // Placeholder
+            created_at: "",
+            messageId: -1,
+            updated_at: "",
             message: req.body.message,
             title,
             userId
@@ -80,12 +90,8 @@ export default class MessageController extends Controller {
 
           if (!isMessage(msg)) {
             return res
-              .status(400)
-              .json(
-                MessageFactory.createError(
-                  "The request did not contain a valid message."
-                )
-              );
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("Message"));
           }
 
           const savedMessage = await this.messageDao.save(msg);
@@ -117,15 +123,18 @@ export default class MessageController extends Controller {
             "<pre>" + message + "</pre>"
           );
 
-          return res
-            .status(201)
-            .json({ ...msg, ...{ messageId: savedMessage[0] } });
+          return res.status(StatusCode.CREATED).json(
+            MessageFactory.createResponse<Message>(true, "", {
+              ...msg,
+              ...{ messageId: savedMessage[0] }
+            })
+          );
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot add a message",
+                "Server error: Cannot add a message",
                 err as Error
               )
             );
@@ -134,35 +143,35 @@ export default class MessageController extends Controller {
     );
 
     this.router.delete("/:messageId(\\d+)", JWTMiddleware, async (req, res) => {
-      if (!isNumber(req.params.messageId)) {
-        return res
-          .status(400)
-          .json(MessageFactory.createError("Invalid message ID"));
-      }
       try {
         const message = await this.messageDao.findOne(req.params.messageId);
         if (message) {
+          if (!isMessage(message)) {
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("Message"));
+          }
           const result = await this.messageDao.remove(req.params.messageId);
           if (result) {
             return res
-              .status(200)
+              .status(StatusCode.OK)
               .json(MessageFactory.createError("Message removed"));
           } else {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Failed to remove message"));
           }
         } else {
           return res
-            .status(404)
+            .status(StatusCode.NOT_FOUND)
             .json(MessageFactory.createError("Message not found"));
         }
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot delete a message",
+              "Server error: Cannot delete a message",
               err as Error
             )
           );

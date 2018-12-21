@@ -8,6 +8,7 @@ import { MessageFactory } from "../utils/MessageFactory";
 import { isNewspost, Newspost, Permission } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
+import { StatusCode } from "../utils/StatusCodes";
 
 export default class NewsPostController extends Controller {
   constructor(private newsPostDao: NewsPostDao) {
@@ -19,15 +20,22 @@ export default class NewsPostController extends Controller {
     this.router.get("", async (req, res) => {
       try {
         const newsPosts = await this.newsPostDao.findAll();
+
+        if (!newsPosts.every(isNewspost)) {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("Newspost"));
+        }
+
         return res
-          .status(200)
+          .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Newspost[]>(true, "", newsPosts));
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot get all newsposts",
+              "Server error: Cannot get all newsposts",
               err as Error
             )
           );
@@ -38,20 +46,24 @@ export default class NewsPostController extends Controller {
       try {
         const newsPost = await this.newsPostDao.findOne(req.params.newsPostId);
         if (newsPost) {
+          if (!isNewspost(newsPost)) {
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("Newspost"));
+          }
           return res
             .status(200)
             .json(MessageFactory.createResponse<Newspost>(true, "", newsPost));
-        } else {
-          return res
-            .status(404)
-            .json(MessageFactory.createError("Newspost not found"));
         }
+        return res
+          .status(StatusCode.NOT_FOUND)
+          .json(MessageFactory.createError("Newspost not found"));
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot get a single newspost",
+              "Server error: Cannot get a single newspost",
               err as Error
             )
           );
@@ -61,12 +73,17 @@ export default class NewsPostController extends Controller {
     this.router.get("/user/:userId(\\d+)", async (req, res) => {
       try {
         const newsPost = await this.newsPostDao.findByAuthor(req.params.userId);
+        if (!newsPost.every(isNewspost)) {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("Newspost"));
+        }
         return res
-          .status(200)
+          .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Newspost[]>(true, "", newsPost));
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
               "Internal server error: Cannot get newspost from a single user",
@@ -95,11 +112,9 @@ export default class NewsPostController extends Controller {
             author: userId
           };
 
-          console.log(savedPost);
-
           if (!isNewspost(savedPost)) {
             return res
-              .status(400)
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
               .json(
                 MessageFactory.createError(
                   "The request did not contain a valid newspost."
@@ -109,23 +124,22 @@ export default class NewsPostController extends Controller {
 
           const newsPost = await this.newsPostDao.save(savedPost);
           if (newsPost.length > 0) {
-            return res.status(201).json(
+            return res.status(StatusCode.CREATED).json(
               MessageFactory.createResponse<Newspost>(true, "", {
                 ...savedPost,
                 ...{ postId: newsPost[0] }
               })
             );
-          } else {
-            return res
-              .status(400)
-              .json(MessageFactory.createError("Error saving newspost"));
           }
+          return res
+            .status(StatusCode.BAD_REQUEST)
+            .json(MessageFactory.createError("Error saving newspost"));
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot add a newspost",
+                "Server error: Cannot add a newspost",
                 err as Error
               )
             );
@@ -147,26 +161,23 @@ export default class NewsPostController extends Controller {
             const result = await this.newsPostDao.remove(req.params.newsPostId);
             if (result) {
               return res
-                .status(200)
+                .status(StatusCode.OK)
                 .json(MessageFactory.createMessage("Newspost deleted"));
-            } else {
-              return res
-                .status(400)
-                .json(
-                  MessageFactory.createMessage("Failed to delete newspost")
-                );
             }
+            return res
+              .status(StatusCode.BAD_REQUEST)
+              .json(MessageFactory.createMessage("Failed to delete newspost"));
           } else {
             return res
-              .status(404)
+              .status(StatusCode.NOT_FOUND)
               .json(MessageFactory.createError("Newspost not found"));
           }
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
-                "Internal server error: Cannot delete newspost",
+                "Server error: Cannot delete newspost",
                 err as Error
               )
             );

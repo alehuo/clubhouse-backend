@@ -11,6 +11,7 @@ import { isString } from "util";
 import UserDao from "../dao/UserDao";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { sendEmail } from "../utils/Mailer";
+import { StatusCode } from "../utils/StatusCodes";
 import { MessageType, WebSocketServer, WsMessage } from "../WebSocket";
 
 export default class SessionController extends Controller {
@@ -27,8 +28,13 @@ export default class SessionController extends Controller {
     this.router.get("/ongoing", JWTMiddleware, async (req, res) => {
       try {
         const sessions = await this.sessionDao.findAllOngoing();
+        if (!sessions.every(isSession)) {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("Session"));
+        }
         return res
-          .status(200)
+          .status(StatusCode.OK)
           .json(
             MessageFactory.createResponse<Session[]>(
               true,
@@ -38,10 +44,10 @@ export default class SessionController extends Controller {
           );
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot get ongoing sessions",
+              "Server error: Cannot get ongoing sessions",
               err as Error
             )
           );
@@ -51,8 +57,13 @@ export default class SessionController extends Controller {
     this.router.get("/user/:userId(\\d+)", JWTMiddleware, async (req, res) => {
       try {
         const sessions = await this.sessionDao.findByUser(req.params.userId);
+        if (!sessions.every(isSession)) {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("Session"));
+        }
         return res
-          .status(200)
+          .status(StatusCode.OK)
           .json(
             MessageFactory.createResponse<Session[]>(
               true,
@@ -62,7 +73,7 @@ export default class SessionController extends Controller {
           );
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
               "Server error: Cannot get sessions from a single user",
@@ -80,8 +91,13 @@ export default class SessionController extends Controller {
           const sessions = await this.sessionDao.findOngoingByUser(
             req.params.userId
           );
+          if (!sessions.every(isSession)) {
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("Session"));
+          }
           return res
-            .status(200)
+            .status(StatusCode.OK)
             .json(
               MessageFactory.createResponse<Session[]>(
                 true,
@@ -91,7 +107,7 @@ export default class SessionController extends Controller {
             );
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Server error:" +
@@ -119,7 +135,7 @@ export default class SessionController extends Controller {
           const sessions = await this.sessionDao.findOngoingByUser(userId);
           if (sessions && sessions.length > 0) {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(
                 MessageFactory.createError(
                   "You already have an ongoing session running."
@@ -141,12 +157,8 @@ export default class SessionController extends Controller {
 
           if (!isSession(session)) {
             return res
-              .status(400)
-              .json(
-                MessageFactory.createError(
-                  "The request did not contain a valid session object."
-                )
-              );
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("Session"));
           }
 
           const user = await this.userDao.findOne(userId);
@@ -192,12 +204,11 @@ export default class SessionController extends Controller {
           }
 
           return res
-            .status(201)
+            .status(StatusCode.CREATED)
             .json(MessageFactory.createMessage("Session started"));
         } catch (err) {
-          console.log(err);
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Server error: Cannot start a session",
@@ -220,7 +231,7 @@ export default class SessionController extends Controller {
           if (sessions) {
             if (sessions.length === 0) {
               return res
-                .status(400)
+                .status(StatusCode.BAD_REQUEST)
                 .json(
                   MessageFactory.createError(
                     "You don't have an ongoing session."
@@ -228,7 +239,7 @@ export default class SessionController extends Controller {
                 );
             } else if (sessions.length > 1) {
               return res
-                .status(400)
+                .status(StatusCode.BAD_REQUEST)
                 .json(
                   MessageFactory.createError(
                     "You have more than one session running." +
@@ -240,19 +251,19 @@ export default class SessionController extends Controller {
           const currentSession: Session = sessions[0];
           if (currentSession === undefined) {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Invalid session"));
           }
 
           if (currentSession.sessionId === undefined) {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Invalid session id"));
           }
 
           if (!isString(endMessage)) {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(
                 MessageFactory.createError("Invalid format for ending message")
               );
@@ -304,7 +315,7 @@ export default class SessionController extends Controller {
           }
 
           return res
-            .status(200)
+            .status(StatusCode.OK)
             .json(
               MessageFactory.createMessage(
                 "Session ended with message '" + req.body.endMessage + "'"
@@ -312,7 +323,7 @@ export default class SessionController extends Controller {
             );
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Server error: Can't end a session",
@@ -330,14 +341,16 @@ export default class SessionController extends Controller {
         const otherSessions = await this.sessionDao.findAllOngoing();
         const peopleCount = otherSessions.length;
         if (sessions.length === 0) {
-          return res.status(200).json(
+          // TODO: Typings
+          return res.status(StatusCode.OK).json(
             MessageFactory.createResponse<any>(true, "", {
               running: sessions && sessions.length !== 0,
               peopleCount
             })
           );
         } else {
-          return res.status(200).json(
+          // TODO: Typings
+          return res.status(StatusCode.OK).json(
             MessageFactory.createResponse<any>(true, "", {
               running: sessions && sessions.length !== 0,
               peopleCount,
@@ -347,7 +360,7 @@ export default class SessionController extends Controller {
         }
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error", err as Error));
       }
     });
