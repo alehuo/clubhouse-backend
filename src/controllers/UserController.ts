@@ -15,6 +15,7 @@ import {
   userFilter
 } from "@alehuo/clubhouse-shared";
 import Validator from "validator";
+import KeyDao from "../dao/KeyDao";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
 import SessionDao from "../dao/SessionDao";
@@ -29,7 +30,8 @@ export default class UserController extends Controller {
     private calendarEventDao: CalendarEventDao,
     private messageDao: MessageDao,
     private newsPostDao: NewsPostDao,
-    private sessionDao: SessionDao
+    private sessionDao: SessionDao,
+    private keyDao: KeyDao
   ) {
     super();
   }
@@ -373,6 +375,11 @@ export default class UserController extends Controller {
             await Promise.all(
               sessions.map((session) => this.sessionDao.remove(session.sessionId))
             );
+
+            // Remove keys
+            const keys = await this.keyDao.findByUser(userId);
+            await Promise.all(keys.map((key) => this.keyDao.remove(key.keyId)));
+
             // Remove user data
             await this.userDao.remove(userId);
 

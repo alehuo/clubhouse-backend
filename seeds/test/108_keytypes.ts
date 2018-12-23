@@ -14,6 +14,12 @@ const keyTypes: KeyType[] = [
     title: "Day",
     created_at: moment().toISOString(),
     updated_at: moment().toISOString()
+  },
+  {
+    keyTypeId: 3,
+    title: "Test key",
+    created_at: moment().toISOString(),
+    updated_at: moment().toISOString()
   }
 ];
 

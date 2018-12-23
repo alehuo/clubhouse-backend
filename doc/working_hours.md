@@ -59,10 +59,10 @@
 | 19.12.2018 | 1.0h  | Implemented Rule migration, seed, Dao and Controller. Added CORS middleware.                                                                                                                                                                                                                                                                              |
 | 20.12.2018 | 1.5h  | Created enum for HTTP status codes. Implemented routes for getting all rules, a single rule and swapping two rules' orders. Created "createModelValidationError" method for creating a HTTP response for handling model validation errors.                                                                                                                |
 | 21.12.2018 | 1.0h  | Code cleanup, fixed StatisticsDao query bug                                                                                                                                                                                                                                                                                                               |
-| 23.12.2018 | 1.5h  | Created migration, seed & Dao for KeyType. Created tests for KeyTypeDao. Added script to test the project inside a Docker container.                                                                                                                                                                                                                                                                                      |
+| 23.12.2018 | 2.5h  | Created migration, seed & Dao for Key and KeyType. Created tests for KeyDao and KeyTypeDao. Added script to test the project inside a Docker container.                                                                                                                                                                                                                                                                                      |
 
 Total:
 
 61.0 h (part 1)
 
-48.5 h (part 2)
+49.5 h (part 2)

@@ -25,6 +25,7 @@ import StatisticsController from "./controllers/StatisticsController";
 import StudentUnionController from "./controllers/StudentUnionController";
 import UserController from "./controllers/UserController";
 import CalendarEventDao from "./dao/CalendarEventDao";
+import KeyDao from "./dao/KeyDao";
 import LocationDao from "./dao/LocationDao";
 import MessageDao from "./dao/MessageDao";
 import NewsPostDao from "./dao/NewsPostDao";
@@ -116,7 +117,8 @@ app.use(
     new CalendarEventDao(knex),
     new MessageDao(knex),
     new NewsPostDao(knex),
-    new SessionDao(knex)
+    new SessionDao(knex),
+    new KeyDao(knex)
   ).routes()
 );
 

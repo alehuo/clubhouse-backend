@@ -20,7 +20,6 @@ export default class StatisticsController extends Controller {
     this.router.get("", JWTMiddleware, async (req, res) => {
       try {
         const result = await this.statisticsDao.findStatistics();
-        console.log(result);
         if (!isStatistics(result[0])) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -52,7 +51,7 @@ export default class StatisticsController extends Controller {
         const result = await this.statisticsDao.findStatisticsFromUser(
           req.params.userId
         );
-        console.log(result);
+
         if (result && result.length === 1) {
           return res.status(StatusCode.OK).json(result);
         } else {
