@@ -3,8 +3,8 @@
 
 
 "@alehuo/clubhouse-shared@https://github.com/alehuo/clubhouse-shared.git":
-  version "1.2.5"
-  resolved "https://github.com/alehuo/clubhouse-shared.git#d5b760bd324ccce824f0cdbc0e326d35c4977bc1"
+  version "1.2.6"
+  resolved "https://github.com/alehuo/clubhouse-shared.git#b0c604cc3d4605da09182e49166bfc30df91f9d0"
 
 "@babel/code-frame@^7.0.0":
   version "7.0.0"
