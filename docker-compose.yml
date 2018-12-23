@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 volumes:
   clubhouse-mysql-data:
 services:
@@ -15,6 +15,7 @@ services:
     ports:
       - 8081:8080
   clubhouse-backend:
+    container_name: "clubhouse-backend"
     build:
       context: .
       shm_size: 1G

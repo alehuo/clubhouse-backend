@@ -9,4 +9,5 @@ export async function seed(knex: Knex): Promise<void> {
   await knex("users").del();
   await knex("studentUnions").del();
   await knex("rules").del();
+  await knex("keyTypes").del();
 }
