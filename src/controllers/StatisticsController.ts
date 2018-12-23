@@ -1,9 +1,11 @@
 import express from "express";
 
+import { isStatistics, Statistics } from "@alehuo/clubhouse-shared";
 import StatisticsDao from "../dao/StatisticsDao";
 import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
+import { StatusCode } from "../utils/StatusCodes";
 import Controller from "./Controller";
 
 /**
@@ -18,13 +20,21 @@ export default class StatisticsController extends Controller {
     this.router.get("", JWTMiddleware, async (req, res) => {
       try {
         const result = await this.statisticsDao.findStatistics();
-        return res.json(result[0]);
+        console.log(result);
+        if (!isStatistics(result[0])) {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("Statistics"));
+        }
+        return res
+          .status(StatusCode.OK)
+          .json(MessageFactory.createResponse<Statistics>(true, "", result[0]));
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot get statistics",
+              "Server error: Cannot get statistics",
               err as Error
             )
           );
@@ -36,14 +46,15 @@ export default class StatisticsController extends Controller {
         const user = await this.userDao.findOne(req.params.userId);
         if (!user) {
           return res
-            .status(404)
+            .status(StatusCode.NOT_FOUND)
             .json(MessageFactory.createError("User not found"));
         }
         const result = await this.statisticsDao.findStatisticsFromUser(
           req.params.userId
         );
+        console.log(result);
         if (result && result.length === 1) {
-          return res.json(result);
+          return res.status(StatusCode.OK).json(result);
         } else {
           return res
             .status(404)

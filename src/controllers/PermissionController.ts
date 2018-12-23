@@ -7,6 +7,7 @@ import Controller from "./Controller";
 import { Permission } from "@alehuo/clubhouse-shared";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { getPermissions } from "../utils/PermissionUtils";
+import { StatusCode } from "../utils/StatusCodes";
 
 export default class PermissionController extends Controller {
   constructor() {
@@ -44,7 +45,7 @@ export default class PermissionController extends Controller {
     this.router.get("/user", JWTMiddleware, async (req, res) => {
       const permissions: number = res.locals.token.data.permissions;
       const permlist = getPermissions(permissions);
-      return res.status(200).json(
+      return res.status(StatusCode.OK).json(
         MessageFactory.createResponse<{
           permissions: number;
           permission_list: string[];

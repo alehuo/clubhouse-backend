@@ -16,7 +16,7 @@ export default class StatisticsDao implements Dao<Statistics> {
           "(SELECT COUNT(*) from calendarEvents) AS eventCount, " +
           "(SELECT COUNT(*) from newsposts) AS newspostCount, " +
           "(SELECT COALESCE(SUM((endTime - startTime) / (1000.0 * 60 * 60)),0)" +
-          " FROM watches WHERE endTime is NOT NULL) AS hoursOnWatch, " +
+          " FROM sessions WHERE endTime is NOT NULL) AS hoursOnWatch, " +
           "(SELECT COUNT(messageId) from messages) AS messageCount FROM users LIMIT 1;"
       )
     );
@@ -28,8 +28,8 @@ export default class StatisticsDao implements Dao<Statistics> {
         "SELECT (SELECT COUNT(*) from calendarEvents WHERE addedBy = :userId) AS eventCount, " +
           "(SELECT COUNT(*) from newsposts WHERE author = :userId) AS newspostCount, " +
           "(SELECT COALESCE(SUM((endTime - startTime) / (1000.0 * 60 * 60)),0)" +
-          " FROM watches WHERE endTime is NOT NULL AND userId = :userId) AS hoursOnWatch, " +
-          "(SELECT COUNT(*) from watches WHERE userId = :userId) AS watchCount, " +
+          " FROM sessions WHERE endTime is NOT NULL AND userId = :userId) AS hoursOnWatch, " +
+          "(SELECT COUNT(*) FROM sessions WHERE userId = :userId) AS watchCount, " +
           "(SELECT COUNT(messageId) from messages WHERE userId = :userId ) AS messageCount FROM users LIMIT 1;",
         { userId }
       )

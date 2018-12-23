@@ -30,11 +30,10 @@ export default class LocationController extends Controller {
           const result = await this.locationDao.findAll();
           if (result.every(isLocation)) {
             return res.status(StatusCode.OK).json(result.map(locationFilter));
-          } else {
-            return res
-              .status(StatusCode.INTERNAL_SERVER_ERROR)
-              .json(MessageFactory.createModelValidationError("Location"));
           }
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("Location"));
         } catch (err) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -59,11 +58,10 @@ export default class LocationController extends Controller {
           if (location) {
             if (isLocation(location)) {
               return res.status(StatusCode.OK).json(locationFilter(location));
-            } else {
-              return res
-                .status(StatusCode.INTERNAL_SERVER_ERROR)
-                .json(MessageFactory.createModelValidationError("Location"));
             }
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("Location"));
           } else {
             return res
               .status(StatusCode.NOT_FOUND)

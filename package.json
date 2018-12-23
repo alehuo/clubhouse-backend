@@ -15,6 +15,7 @@
     "watch": "nodemon start",
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "test": "nyc mocha test/**/*.test.ts --exit --timeout 10000",
+    "test-docker": "docker exec -it clubhouse-backend yarn test",
     "view-coverage": "serve coverage -s",
     "create-databases": "ts-node src/scripts/create-databases.ts",
     "migrate": "knex migrate:latest",
