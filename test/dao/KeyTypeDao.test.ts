@@ -33,6 +33,12 @@ const dbKeyTypes: KeyType[] = [
     title: "Day",
     created_at: moment().toISOString(),
     updated_at: moment().toISOString()
+  },
+  {
+    keyTypeId: 3,
+    title: "Test key",
+    created_at: moment().toISOString(),
+    updated_at: moment().toISOString()
   }
 ];
 
@@ -60,7 +66,7 @@ describe("KeyTypeDao", () => {
       const res = await keyTypeDao.findAll();
       const keyTypes = mapToKeyTypes(res);
       should.exist(keyTypes.length);
-      keyTypes.length.should.equal(2);
+      keyTypes.length.should.equal(3);
       should.exist(keyTypes[0]);
       should.exist(keyTypes[1]);
 
@@ -101,32 +107,30 @@ describe("KeyTypeDao", () => {
     it("Saves a new key type", async () => {
       const all1 = await keyTypeDao.findAll();
       const keyTypes1 = mapToKeyTypes(all1);
-      keyTypes1.length.should.equal(2);
+      keyTypes1.length.should.equal(3);
 
       await keyTypeDao.save({
         created_at: "",
-        keyTypeId: 3,
-        title: "Test",
+        keyTypeId: 4,
+        title: "Test key",
         updated_at: ""
       });
 
       const all2 = await keyTypeDao.findAll();
       const keyTypes2 = mapToKeyTypes(all2);
-      keyTypes2.length.should.equal(3);
+      keyTypes2.length.should.equal(4);
 
-      const res = await keyTypeDao.findOne(3);
+      const res = await keyTypeDao.findOne(4);
       const keyType: KeyType = { ...res };
-      const dbKey = dbKeyTypes.find((keyType) => keyType.keyTypeId === 1);
-      dbKey!.should.not.equal(null);
 
       should.exist(keyType.created_at);
       should.exist(keyType.updated_at);
 
       should.exist(keyType.keyTypeId);
-      keyType.keyTypeId.should.equal(3);
+      keyType.keyTypeId.should.equal(4);
 
       should.exist(keyType.title);
-      keyType.title.should.equal("Test");
+      keyType.title.should.equal("Test key");
 
       keyType.updated_at.should.equal(keyType.created_at);
     });
@@ -152,13 +156,13 @@ describe("KeyTypeDao", () => {
     it("Removes a single key type", async () => {
       const all1 = await keyTypeDao.findAll();
       const keyTypes1 = mapToKeyTypes(all1);
-      keyTypes1.length.should.equal(2);
+      keyTypes1.length.should.equal(3);
 
-      await keyTypeDao.remove(1);
+      await keyTypeDao.remove(3);
 
       const all2 = await keyTypeDao.findAll();
       const keyTypes2 = mapToKeyTypes(all2);
-      keyTypes2.length.should.equal(1);
+      keyTypes2.length.should.equal(2);
     });
   });
 });

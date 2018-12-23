@@ -159,7 +159,6 @@ describe("SessionController", () => {
         .set("Authorization", generateToken())
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<Session[]>;
-          console.log(body);
           const sessions = body.payload!;
           res.status.should.equal(StatusCode.OK);
           should.not.exist(body.error);

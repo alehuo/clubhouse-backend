@@ -19,7 +19,11 @@
     "view-coverage": "serve coverage -s",
     "create-databases": "ts-node src/scripts/create-databases.ts",
     "migrate": "knex migrate:latest",
+    "migrate-docker": "docker exec -it clubhouse-backend yarn migrate",
     "seed": "knex seed:run",
+    "seed-docker": "docker exec -it clubhouse-backend yarn seed",
+    "rollback": "knex migrate:rollback",
+    "rollback-docker": "docker exec -it clubhouse-backend yarn rollback",
     "build": "tsc",
     "heroku-postbuild": "yarn migrate"
   },
