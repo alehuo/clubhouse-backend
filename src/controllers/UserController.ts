@@ -9,18 +9,16 @@ import CalendarEventDao from "../dao/CalendarEventDao";
 
 import {
   DbUser,
+  isCalendarEvent,
   isDbUser,
+  isKey,
+  isMessage,
+  isNewspost,
+  isSession,
   Permission,
   User,
   userFilter
 } from "@alehuo/clubhouse-shared";
-import {
-  isCalendarEvent,
-  isKey,
-  isMessage,
-  isNewspost,
-  isSession
-} from "@alehuo/clubhouse-shared/dist/Validators";
 import { isString } from "util";
 import Validator from "validator";
 import KeyDao from "../dao/KeyDao";

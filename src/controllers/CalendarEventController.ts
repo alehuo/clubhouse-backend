@@ -7,8 +7,11 @@ import { createICal, createICalStream } from "../utils/iCalUtils";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
-import { CalendarEvent, Permission } from "@alehuo/clubhouse-shared";
-import { isCalendarEvent } from "@alehuo/clubhouse-shared/dist/Validators";
+import {
+  CalendarEvent,
+  isCalendarEvent,
+  Permission
+} from "@alehuo/clubhouse-shared";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { StatusCode } from "../utils/StatusCodes";
 
