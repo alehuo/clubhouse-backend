@@ -124,7 +124,7 @@ export default class SessionController extends Controller {
       RequestParamMiddleware("startMessage"),
       JWTMiddleware,
       async (req, res) => {
-        const { startMessage }: { startMessage: string } = req.body;
+        const { startMessage }: Partial<Session> = req.body;
 
         if (!isString(startMessage)) {
           return res.status(400).json("Invalid format for start message.");
@@ -142,7 +142,7 @@ export default class SessionController extends Controller {
                 )
               );
           }
-          const session: Session = {
+          const session: Partial<Session> = {
             sessionId: -1, // Placeholder
             userId,
             startMessage,
@@ -151,8 +151,8 @@ export default class SessionController extends Controller {
             endTime: "",
             ended: 0,
             started: 1,
-            created_at: "placeholder", // Placeholder
-            updated_at: "placeholder" // Placeholder
+            created_at: "", // Placeholder
+            updated_at: "" // Placeholder
           };
 
           if (!isSession(session)) {
@@ -224,7 +224,7 @@ export default class SessionController extends Controller {
       RequestParamMiddleware("endMessage"),
       JWTMiddleware,
       async (req, res) => {
-        const { endMessage }: { endMessage: string } = req.body;
+        const { endMessage }: Partial<Session> = req.body;
         try {
           const userId: number = res.locals.token.data.userId;
           const sessions = await this.sessionDao.findOngoingByUser(userId);

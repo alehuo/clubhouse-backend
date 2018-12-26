@@ -11,6 +11,7 @@ import {
   locationFilter,
   Permission
 } from "@alehuo/clubhouse-shared";
+import { isString } from "util";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { StatusCode } from "../utils/StatusCodes";
@@ -86,14 +87,19 @@ export default class LocationController extends Controller {
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req, res) => {
         try {
-          const { name, address }: { name: string; address: string } = req.body;
+          const { name, address }: Partial<Location> = req.body;
+          if (!isString(name) || !isString(address)) {
+            return res
+              .status(StatusCode.BAD_REQUEST)
+              .json(MessageFactory.createError("Invalid request parameters"));
+          }
           const location = await this.locationDao.findByName(name);
           if (location) {
             return res
               .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Location already exists"));
           } else {
-            const locationObj: Location = {
+            const locationObj: Partial<Location> = {
               name: name.trim(),
               address: address.trim(),
               created_at: "", // Placeholder

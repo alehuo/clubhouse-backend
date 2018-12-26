@@ -3,7 +3,7 @@ import UserDao from "../dao/UserDao";
 import { SignToken, VerifyToken } from "../utils/JwtUtils";
 import Controller from "./Controller";
 
-import { isString, Permission } from "@alehuo/clubhouse-shared";
+import { DbUser, isString, Permission } from "@alehuo/clubhouse-shared";
 import axios from "axios";
 import uuid from "uuid/v4";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
@@ -37,13 +37,7 @@ export default class AuthController extends Controller {
       RequestParamMiddleware("email", "password"),
       async (req, res) => {
         try {
-          const {
-            email,
-            password
-          }: {
-            email: string;
-            password: string;
-          } = req.body;
+          const { email, password }: Partial<DbUser> = req.body;
 
           if (!isString(email) || !isString(password)) {
             return res
@@ -124,6 +118,7 @@ export default class AuthController extends Controller {
       }
       // Validate token
       try {
+        // TODO: Typings
         const tokenData: any = await VerifyToken(token);
         const permissions: number = tokenData.data.permissions;
         // If the user doesn't have the permission to use the Spotify API, return an error

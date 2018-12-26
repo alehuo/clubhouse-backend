@@ -12,8 +12,10 @@ import {
   studentUnionFilter
 } from "@alehuo/clubhouse-shared";
 import moment from "moment";
+import { isString } from "util";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
+import { StatusCode } from "../utils/StatusCodes";
 
 /**
  * Student union controller.
@@ -31,16 +33,23 @@ export default class StudentUnionController extends Controller {
       async (req, res) => {
         try {
           const result = await this.studentUnionDao.findAll();
-          return res.json(
-            MessageFactory.createResponse<StudentUnion[]>(
-              true,
-              "Succesfully fetched student unions",
-              result.map(studentUnionFilter)
-            )
-          );
+          if (!result.every(isStudentUnion)) {
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("StudentUnion"));
+          }
+          return res
+            .status(StatusCode.OK)
+            .json(
+              MessageFactory.createResponse<StudentUnion[]>(
+                true,
+                "Succesfully fetched student unions",
+                result.map(studentUnionFilter)
+              )
+            );
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createError("Server error", err as Error));
         }
       }
@@ -56,8 +65,15 @@ export default class StudentUnionController extends Controller {
             req.params.studentUnionId
           );
           if (studentUnion) {
+            if (!isStudentUnion(studentUnion)) {
+              return res
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(
+                  MessageFactory.createModelValidationError("StudentUnion")
+                );
+            }
             return res
-              .status(200)
+              .status(StatusCode.OK)
               .json(
                 MessageFactory.createResponse<StudentUnion>(
                   true,
@@ -67,12 +83,12 @@ export default class StudentUnionController extends Controller {
               );
           } else {
             return res
-              .status(404)
+              .status(StatusCode.NOT_FOUND)
               .json(MessageFactory.createError("Student union not found"));
           }
         } catch (ex) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createError("Server error", ex as Error));
         }
       }
@@ -85,17 +101,24 @@ export default class StudentUnionController extends Controller {
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req, res) => {
         try {
-          const { name, description }: StudentUnion = req.body;
+          const { name, description }: Partial<StudentUnion> = req.body;
+
+          if (!isString(name) || !isString(description)) {
+            return res
+              .status(StatusCode.BAD_REQUEST)
+              .json(MessageFactory.createError("Invalid request params"));
+          }
+
           const studentUnion = await this.studentUnionDao.findByName(name);
 
           if (studentUnion) {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Student union already exists"));
           } else {
             if (name.length === 0 || description.length === 0) {
               return res
-                .status(400)
+                .status(StatusCode.BAD_REQUEST)
                 .json(
                   MessageFactory.createError(
                     "Name or description cannot be empty"
@@ -103,7 +126,7 @@ export default class StudentUnionController extends Controller {
                 );
             }
 
-            const newStdu: StudentUnion = {
+            const newStdu: Partial<StudentUnion> = {
               name,
               description,
               created_at: "",
@@ -113,7 +136,7 @@ export default class StudentUnionController extends Controller {
 
             if (!isStudentUnion(newStdu)) {
               return res
-                .status(400)
+                .status(StatusCode.BAD_REQUEST)
                 .json(
                   MessageFactory.createError(
                     "The request did not contain a valid student union object."
@@ -123,7 +146,7 @@ export default class StudentUnionController extends Controller {
 
             const savedStudentUnion = await this.studentUnionDao.save(newStdu);
 
-            return res.status(201).json(
+            return res.status(StatusCode.CREATED).json(
               MessageFactory.createResponse<StudentUnion>(true, "", {
                 ...{ name, description },
                 ...{
@@ -136,7 +159,7 @@ export default class StudentUnionController extends Controller {
           }
         } catch (err) {
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createError("Server error", err as Error));
         }
       }
@@ -157,18 +180,18 @@ export default class StudentUnionController extends Controller {
             );
             if (result) {
               return res
-                .status(200)
+                .status(StatusCode.OK)
                 .json(MessageFactory.createMessage("Student union removed"));
             } else {
               return res
-                .status(400)
+                .status(StatusCode.BAD_REQUEST)
                 .json(
                   MessageFactory.createError("Failed to remove student union")
                 );
             }
           } catch (err) {
             return res
-              .status(500)
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
               .json(
                 MessageFactory.createError(
                   "Server error: Cannot remove student union",
@@ -178,7 +201,7 @@ export default class StudentUnionController extends Controller {
           }
         } else {
           return res
-            .status(404)
+            .status(StatusCode.NOT_FOUND)
             .json(MessageFactory.createError("Student union not found"));
         }
       }

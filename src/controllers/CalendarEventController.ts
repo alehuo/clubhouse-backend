@@ -32,36 +32,15 @@ export default class CalendarEventController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req, res) => {
-        const {
-          name,
-          description,
-          locationId,
-          restricted,
-          startTime,
-          endTime,
-          unionId
-        }: {
-          name: string;
-          description: string;
-          locationId: number;
-          restricted: 0 | 1;
-          startTime: string;
-          endTime: string;
-          unionId: number;
-        } = req.body;
-
-        const calendarEventData: CalendarEvent = {
-          eventId: -1, // Placeholder
-          created_at: "placeholder", // Placeholder
-          updated_at: "placeholder", // Placeholder
-          name,
-          description,
-          locationId,
-          restricted,
-          startTime,
-          endTime,
+        const calendarEventData: Partial<CalendarEvent> = {
+          name: req.body.name,
+          description: req.body.description,
+          locationId: req.body.locationId,
+          restricted: req.body.restricted,
+          startTime: req.body.startTime,
+          endTime: req.body.endTime,
           addedBy: res.locals.token.userId,
-          unionId
+          unionId: req.body.unionId
         };
 
         if (!isCalendarEvent(calendarEventData)) {
@@ -103,7 +82,11 @@ export default class CalendarEventController extends Controller {
     this.router.get("", async (req, res) => {
       try {
         const events = await this.calendarEventDao.findAll();
-        // TODO: Add model validation
+        if (!events.every(isCalendarEvent)) {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("CalendarEvent"));
+        }
         return res
           .status(StatusCode.OK)
           .json(

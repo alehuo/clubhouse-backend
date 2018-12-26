@@ -77,14 +77,12 @@ export default class MessageController extends Controller {
         try {
           const userId: number = res.locals.token.data.userId;
 
-          const title = req.body.title ? String(req.body.title) : "(No title)";
-
-          const msg: Message = {
+          const msg: Partial<Message> = {
             created_at: "",
             messageId: -1,
             updated_at: "",
             message: req.body.message,
-            title,
+            title: req.body.title ? req.body.title : "(No title)",
             userId
           };
 
@@ -103,14 +101,14 @@ export default class MessageController extends Controller {
           const emailTitle =
             (process.env.MAIL_PREFIX
               ? "[" + process.env.MAIL_PREFIX + "]: "
-              : "") + title;
+              : "") + msg.title;
 
           const message =
             user.firstName +
             " " +
             user.lastName +
             " has sent the following message: \r\n\r\n\r\n\r\n" +
-            title +
+            msg.title +
             "\r\n\r\n" +
             req.body.message +
             "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";

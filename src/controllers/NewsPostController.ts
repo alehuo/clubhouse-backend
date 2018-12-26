@@ -103,7 +103,7 @@ export default class NewsPostController extends Controller {
         try {
           const userId: number = res.locals.token.data.userId;
 
-          const savedPost: Newspost = {
+          const savedPost: Partial<Newspost> = {
             created_at: "", // Placeholder
             postId: -1, // Placeholder
             updated_at: "", // Placeholder
