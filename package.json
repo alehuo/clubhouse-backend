@@ -96,7 +96,9 @@
       "src/scripts/**/*.js",
       "knexfile.ts",
       "src/index.ts",
-      "src/Database.ts"
+      "src/Database.ts",
+      "src/WebSocket.ts",
+      "src/utils/Mailer.ts"
     ],
     "reporter": [
       "html",

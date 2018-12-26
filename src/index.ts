@@ -15,6 +15,7 @@ import morgan from "morgan";
 import path from "path";
 import AuthController from "./controllers/AuthController";
 import CalendarEventController from "./controllers/CalendarEventController";
+import KeyTypeController from "./controllers/KeyTypeController";
 import LocationController from "./controllers/LocationController";
 import MessageController from "./controllers/MessageController";
 import NewsPostController from "./controllers/NewsPostController";
@@ -26,6 +27,7 @@ import StudentUnionController from "./controllers/StudentUnionController";
 import UserController from "./controllers/UserController";
 import CalendarEventDao from "./dao/CalendarEventDao";
 import KeyDao from "./dao/KeyDao";
+import KeyTypeDao from "./dao/KeyTypeDao";
 import LocationDao from "./dao/LocationDao";
 import MessageDao from "./dao/MessageDao";
 import NewsPostDao from "./dao/NewsPostDao";
@@ -36,6 +38,8 @@ import StudentUnionDao from "./dao/StudentUnionDao";
 import UserDao from "./dao/UserDao";
 import * as Database from "./Database";
 import { apiHeader, apiUrl } from "./utils/ApiUtils";
+import { MessageFactory } from "./utils/MessageFactory";
+import { StatusCode } from "./utils/StatusCodes";
 import { WebSocketServer } from "./WebSocket";
 
 // Express instance
@@ -191,11 +195,18 @@ app.use(
   new RuleController(new RuleDao(knex)).routes()
 );
 
+// Key types
 app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    return res.status(404).json({ error: "Invalid API route" });
-  }
+  apiUrl("keyType", API_VERSION),
+  apiHeader(API_VERSION),
+  new KeyTypeController(new KeyTypeDao(knex)).routes()
 );
+
+app.use((req, res, next) => {
+  return res
+    .status(StatusCode.NOT_FOUND)
+    .json(MessageFactory.createError("Invalid API route"));
+});
 
 app.use(
   (
@@ -204,8 +215,9 @@ app.use(
     res: express.Response,
     next: express.NextFunction
   ) => {
-    console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
+    return res
+      .status(StatusCode.INTERNAL_SERVER_ERROR)
+      .json(MessageFactory.createError("Internal server error", err));
   }
 );
 
