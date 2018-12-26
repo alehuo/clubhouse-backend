@@ -199,7 +199,7 @@ app.use(
 app.use(
   apiUrl("keyType", API_VERSION),
   apiHeader(API_VERSION),
-  new KeyTypeController(new KeyTypeDao(knex)).routes()
+  new KeyTypeController(new KeyTypeDao(knex), new KeyDao(knex)).routes()
 );
 
 app.use((req, res, next) => {

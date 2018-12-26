@@ -33,14 +33,17 @@ export default class CalendarEventController extends Controller {
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req, res) => {
         const calendarEventData: Partial<CalendarEvent> = {
+          eventId: -1,
           name: req.body.name,
           description: req.body.description,
           locationId: req.body.locationId,
           restricted: req.body.restricted,
           startTime: req.body.startTime,
           endTime: req.body.endTime,
-          addedBy: res.locals.token.userId,
-          unionId: req.body.unionId
+          addedBy: res.locals.token.data.userId,
+          unionId: req.body.unionId,
+          created_at: "",
+          updated_at: ""
         };
 
         if (!isCalendarEvent(calendarEventData)) {
@@ -53,25 +56,28 @@ export default class CalendarEventController extends Controller {
           const calendarEvent = await this.calendarEventDao.save(
             calendarEventData
           );
-          return res.status(StatusCode.CREATED).json(
-            MessageFactory.createResponse<CalendarEvent>(
-              true,
-              "Succesfully saved calendar event",
-              {
-                ...{},
-                ...calendarEventData,
-                ...{
-                  eventId: calendarEvent[0]
-                }
-              }
-            )
-          );
+          if (calendarEvent[0]) {
+            const event = await this.calendarEventDao.findOne(calendarEvent[0]);
+            return res
+              .status(StatusCode.CREATED)
+              .json(
+                MessageFactory.createResponse<CalendarEvent>(
+                  true,
+                  "Succesfully saved calendar event",
+                  event
+                )
+              );
+          } else {
+            return res
+              .status(StatusCode.BAD_REQUEST)
+              .json(MessageFactory.createError("Failed to add calendar event"));
+          }
         } catch (ex) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
-                "Server error: Cannot add a new event",
+                "Server error: Cannot add a new calendar event",
                 ex as Error
               )
             );

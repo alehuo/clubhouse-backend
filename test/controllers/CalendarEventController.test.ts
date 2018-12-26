@@ -184,4 +184,56 @@ describe("CalendarEventController", () => {
         done();
       });
   }).timeout(5000);
+
+  it("Adds a calendar event", async () => {
+    const calendarEvent: Partial<CalendarEvent> = {
+      addedBy: 1,
+      description: "Hello World",
+      locationId: 1,
+      name: "Test event",
+      startTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+      endTime: moment()
+        .add(2, "hours")
+        .format("YYYY-MM-DD HH:mm:ss"),
+      unionId: 1,
+      restricted: 0
+    };
+    const res = await chai
+      .request(app)
+      .post(calendarUrl)
+      .send(calendarEvent)
+      .set("Authorization", generateToken());
+    const body = res.body as ApiResponse<CalendarEvent>;
+    should.not.exist(body.error);
+    should.exist(body.payload);
+    should.exist(body.success);
+    body.success.should.equal(true);
+    res.status.should.equal(StatusCode.CREATED);
+
+    const event = body!.payload!;
+
+    should.exist(event.description);
+    should.exist(event.addedBy);
+    should.exist(event.created_at);
+    should.exist(event.updated_at);
+    should.exist(event.endTime);
+    should.exist(event.startTime);
+    should.exist(event.restricted);
+    should.exist(event.eventId);
+    should.exist(event.locationId);
+    should.exist(event.name);
+    should.exist(event.unionId);
+
+    event.description.should.equal(calendarEvent.description);
+    moment(event.endTime)
+      .format("YYYY-MM-DD HH:mm:ss")
+      .should.equal(calendarEvent.endTime);
+    event.locationId.should.equal(calendarEvent.locationId);
+    event.name.should.equal(calendarEvent.name);
+    event.restricted.should.equal(calendarEvent.restricted);
+    moment(event.startTime)
+      .format("YYYY-MM-DD HH:mm:ss")
+      .should.equal(calendarEvent.startTime);
+    event.unionId.should.equal(calendarEvent.unionId);
+  }).timeout(5000);
 });
