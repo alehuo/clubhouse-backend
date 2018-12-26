@@ -13,6 +13,7 @@ const knex = Database.connect();
 import chai from "chai";
 const should = chai.should();
 import chaiHttp from "chai-http";
+import { StatusCode } from "../../src/utils/StatusCodes";
 chai.use(chaiHttp);
 
 const url = "/api/v1/studentunion";
@@ -81,7 +82,7 @@ describe("StudentUnionController", () => {
         .get(url)
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(403);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.exist(body.error);
           should.exist(body.error!.message);
           body.error!.message.should.equal("Missing Authorization header");
@@ -96,7 +97,7 @@ describe("StudentUnionController", () => {
         .set("Authorization", "Bearer HelloWorld")
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(403);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.exist(body.error);
           should.exist(body.error!.message);
           body.error!.message.should.equal("Malformed Authorization header");
@@ -143,7 +144,7 @@ describe("StudentUnionController", () => {
           })
         )
         .end((err, res: ChaiHttp.Response) => {
-          res.status.should.equal(400);
+          res.status.should.equal(StatusCode.UNAUTHORIZED);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
@@ -187,7 +188,7 @@ describe("StudentUnionController", () => {
         )
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(400);
+          res.status.should.equal(StatusCode.UNAUTHORIZED);
           should.exist(body.error);
           should.exist(body.error!.message);
           body.error!.message.should.equal("Unauthorized");
@@ -201,7 +202,7 @@ describe("StudentUnionController", () => {
         .get(url + "/100")
         .set("Authorization", generateToken())
         .end((err, res: ChaiHttp.Response) => {
-          res.status.should.equal(404);
+          res.status.should.equal(StatusCode.NOT_FOUND);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
@@ -225,7 +226,7 @@ describe("StudentUnionController", () => {
           const body = res.body as ApiResponse<StudentUnion>;
           should.exist(body.payload);
           const stdu = body.payload!;
-          res.status.should.equal(201);
+          res.status.should.equal(StatusCode.CREATED);
           should.exist(stdu.name);
           stdu.name.should.equal("TestUnion");
           should.exist(stdu.description);
@@ -249,7 +250,7 @@ describe("StudentUnionController", () => {
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
-          res.status.should.equal(400);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.not.exist(body.payload);
           body.error!.message.should.equal(
             "Name or description cannot be empty"
@@ -298,7 +299,7 @@ describe("StudentUnionController", () => {
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
-          res.status.should.equal(400);
+          res.status.should.equal(StatusCode.UNAUTHORIZED);
           should.not.exist(body.payload);
           body.error!.message.should.equal("Unauthorized");
           done();
@@ -315,7 +316,7 @@ describe("StudentUnionController", () => {
         })
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(400);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.exist(body.error);
           should.exist(body.error!.message);
           body.error!.message.should.equal("Missing request body parameters");
@@ -367,6 +368,7 @@ describe("StudentUnionController", () => {
         )
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
+          res.status.should.equal(StatusCode.UNAUTHORIZED);
           should.exist(body.error);
           should.exist(body.error!.message);
           body.error!.message!.should.equal("Unauthorized");

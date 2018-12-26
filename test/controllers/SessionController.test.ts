@@ -61,7 +61,7 @@ describe("SessionController", () => {
         .request(app)
         .get(url + "/ongoing")
         .end((err, res: ChaiHttp.Response) => {
-          res.status.should.equal(StatusCode.FORBIDDEN);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);
@@ -76,7 +76,7 @@ describe("SessionController", () => {
         .get(url + "/ongoing")
         .set("Authorization", "Bearer HelloWorld")
         .end((err, res: ChaiHttp.Response) => {
-          res.status.should.equal(StatusCode.FORBIDDEN);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           const body = res.body as ApiResponse<undefined>;
           should.exist(body.error);
           should.exist(body.error!.message);

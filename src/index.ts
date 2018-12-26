@@ -37,16 +37,19 @@ import StatisticsDao from "./dao/StatisticsDao";
 import StudentUnionDao from "./dao/StudentUnionDao";
 import UserDao from "./dao/UserDao";
 import * as Database from "./Database";
+import { APIVersionMiddleware } from "./middleware/APIVersionMiddleware";
+import { ErrorMiddleware } from "./middleware/ErrorMiddleware";
+import { InvalidRouteMiddleware } from "./middleware/InvalidRouteMiddleware";
 import { apiHeader, apiUrl } from "./utils/ApiUtils";
-import { MessageFactory } from "./utils/MessageFactory";
-import { StatusCode } from "./utils/StatusCodes";
 import { WebSocketServer } from "./WebSocket";
 
 // Express instance
 const app = express();
 
+// CORS middleware
 app.use(cors());
 
+// Cookie parser
 app.use(cookieParser());
 
 const server = http.createServer(app);
@@ -56,27 +59,6 @@ const ws = new WebSocketServer(server);
 
 // Use Helmet
 app.use(helmet());
-
-// Middleware to set Access-Control origin
-/*
-if (process.env.NODE_ENV !== "test") {
-  app.use((req, res, next) => {
-    res.setHeader(
-      "Access-Control-Allow-Origin",
-      req.headers.origin || "localhost"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "POST, GET, PUT, PATCH, OPTIONS, DELETE"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Accept, X-Requested-With, Authorization"
-    );
-    res.setHeader("Access-Control-Max-Age", "3600");
-    next();
-  });
-}*/
 
 // Knex instance
 const knex = Database.connect();
@@ -107,10 +89,7 @@ app.use(
 );
 
 // API version header
-app.use((req, res, next) => {
-  res.setHeader("X-Latest-API-Version", API_VERSION);
-  next();
-});
+app.use(APIVersionMiddleware(API_VERSION));
 
 // Users route
 app.use(
@@ -202,24 +181,9 @@ app.use(
   new KeyTypeController(new KeyTypeDao(knex), new KeyDao(knex)).routes()
 );
 
-app.use((req, res, next) => {
-  return res
-    .status(StatusCode.NOT_FOUND)
-    .json(MessageFactory.createError("Invalid API route"));
-});
+app.use(InvalidRouteMiddleware);
 
-app.use(
-  (
-    err: any,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    return res
-      .status(StatusCode.INTERNAL_SERVER_ERROR)
-      .json(MessageFactory.createError("Internal server error", err));
-  }
-);
+app.use(ErrorMiddleware);
 
 const port = Number(process.env.PORT || 3001);
 

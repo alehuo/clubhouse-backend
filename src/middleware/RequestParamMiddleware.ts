@@ -1,4 +1,4 @@
-import * as express from "express";
+import { RequestHandler } from "express";
 import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
 
@@ -10,12 +10,10 @@ import { StatusCode } from "../utils/StatusCodes";
  * @param {...Array<keyof T>} params Fields that are required in the post body, defined by the model T
  * @returns Express middleware function
  */
-export function RequestParamMiddleware<T>(...params: Array<keyof T>) {
-  return (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
+export function RequestParamMiddleware<T>(
+  ...params: Array<keyof T>
+): RequestHandler {
+  return (req, res, next) => {
     const missing: Array<keyof T> = [];
     for (const param of params) {
       if (!req.body.hasOwnProperty(param)) {

@@ -8,6 +8,7 @@ import "mocha";
 import * as httpMocks from "node-mocks-http";
 import { PermissionMiddleware } from "../../src/middleware/PermissionMiddleware";
 import { VerifyToken } from "../../src/utils/JwtUtils";
+import { StatusCode } from "../../src/utils/StatusCodes";
 import { generateToken } from "../TestUtils";
 const should = chai.should();
 
@@ -36,7 +37,7 @@ describe("PermissionMiddleware", () => {
     should.exist(data.error!.message);
     should.exist(response.statusCode);
     expect(data.error!.message).to.equal("Invalid token");
-    expect(response.statusCode).to.equal(400);
+    expect(response.statusCode).to.equal(StatusCode.BAD_REQUEST);
   });
 
   it("Should return an error if the user has no permissions", async () => {
@@ -72,7 +73,7 @@ describe("PermissionMiddleware", () => {
     should.exist(data.error!.message);
     should.exist(response.statusCode);
     expect(data.error!.message).to.equal("Unauthorized");
-    expect(response.statusCode).to.equal(400);
+    expect(response.statusCode).to.equal(StatusCode.UNAUTHORIZED);
   });
 
   it("Should call next() if the user has permissions", async () => {

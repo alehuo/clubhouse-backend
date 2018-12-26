@@ -1,23 +1,15 @@
-import * as express from "express";
+import { RequestHandler } from "express";
 import { VerifyToken } from "../utils/JwtUtils";
 import { MessageFactory } from "../utils/MessageFactory";
-/**
- * Express middleware for verifying JWT's.
- * @param req Express request.
- * @param res Express response.
- * @param next Express NextFunction
- */
-export const JWTMiddleware = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
+import { StatusCode } from "../utils/StatusCodes";
+
+export const JWTMiddleware: RequestHandler = async (req, res, next) => {
   // Extract auth header
   const authHeader = req.get("Authorization");
   if (authHeader === undefined) {
     // If the token is undefined, return an error.
     return res
-      .status(403)
+      .status(StatusCode.BAD_REQUEST)
       .json(MessageFactory.createError("Missing Authorization header"));
   }
   // Split header into parts to extract token & check for Bearer
@@ -31,12 +23,12 @@ export const JWTMiddleware = async (
       next();
     } catch (ex) {
       return res
-        .status(403)
+        .status(StatusCode.BAD_REQUEST)
         .json(MessageFactory.createError("Malformed Authorization header"));
     }
   } else {
     return res
-      .status(403)
+      .status(StatusCode.BAD_REQUEST)
       .json(MessageFactory.createError("Malformed Authorization header"));
   }
 };

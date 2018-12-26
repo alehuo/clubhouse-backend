@@ -5,6 +5,7 @@ import { expect } from "chai";
 import "mocha";
 import * as httpMocks from "node-mocks-http";
 import { JWTMiddleware } from "../../src/middleware/JWTMiddleware";
+import { StatusCode } from "../../src/utils/StatusCodes";
 import { generateToken } from "../TestUtils";
 
 process.env.JWT_SECRET = "testSecret";
@@ -25,7 +26,7 @@ describe("JWTMiddleware", () => {
     expect(nextCalled).to.equal(0);
     const data: ApiResponse<undefined> = JSON.parse(response._getData());
     expect(data.error!.message).to.equal("Missing Authorization header");
-    expect(response.statusCode).to.equal(403);
+    expect(response.statusCode).to.equal(StatusCode.BAD_REQUEST);
   });
 
   it("Should return an error if the Authorization -header is malformed (Case 1)", async () => {
@@ -46,7 +47,7 @@ describe("JWTMiddleware", () => {
     expect(nextCalled).to.equal(0);
     const data: ApiResponse<undefined> = JSON.parse(response._getData());
     expect(data.error!.message).to.equal("Malformed Authorization header");
-    expect(response.statusCode).to.equal(403);
+    expect(response.statusCode).to.equal(StatusCode.BAD_REQUEST);
   });
 
   it("Should return an error if the Authorization -header is malformed (Case 2)", async () => {
@@ -66,7 +67,7 @@ describe("JWTMiddleware", () => {
     expect(nextCalled).to.equal(0);
     const data: ApiResponse<undefined> = JSON.parse(response._getData());
     expect(data.error!.message).to.equal("Malformed Authorization header");
-    expect(response.statusCode).to.equal(403);
+    expect(response.statusCode).to.equal(StatusCode.BAD_REQUEST);
   });
 
   it("Should call next() if the token is valid", async () => {

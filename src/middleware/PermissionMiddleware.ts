@@ -1,12 +1,11 @@
-import * as express from "express";
+import { RequestHandler } from "express";
 import { MessageFactory } from "../utils/MessageFactory";
 import { hasPermissions } from "../utils/PermissionUtils";
+import { StatusCode } from "../utils/StatusCodes";
 
-export const PermissionMiddleware = (...requiredPermissions: number[]) => (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
+export const PermissionMiddleware = (
+  ...requiredPermissions: number[]
+): RequestHandler => (req, res, next) => {
   // Handle required permissions here.
   const token = res.locals.token;
   if (token) {
@@ -18,9 +17,13 @@ export const PermissionMiddleware = (...requiredPermissions: number[]) => (
     ) {
       next();
     } else {
-      return res.status(400).json(MessageFactory.createError("Unauthorized"));
+      return res
+        .status(StatusCode.UNAUTHORIZED)
+        .json(MessageFactory.createError("Unauthorized"));
     }
   } else {
-    return res.status(400).json(MessageFactory.createError("Invalid token"));
+    return res
+      .status(StatusCode.BAD_REQUEST)
+      .json(MessageFactory.createError("Invalid token"));
   }
 };

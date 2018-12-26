@@ -11,6 +11,7 @@ const knex = Database.connect();
 import chai from "chai";
 const should = chai.should();
 import chaiHttp from "chai-http";
+import { StatusCode } from "../../src/utils/StatusCodes";
 chai.use(chaiHttp);
 
 const url = "/api/v1/keyType";
@@ -41,7 +42,7 @@ describe("KeyTypeController", () => {
         .get(url)
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(403);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.exist(body.error);
           should.exist(body.error!.message);
           should.not.exist(body.payload);
@@ -57,7 +58,7 @@ describe("KeyTypeController", () => {
         .set("Authorization", "Bearer HelloWorld")
         .end((err, res: ChaiHttp.Response) => {
           const body = res.body as ApiResponse<undefined>;
-          res.status.should.equal(403);
+          res.status.should.equal(StatusCode.BAD_REQUEST);
           should.exist(body.error);
           should.exist(body.error!.message);
           should.not.exist(body.payload);
