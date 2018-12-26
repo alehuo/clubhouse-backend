@@ -14,6 +14,14 @@ import {
   User,
   userFilter
 } from "@alehuo/clubhouse-shared";
+import {
+  isCalendarEvent,
+  isKey,
+  isMessage,
+  isNewspost,
+  isSession
+} from "@alehuo/clubhouse-shared/dist/Validators";
+import { isString } from "util";
 import Validator from "validator";
 import KeyDao from "../dao/KeyDao";
 import MessageDao from "../dao/MessageDao";
@@ -40,16 +48,23 @@ export default class UserController extends Controller {
     this.router.get("", JWTMiddleware, async (req, res) => {
       try {
         const result = await this.userDao.findAll();
-        return res.json(
-          MessageFactory.createResponse<User[]>(
-            true,
-            "Succesfully fetched users",
-            result.map(userFilter)
-          )
-        );
+        if (!result.every(isDbUser)) {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(MessageFactory.createModelValidationError("DbUser"));
+        }
+        return res
+          .status(StatusCode.OK)
+          .json(
+            MessageFactory.createResponse<User[]>(
+              true,
+              "Succesfully fetched users",
+              result.map(userFilter)
+            )
+          );
       } catch (err) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
               "Internal server error: Cannot get all users",
@@ -65,21 +80,26 @@ export default class UserController extends Controller {
         const user = await this.userDao.findOne(userId);
         if (!user) {
           return res
-            .status(404)
+            .status(StatusCode.NOT_FOUND)
             .json(MessageFactory.createError("User not found"));
         } else {
+          if (!isDbUser(user)) {
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("DbUser"));
+          }
           return res
-            .status(200)
+            .status(StatusCode.OK)
             .json(
               MessageFactory.createResponse<User>(true, "", userFilter(user))
             );
         }
       } catch (ex) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot get a single user",
+              "Server error: Cannot get a single user",
               ex as Error
             )
           );
@@ -88,24 +108,30 @@ export default class UserController extends Controller {
 
     this.router.get("/:userId(\\d+)", JWTMiddleware, async (req, res) => {
       try {
-        const user = await this.userDao.findOne(req.params.userId);
+        const userId = Number(req.params.userId);
+        const user = await this.userDao.findOne(userId);
         if (!user) {
           return res
-            .status(404)
+            .status(StatusCode.NOT_FOUND)
             .json(MessageFactory.createError("User not found"));
         } else {
+          if (!isDbUser(user)) {
+            return res
+              .status(StatusCode.INTERNAL_SERVER_ERROR)
+              .json(MessageFactory.createModelValidationError("DbUser"));
+          }
           return res
-            .status(200)
+            .status(StatusCode.OK)
             .json(
               MessageFactory.createResponse<User>(true, "", userFilter(user))
             );
         }
       } catch (ex) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot get a single user",
+              "Server error: Cannot get a single user",
               ex as Error
             )
           );
@@ -114,33 +140,39 @@ export default class UserController extends Controller {
 
     this.router.put("/:userId(\\d+)", JWTMiddleware, async (req, res) => {
       try {
-        const userId: number = res.locals.token.data.userId;
+        const userId = Number(res.locals.token.data.userId);
+        const routeUserId = Number(req.params.userId);
         // Check that the JWT's userId matches with the request userId
         // In the future, admin permission check can be used for this functionality.
-        if (Number(userId) !== Number(req.params.userId)) {
+        if (userId !== routeUserId) {
           return res
-            .status(400)
+            .status(StatusCode.BAD_REQUEST)
             .json(
               MessageFactory.createError(
                 "You can only edit your own information"
               )
             );
         }
-        const user = await this.userDao.findOne(res.locals.token.data.userId);
+        const user = await this.userDao.findOne(userId);
         if (!user) {
           return res
-            .status(404)
+            .status(StatusCode.NOT_FOUND)
             .json(MessageFactory.createError("User not found"));
         } else {
           const errors: string[] = [];
-          const { firstName, lastName, email, password }: DbUser = req.body;
+          const {
+            firstName,
+            lastName,
+            email,
+            password
+          }: Partial<DbUser> = req.body;
           user.firstName = firstName ? firstName : user.firstName;
           user.lastName = lastName ? lastName : user.lastName;
           if (email && user.email !== email) {
             const usr = await this.userDao.findByEmail(email.trim());
             if (usr) {
               return res
-                .status(400)
+                .status(StatusCode.BAD_REQUEST)
                 .json(
                   MessageFactory.createError("Email address is already in use")
                 );
@@ -188,11 +220,11 @@ export default class UserController extends Controller {
               : user.password;
           }
           if (errors.length === 0) {
-            const result: boolean = await this.userDao.update(user);
+            const result = await this.userDao.update(user);
             if (result) {
               const updatedUser = await this.userDao.findOne(userId);
               return res
-                .status(200)
+                .status(StatusCode.OK)
                 .json(
                   MessageFactory.createResponse<User>(
                     true,
@@ -202,12 +234,12 @@ export default class UserController extends Controller {
                 );
             } else {
               return res
-                .status(400)
+                .status(StatusCode.BAD_REQUEST)
                 .json(MessageFactory.createError("Error editing user"));
             }
           } else {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(
                 MessageFactory.createError(
                   "Error editing user information",
@@ -219,10 +251,10 @@ export default class UserController extends Controller {
         }
       } catch (ex) {
         return res
-          .status(500)
+          .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
             MessageFactory.createError(
-              "Internal server error: Cannot edit user",
+              "Server error: Cannot edit user",
               ex as Error
             )
           );
@@ -234,12 +266,29 @@ export default class UserController extends Controller {
       RequestParamMiddleware("email", "firstName", "lastName", "password"),
       async (req, res) => {
         try {
-          const { email, firstName, lastName, password }: DbUser = req.body;
+          const {
+            email,
+            firstName,
+            lastName,
+            password
+          }: Partial<DbUser> = req.body;
+
+          if (
+            !isString(email) ||
+            !isString(firstName) ||
+            !isString(lastName) ||
+            !isString(password)
+          ) {
+            return res
+              .status(StatusCode.BAD_REQUEST)
+              .json(MessageFactory.createError("Invalid request params"));
+          }
+
           const user = await this.userDao.findByEmail(email.trim());
 
           if (user) {
             return res
-              .status(400)
+              .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("User already exists"));
           } else {
             const errors: string[] = [];
@@ -274,7 +323,7 @@ export default class UserController extends Controller {
 
             if (errors.length > 0) {
               return res
-                .status(400)
+                .status(StatusCode.BAD_REQUEST)
                 .json(
                   MessageFactory.createError(
                     "Error registering user",
@@ -284,7 +333,7 @@ export default class UserController extends Controller {
                 );
             }
 
-            const userToSave: DbUser = {
+            const userToSave: Partial<DbUser> = {
               email,
               firstName,
               lastName,
@@ -325,66 +374,91 @@ export default class UserController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_REMOVE_USER),
       async (req, res) => {
+        const userId = Number(req.params.userId);
+        const localUserId = Number(res.locals.token.data.userId);
         try {
-          const user = await this.userDao.findOne(req.params.userId);
+          const user = await this.userDao.findOne(userId);
           if (!user) {
             return res
-              .status(404)
+              .status(StatusCode.NOT_FOUND)
               .json(MessageFactory.createError("User not found"));
           } else {
-            if (Number(res.locals.token.data.userId) === Number(user.userId)) {
+            if (!isDbUser(user)) {
               return res
-                .status(400)
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(MessageFactory.createModelValidationError("DbUser"));
+            }
+            if (localUserId === user.userId) {
+              return res
+                .status(StatusCode.BAD_REQUEST)
                 .json(
                   MessageFactory.createError(
                     "You cannot delete yourself. Please contact a server admin to do this operation."
                   )
                 );
             }
-            const userId = Number(user.userId);
             const calendarEvents = await this.calendarEventDao.findCalendarEventsByUser(
-              userId
+              user.userId
             );
+            if (!calendarEvents.every(isCalendarEvent)) {
+              return res
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(
+                  MessageFactory.createModelValidationError("CalendarEvent")
+                );
+            }
             await Promise.all(
-              calendarEvents.map((event) => {
-                if (event.eventId !== undefined) {
-                  this.calendarEventDao.remove(event.eventId);
-                }
-              })
+              calendarEvents.map((event) =>
+                this.calendarEventDao.remove(event.eventId)
+              )
             );
             // Remove messages
             const messages = await this.messageDao.findByUser(userId);
+            if (!messages.every(isMessage)) {
+              return res
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(MessageFactory.createModelValidationError("Message"));
+            }
             await Promise.all(
-              messages.map((msg) => {
-                if (msg.messageId !== undefined) {
-                  this.messageDao.remove(msg.messageId);
-                }
-              })
+              messages.map((msg) => this.messageDao.remove(msg.messageId))
             );
             // Remove newsposts
             const newsPosts = await this.newsPostDao.findByAuthor(userId);
+            if (!newsPosts.every(isNewspost)) {
+              return res
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(MessageFactory.createModelValidationError("NewsPost"));
+            }
             await Promise.all(
-              newsPosts.map((newsPost) => {
-                if (newsPost.postId !== undefined) {
-                  this.newsPostDao.remove(newsPost.postId);
-                }
-              })
+              newsPosts.map((newsPost) =>
+                this.newsPostDao.remove(newsPost.postId)
+              )
             );
             // Remove sessions
             const sessions = await this.sessionDao.findByUser(userId);
+            if (!sessions.every(isSession)) {
+              return res
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(MessageFactory.createModelValidationError("Session"));
+            }
             await Promise.all(
               sessions.map((session) => this.sessionDao.remove(session.sessionId))
             );
 
             // Remove keys
             const keys = await this.keyDao.findByUser(userId);
+            if (!keys.every(isKey)) {
+              return res
+                .status(StatusCode.INTERNAL_SERVER_ERROR)
+                .json(MessageFactory.createModelValidationError("Key"));
+            }
             await Promise.all(keys.map((key) => this.keyDao.remove(key.keyId)));
 
             // Remove user data
             await this.userDao.remove(userId);
 
             return res
-              .status(200)
+              .status(StatusCode.OK)
               .json(
                 MessageFactory.createMessage(
                   "User deleted from the server (including his/her created calendar events" +
@@ -393,9 +467,8 @@ export default class UserController extends Controller {
               );
           }
         } catch (ex) {
-          console.log(ex);
           return res
-            .status(500)
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
               MessageFactory.createError(
                 "Internal server error: Cannot delete user",
