@@ -19,7 +19,7 @@ export default class KeyDao implements Dao<Key> {
         .first()
     );
   }
-  public findByKeyType(keyTypeId: number): PromiseLike<Key> {
+  public findByKeyType(keyTypeId: number): PromiseLike<Key[]> {
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .select()

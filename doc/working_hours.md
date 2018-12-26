@@ -66,4 +66,4 @@ Total:
 
 61.0 h (part 1)
 
-50.0 h (part 2)
+50.5 h (part 2)
