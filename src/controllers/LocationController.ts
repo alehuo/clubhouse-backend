@@ -82,7 +82,7 @@ export default class LocationController extends Controller {
 
     this.router.post(
       "",
-      RequestParamMiddleware("name", "address"),
+      RequestParamMiddleware<Location>("name", "address"),
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req, res) => {

@@ -96,7 +96,7 @@ export default class NewsPostController extends Controller {
     // Add a newspost
     this.router.post(
       "",
-      RequestParamMiddleware("title", "message"),
+      RequestParamMiddleware<Newspost>("title", "message"),
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_POSTS),
       async (req, res) => {

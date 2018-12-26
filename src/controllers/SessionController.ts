@@ -121,7 +121,7 @@ export default class SessionController extends Controller {
     // Start a session.
     this.router.post(
       "/start",
-      RequestParamMiddleware("startMessage"),
+      RequestParamMiddleware<Session>("startMessage"),
       JWTMiddleware,
       async (req, res) => {
         const { startMessage }: Partial<Session> = req.body;
@@ -131,7 +131,7 @@ export default class SessionController extends Controller {
         }
 
         try {
-          const userId: number = res.locals.token.data.userId;
+          const userId = Number(res.locals.token.data.userId);
           const sessions = await this.sessionDao.findOngoingByUser(userId);
           if (sessions && sessions.length > 0) {
             return res
@@ -182,7 +182,7 @@ export default class SessionController extends Controller {
             session.startMessage +
             "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
 
-          const htmlMessage: string =
+          const htmlMessage =
             "<span style='font-weight: bold;'>" +
             user.firstName +
             " " +
@@ -221,12 +221,12 @@ export default class SessionController extends Controller {
     // Stop a session.
     this.router.post(
       "/stop",
-      RequestParamMiddleware("endMessage"),
+      RequestParamMiddleware<Session>("endMessage"),
       JWTMiddleware,
       async (req, res) => {
         const { endMessage }: Partial<Session> = req.body;
         try {
-          const userId: number = res.locals.token.data.userId;
+          const userId = Number(res.locals.token.data.userId);
           const sessions = await this.sessionDao.findOngoingByUser(userId);
           if (sessions) {
             if (sessions.length === 0) {
@@ -248,7 +248,7 @@ export default class SessionController extends Controller {
                 );
             }
           }
-          const currentSession: Session = sessions[0];
+          const currentSession = sessions[0];
           if (currentSession === undefined) {
             return res
               .status(StatusCode.BAD_REQUEST)
@@ -276,7 +276,7 @@ export default class SessionController extends Controller {
 
           const user = await this.userDao.findOne(userId);
 
-          const title: string =
+          const title =
             (process.env.MAIL_PREFIX
               ? "[" + process.env.MAIL_PREFIX + "]: "
               : "") +
@@ -285,7 +285,7 @@ export default class SessionController extends Controller {
             user.lastName +
             " has ended a session";
 
-          const message: string =
+          const message =
             user.firstName +
             " " +
             user.lastName +
@@ -293,7 +293,7 @@ export default class SessionController extends Controller {
             endMessage +
             "\r\n\r\n\r\n\r\nTo view more details, please visit the clubhouse website.";
 
-          const htmlMessage: string =
+          const htmlMessage =
             "<span style='font-weight: bold;'>" +
             user.firstName +
             " " +

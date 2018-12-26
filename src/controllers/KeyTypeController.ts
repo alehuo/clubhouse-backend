@@ -3,6 +3,7 @@ import { isString } from "util";
 import KeyDao from "../dao/KeyDao";
 import KeyTypeDao from "../dao/KeyTypeDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
+import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
 import Controller from "./Controller";
@@ -59,48 +60,55 @@ export default class KeyTypeController extends Controller {
       }
     });
     // TODO: DELETE, PATCH and PUT routes and permission checking
-    this.router.post("", JWTMiddleware, async (req, res) => {
-      const { title }: Partial<KeyType> = req.body;
-      if (!isString(title)) {
-        return res
-          .status(StatusCode.BAD_REQUEST)
-          .json(MessageFactory.createError("Invalid request params"));
-      }
-      const newKeyType = {
-        keyTypeId: -1, // Placeholder
-        title: title.trim(),
-        created_at: "", // Placeholder
-        updated_at: "" // Placeholder
-      };
-      if (!isKeyType(newKeyType)) {
-        return res
-          .status(StatusCode.BAD_REQUEST)
-          .json(MessageFactory.createError("Invalid request params"));
-      }
-      try {
-        const savedKeyTypeIds = await this.keyTypeDao.save(newKeyType);
-        if (savedKeyTypeIds[0]) {
-          const savedKeyType = await this.keyTypeDao.findOne(
-            savedKeyTypeIds[0]
-          );
-          return res
-            .status(StatusCode.CREATED)
-            .json(
-              MessageFactory.createResponse<KeyType>(true, "", savedKeyType)
-            );
-        } else {
+    this.router.post(
+      "",
+      RequestParamMiddleware<KeyType>("title"),
+      JWTMiddleware,
+      async (req, res) => {
+        const { title }: Partial<KeyType> = req.body;
+        if (!isString(title)) {
           return res
             .status(StatusCode.BAD_REQUEST)
-            .json(MessageFactory.createError("Error adding new key type"));
+            .json(MessageFactory.createError("Invalid request params"));
         }
-      } catch (err) {
-        return res
-          .status(StatusCode.INTERNAL_SERVER_ERROR)
-          .json(
-            MessageFactory.createError("Server error: Cannot add new key type")
-          );
+        const newKeyType = {
+          keyTypeId: -1, // Placeholder
+          title: title.trim(),
+          created_at: "", // Placeholder
+          updated_at: "" // Placeholder
+        };
+        if (!isKeyType(newKeyType)) {
+          return res
+            .status(StatusCode.BAD_REQUEST)
+            .json(MessageFactory.createError("Invalid request params"));
+        }
+        try {
+          const savedKeyTypeIds = await this.keyTypeDao.save(newKeyType);
+          if (savedKeyTypeIds[0]) {
+            const savedKeyType = await this.keyTypeDao.findOne(
+              savedKeyTypeIds[0]
+            );
+            return res
+              .status(StatusCode.CREATED)
+              .json(
+                MessageFactory.createResponse<KeyType>(true, "", savedKeyType)
+              );
+          } else {
+            return res
+              .status(StatusCode.BAD_REQUEST)
+              .json(MessageFactory.createError("Error adding new key type"));
+          }
+        } catch (err) {
+          return res
+            .status(StatusCode.INTERNAL_SERVER_ERROR)
+            .json(
+              MessageFactory.createError(
+                "Server error: Cannot add new key type"
+              )
+            );
+        }
       }
-    });
+    );
 
     this.router.delete("/:keyTypeId(\\d+)", JWTMiddleware, async (req, res) => {
       const keyTypeId = Number(req.params.keyTypeId);

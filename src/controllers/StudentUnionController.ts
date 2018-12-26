@@ -96,7 +96,7 @@ export default class StudentUnionController extends Controller {
 
     this.router.post(
       "",
-      RequestParamMiddleware("name", "description"),
+      RequestParamMiddleware<StudentUnion>("name", "description"),
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req, res) => {

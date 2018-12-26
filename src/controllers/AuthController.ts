@@ -34,7 +34,7 @@ export default class AuthController extends Controller {
   public routes() {
     this.router.post(
       "",
-      RequestParamMiddleware("email", "password"),
+      RequestParamMiddleware<DbUser>("email", "password"),
       async (req, res) => {
         try {
           const { email, password }: Partial<DbUser> = req.body;

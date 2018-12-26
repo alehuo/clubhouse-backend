@@ -74,7 +74,7 @@ export default class UserController extends Controller {
 
     this.router.get("/ownData", JWTMiddleware, async (req, res) => {
       try {
-        const userId: number = res.locals.token.data.userId;
+        const userId = Number(res.locals.token.data.userId);
         const user = await this.userDao.findOne(userId);
         if (!user) {
           return res
@@ -261,7 +261,12 @@ export default class UserController extends Controller {
 
     this.router.post(
       "",
-      RequestParamMiddleware("email", "firstName", "lastName", "password"),
+      RequestParamMiddleware<DbUser>(
+        "email",
+        "firstName",
+        "lastName",
+        "password"
+      ),
       async (req, res) => {
         try {
           const {

@@ -23,7 +23,7 @@ export default class CalendarEventController extends Controller {
   public routes(): express.Router {
     this.router.post(
       "",
-      RequestParamMiddleware(
+      RequestParamMiddleware<CalendarEvent>(
         "name",
         "description",
         "locationId",

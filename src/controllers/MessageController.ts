@@ -71,7 +71,7 @@ export default class MessageController extends Controller {
     // Add a message
     this.router.post(
       "",
-      RequestParamMiddleware("message"),
+      RequestParamMiddleware<Message>("message"),
       JWTMiddleware,
       async (req, res) => {
         try {
