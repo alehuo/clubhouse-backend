@@ -23,7 +23,7 @@ export const SignToken = (data: string | object | Buffer) => {
 export const VerifyToken = (
   token: string,
   secret: string | undefined = process.env.JWT_SECRET
-): string | object => {
+) => {
   try {
     if (secret !== undefined) {
       return jwt.verify(token, String(secret));

@@ -4,11 +4,11 @@ import express from "express";
 export const apiUrl = (path: string, apiVersion: string) =>
   "/api/" + apiVersion + "/" + path;
 
-export const apiHeader = (apiVersion: string) => (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-): void => {
+export const apiHeader = (apiVersion: string): express.RequestHandler => (
+  req,
+  res,
+  next
+) => {
   res.setHeader("X-Route-API-Version", apiVersion);
   next();
 };

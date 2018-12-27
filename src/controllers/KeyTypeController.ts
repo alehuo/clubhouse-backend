@@ -55,7 +55,7 @@ export default class KeyTypeController extends Controller {
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
-            MessageFactory.createError("Server error: Cannot get key types")
+            MessageFactory.createError("Server error: Cannot get key type")
           );
       }
     });
@@ -145,7 +145,7 @@ export default class KeyTypeController extends Controller {
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
-            MessageFactory.createError("Server error: Cannot get key types")
+            MessageFactory.createError("Server error: Cannot delete key type")
           );
       }
     });

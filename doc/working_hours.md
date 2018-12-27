@@ -61,10 +61,10 @@
 | 21.12.2018 | 1.0h  | Code cleanup, fixed StatisticsDao query bug                                                                                                                                                                                                                                                                                                               |
 | 23.12.2018 | 2.5h  | Created migration, seed & Dao for Key and KeyType. Created tests for KeyDao and KeyTypeDao. Added script to test the project inside a Docker container.                                                                                                                                                                                                   |
 | 26.12.2018 | 1.5h  | Implemented KeyTypeController & tests for KeyTypeController. Improved tests for CalendarEventController. Fixed a bug where the user was unable to create an event.                                                                                                                                                                                        |
-| 27.12.2018 | 0.7h  | Added generic type to RequestParamMiddleware to enforce strict request param key check. Cleanup and code refactoring.                                                                                                                                                                                                                                     |
+| 27.12.2018 | 1.2h  | Added generic type to RequestParamMiddleware to enforce strict request param key check. Cleanup and code refactoring. Added KeyController & rest files for KeyController.                                                                                                                                                                                 |
 
 Total:
 
 61.0 h (part 1)
 
-52.2 h (part 2)
+52.7 h (part 2)

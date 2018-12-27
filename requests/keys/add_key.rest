@@ -1,0 +1,10 @@
+POST http://localhost:8080/api/v1/key HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{clubhouse_token}}
+
+{
+    "userId": 1,
+    "unionId": 1,
+    "keyType": 1,
+    "description": "Hello World"
+    }

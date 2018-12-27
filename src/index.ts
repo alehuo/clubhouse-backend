@@ -15,6 +15,7 @@ import morgan from "morgan";
 import path from "path";
 import AuthController from "./controllers/AuthController";
 import CalendarEventController from "./controllers/CalendarEventController";
+import KeyController from "./controllers/KeyController";
 import KeyTypeController from "./controllers/KeyTypeController";
 import LocationController from "./controllers/LocationController";
 import MessageController from "./controllers/MessageController";
@@ -174,11 +175,23 @@ app.use(
   new RuleController(new RuleDao(knex)).routes()
 );
 
-// Key types
+// Key types route
 app.use(
   apiUrl("keyType", API_VERSION),
   apiHeader(API_VERSION),
   new KeyTypeController(new KeyTypeDao(knex), new KeyDao(knex)).routes()
+);
+
+// Keys route
+app.use(
+  apiUrl("key", API_VERSION),
+  apiHeader(API_VERSION),
+  new KeyController(
+    new KeyTypeDao(knex),
+    new KeyDao(knex),
+    new StudentUnionDao(knex),
+    new UserDao(knex)
+  ).routes()
 );
 
 app.use(InvalidRouteMiddleware);

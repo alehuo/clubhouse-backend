@@ -1,5 +1,7 @@
 import moment from "moment";
 
+// TODO: Deprecate
+
 export const addTimestamps = (obj: any) => {
   const currentTimestamp = moment().toISOString();
   if (obj.created_at) {
