@@ -133,8 +133,8 @@ You need to create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where 
 3.  Run `yarn` to install dependencies
 4.  Create `.env` file and define environment variables. See `.env.example` file.
 5.  `yarn create-databases` to create necessary databases (optionally, you can create the databases manually.)
-6.  `knex migrate:latest` to run migrations
-7.  `knex seed:run` to seed the database
+6.  `yarn migrate` to run migrations
+7.  `yarn seed` to seed the database
 8.  `yarn start` to start the server or `yarn watch` to watch for code changes
 
 ### With Docker
