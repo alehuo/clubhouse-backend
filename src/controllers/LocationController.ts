@@ -58,7 +58,15 @@ export default class LocationController extends Controller {
           const location = await this.locationDao.findOne(locationId);
           if (location) {
             if (isLocation(location)) {
-              return res.status(StatusCode.OK).json(locationFilter(location));
+              return res
+                .status(StatusCode.OK)
+                .json(
+                  MessageFactory.createResponse<Location>(
+                    true,
+                    "",
+                    locationFilter(location)
+                  )
+                );
             }
             return res
               .status(StatusCode.INTERNAL_SERVER_ERROR)

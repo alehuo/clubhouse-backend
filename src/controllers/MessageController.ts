@@ -21,7 +21,9 @@ export default class MessageController extends Controller {
       try {
         const messages = await this.messageDao.findAll();
         if (messages.every(isMessage)) {
-          return res.status(StatusCode.OK).json(messages);
+          return res
+            .status(StatusCode.OK)
+            .json(MessageFactory.createResponse<Message[]>(true, "", messages));
         } else {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)

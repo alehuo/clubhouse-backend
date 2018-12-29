@@ -3,5 +3,5 @@ content-type: application/json
 Authorization: Bearer {{clubhouse_token}}
 
 {
-    "message": "Hello world, second time!"
+    "message": "Hello world!"
 }

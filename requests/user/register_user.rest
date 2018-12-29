@@ -6,6 +6,5 @@ Authorization: Bearer {{clubhouse_token}}
     "email": "hello@world.com",
     "firstName": "Hello",
     "lastName": "World",
-    "unionId": 1,
     "password": "HelloWorld"
 }

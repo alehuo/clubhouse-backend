@@ -33,9 +33,10 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Introduction](#introduction)
-- [Database setup](#database-setup)
   - [Creating databases manually](#creating-databases-manually)
 - [Installation instructions](#installation-instructions)
+  - [Without docker](#without-docker)
+  - [With Docker](#with-docker)
 - [Running tests & calculating code coverage](#running-tests--calculating-code-coverage)
 - [API routes](#api-routes)
   - [/api/v1/authenticate](#apiv1authenticate)
@@ -67,7 +68,6 @@ The back-end has been coded with TypeScript. A Dockerfile is also provided if yo
     - [PUT /api/v1/location/:locationId](#put-apiv1locationlocationid)
   - [/api/v1/permission](#apiv1permission)
     - [GET /api/v1/permission](#get-apiv1permission)
-    - [GET /api/v1/permission/:permissionId](#get-apiv1permissionpermissionid)
   - [/api/v1/session](#apiv1session)
     - [GET /api/v1/session/ongoing](#get-apiv1sessionongoing)
     - [GET /api/v1/session/user/:userId](#get-apiv1sessionuseruserid)
@@ -107,24 +107,26 @@ It is not always clear what events are kept there, who has the permission to use
 This project is meant to solve this problem by providing:
 
 - List of student unions
+- List of users
 - List of students that have access to clubhouses (night / day keys etc..)
-- An Event calendar to look for events (Available also as iCal / RSS)
+- An event calendar to look for events (Available also as iCal feed)
 - Rules of the clubhouse easily available
-- Cleaning schedules of the clubhouse
+- Cleaning schedules of the clubhouse\*
 - A "newsboard" system for posting announcements
 - Management interface for easy responsibility taking of other people
 - Comprehensive admin interface for administrators to be constantly up to date of whats happening.
 - Very flexible permissions system. You can add roles and customize their permissions as you wish.
+- Spotify API support
 
-## Database setup
-
-To quickly set up a MySQL server, run `./start-mysli.sh`.
+\* not yet implemented
 
 ### Creating databases manually
 
 You need to create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where `DB_NAME` is the database you want to use with your setup. This can be done manually, or by executing `yarn create-databases` when `.env` file is configured.
 
 ## Installation instructions
+
+### Without docker
 
 1.  Clone the repo
 2.  Install yarn if not yet installed
@@ -135,9 +137,16 @@ You need to create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where 
 7.  `knex seed:run` to seed the database
 8.  `yarn start` to start the server or `yarn watch` to watch for code changes
 
+### With Docker
+
+1. Clone the repo
+2. Run `docker-compose up -d --build`
+3. Run `yarn migrate-docker`
+4. Run `yarn seed-docker` to seed your database with example users
+
 ## Running tests & calculating code coverage
 
-To run tests, run `yarn test`.
+To run tests, run `yarn test`. To run tests in a container environment, run `yarn test-docker`.
 
 ## API routes
 
@@ -168,7 +177,11 @@ _Response body:_ JWT
 
 ```json
 {
-  "token": "LoremIpsum"
+  "success": true,
+  "message": "Authentication successful",
+  "payload": {
+    "token": "TOKEN"
+  }
 }
 ```
 
@@ -185,41 +198,27 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
-  {
+{
+  "success": true,
+  "message": "Succesfully fetched users",
+  "payload": [{
     "userId": 1,
-    "username": "user1",
-    "email": "user1@email.com",
-    "firstName": "Hello",
-    "lastName": "World 1",
-    "unionId": 1,
-    "permissions": 67108863,
-    "created_at": "2018-04-17 10:01:27",
-    "updateD_at": "2018-04-17 10:01:27"
-  },
-  {
+    "email": "testuser@email.com",
+    "firstName": "Test",
+    "lastName": "User",
+    "permissions": 524287,
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }, {
     "userId": 2,
-    "username": "user2",
-    "email": "user2@email.com",
-    "firstName": "Hello",
-    "lastName": "World 2",
-    "unionId": 1,
+    "email": "testuser2@email.com",
+    "firstName": "Test2",
+    "lastName": "User2",
     "permissions": 8,
-    "created_at": "2018-04-17 10:01:27",
-    "updateD_at": "2018-04-17 10:01:27"
-  },
-  {
-    "userId": 3,
-    "username": "user3",
-    "email": "user3@email.com",
-    "firstName": "Hello",
-    "lastName": "World 3",
-    "unionId": 2,
-    "permissions": 8,
-    "created_at": "2018-04-17 10:01:27",
-    "updateD_at": "2018-04-17 10:01:27"
-  }
-]
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }]
+}
 ```
 
 #### GET /api/v1/user/:userId
@@ -236,15 +235,17 @@ _Response body:_ **GET /api/v1/user/1**
 
 ```json
 {
-  "userId": 1,
-  "username": "user1",
-  "email": "user1@email.com",
-  "firstName": "Hello",
-  "lastName": "World 1",
-  "unionId": 1,
-  "permissions": 67108863,
-  "created_at": "2018-04-17 10:01:27",
-  "updateD_at": "2018-04-17 10:01:27"
+  "success": true,
+  "message": "",
+  "payload": {
+    "userId": 1,
+    "email": "testuser@email.com",
+    "firstName": "Test",
+    "lastName": "User",
+    "permissions": 524287,
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }
 }
 ```
 
@@ -256,16 +257,14 @@ _Request content-type:_ **application/json**
 
 _Request body:_
 
-Required: `username`, `email` and `password`
+Required: `email`, `password`, `firstName` and `lastName`
 
 ```json
 {
-  "username": "user1",
   "email": "user1@email.com",
   "password": "password1",
   "firstName": "firstname",
-  "lastName": "lastname",
-  "unionId": 1
+  "lastName": "lastname"
 }
 ```
 
@@ -277,19 +276,30 @@ _Response body:_ Created user
 
 ```json
 {
-  "userId": 1,
-  "username": "user1",
-  "email": "user1@email.com",
-  "firstName": "firstname",
-  "lastName": "lastname",
-  "unionId": 1,
-  "permissions": 8
+  "success": true,
+  "message": "",
+  "payload": {
+    "userId": 5,
+    "email": "user1@email.com",
+    "firstName": "firstname",
+    "lastName": "lastname",
+    "permissions": 8,
+    "created_at": "2018-12-29 09:17:52",
+    "updated_at": "2018-12-29 09:17:52"
+  }
 }
 ```
 
 #### DELETE /api/v1/user/:userId
 
-Todo
+_Response body:_
+
+```json
+{
+  "success": true,
+  "message": "User deleted from the server (including his/her created calendar events, messages, sessions and newsposts.)"
+}
+```
 
 #### PUT /api/v1/user/:userId
 
@@ -308,29 +318,29 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
-  {
+{
+  "success": true,
+  "message": "Succesfully fetched student unions",
+  "payload": [{
     "unionId": 1,
     "name": "Union 1",
     "description": "Union 1 description",
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }, {
     "unionId": 2,
     "name": "Union 2",
     "description": "Union 2 description",
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }, {
     "unionId": 3,
     "name": "Union 3",
     "description": "Union 3 description",
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  }
-]
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }]
+}
 ```
 
 #### GET /api/v1/studentunion/:unionId
@@ -347,11 +357,15 @@ _Response body:_ **GET /api/v1/studentunion/1**
 
 ```json
 {
-  "unionId": 1,
-  "name": "Union 1",
-  "description": "Union 1 description",
-  "created_at": "2018-04-17 10:01:26",
-  "updated_at": "2018-04-17 10:01:26"
+  "success": true,
+  "message": "",
+  "payload": {
+    "unionId": 1,
+    "name": "Union 1",
+    "description": "Union 1 description",
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }
 }
 ```
 
@@ -367,8 +381,8 @@ Required: `name` and `description`
 
 ```json
 {
-  "name": "StudentUnion",
-  "description": "Student union description"
+  "name": "HelloWorld",
+  "description": "Description for student union"
 }
 ```
 
@@ -380,9 +394,15 @@ _Response body:_ Created student union
 
 ```json
 {
-  "name": "StudentUnion",
-  "description": "Student union description",
-  "unionId": 1
+  "success": true,
+  "message": "",
+  "payload": {
+    "name": "HelloWorld",
+    "description": "Description for student union",
+    "unionId": 4,
+    "created_at": "2018-12-29T09:22:28.833Z",
+    "updated_at": "2018-12-29T09:22:28.833Z"
+  }
 }
 ```
 
@@ -407,34 +427,35 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
-  {
+{
+  "success": true,
+  "message": "Succesfully fetched calendar events",
+  "payload": [{
     "eventId": 1,
     "name": "Friday hangouts",
     "description": "Friday hangouts at our clubhouse",
     "restricted": 0,
-    "startTime": 1524495600000,
-    "endTime": 1524524400000,
+    "startTime": "2018-12-29 09:14:08",
+    "endTime": "2018-12-29 12:14:08",
     "addedBy": 1,
     "unionId": 1,
     "locationId": 2,
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27"
-  },
-  {
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }, {
     "eventId": 2,
     "name": "Board meeting",
-    "description": "Board meeting 5/2018",
-    "restricted": 1,
-    "startTime": 1524495600000,
-    "endTime": 1524524400000,
+    "description": "Board meeting",
+    "restricted": 0,
+    "startTime": "2018-12-29 09:14:08",
+    "endTime": "2018-12-29 12:14:08",
     "addedBy": 1,
     "unionId": 1,
     "locationId": 1,
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27"
-  }
-]
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }]
+}
 ```
 
 #### GET /api/v1/calendar/:eventId
@@ -450,17 +471,22 @@ _Response content-type:_ **application/json**
 _Response body:_ **GET /api/v1/calendar/1**
 
 ```json
-  "eventId": 1,
-  "name": "Friday hangouts",
-  "description": "Friday hangouts at our clubhouse",
-  "restricted": 0,
-  "startTime": 1524495600000,
-  "endTime": 1524524400000,
-  "addedBy": 1,
-  "unionId": 1,
-  "locationId": 2,
-  "created_at": "2018-04-17 10:01:27",
-  "updated_at": "2018-04-17 10:01:27"
+{
+  "success": true,
+  "message": "Succesfully fetched single calendar event",
+  "payload": {
+    "eventId": 1,
+    "name": "Friday hangouts",
+    "description": "Friday hangouts at our clubhouse",
+    "restricted": 0,
+    "startTime": "2018-12-29 09:14:08",
+    "endTime": "2018-12-29 12:14:08",
+    "addedBy": 1,
+    "unionId": 1,
+    "locationId": 2,
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }
 }
 ```
 
@@ -480,11 +506,11 @@ Required: `name`, `description`, `restricted`, `startTime`, `endTime`, `unionId`
 
 ```json
 {
-  "name": "Friday hangouts",
-  "description": "Friday hangouts at our clubhouse",
+  "name": "Test event",
+  "description": "Test event",
   "restricted": 0,
-  "startTime": 1524495600000,
-  "endTime": 1524524400000,
+  "startTime": "2018-08-12 12:00",
+  "endTime": "2018-08-12 14:00",
   "unionId": 1,
   "locationId": 2
 }
@@ -498,15 +524,21 @@ _Response body:_ Created calendar event
 
 ```json
 {
-  "eventId": 1,
-  "name": "Friday hangouts",
-  "description": "Friday hangouts at our clubhouse",
-  "restricted": 0,
-  "startTime": 1524495600000,
-  "endTime": 1524524400000,
-  "addedBy": 1,
-  "unionId": 1,
-  "locationId": 2
+  "success": true,
+  "message": "Succesfully saved calendar event",
+  "payload": {
+    "eventId": 3,
+    "name": "Test event",
+    "description": "Test event",
+    "restricted": 0,
+    "startTime": "2018-08-12 12:00:00",
+    "endTime": "2018-08-12 14:00:00",
+    "addedBy": 1,
+    "unionId": 1,
+    "locationId": 2,
+    "created_at": "2018-12-29 09:24:46",
+    "updated_at": "2018-12-29 09:24:46"
+  }
 }
 ```
 
@@ -526,16 +558,18 @@ _Response body:_ **GET /api/v1/calendar/1/ical**
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:clubhouse
+METHOD:PUBLISH
 BEGIN:VEVENT
 CATEGORIES:MEETING
 STATUS:TENTATIVE
-DTSTAMP:20180327T113010
-DTSTART:20180423T180000
-UID:20180327T113010@clubhouse.com
-DTSTART:20180423T180000
-DTEND:20180424T020000
+DTSTAMP:20181229T092543
+DTSTART:20181229T091408
+UID:20181229T092543@clubhouse.com_1
+DTSTART:20181229T091408
+DTEND:20181229T121408
 SUMMARY: Friday hangouts
 DESCRIPTION: Friday hangouts at our clubhouse
+LOCATION: Street Addr 1
 CLASS:PRIVATE
 END:VEVENT
 END:VCALENDAR
@@ -562,22 +596,19 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
-  {
-    "locationId": 1,
-    "name": "Meeting room",
-    "address": "Street Addr 1",
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27"
-  },
-  {
-    "locationId": 2,
-    "name": "Club",
-    "address": "Street Addr 1",
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27"
-  }
-]
+[{
+  "locationId": 1,
+  "name": "Meeting room",
+  "address": "Street Addr 1",
+  "created_at": "2018-12-29 09:14:08",
+  "updated_at": "2018-12-29 09:14:08"
+}, {
+  "locationId": 2,
+  "name": "Club",
+  "address": "Street Addr 1",
+  "created_at": "2018-12-29 09:14:08",
+  "updated_at": "2018-12-29 09:14:08"
+}]
 ```
 
 #### GET /api/v1/location/:locationId
@@ -594,11 +625,15 @@ _Response body:_ **GET /api/v1/location/1**
 
 ```json
 {
-  "locationId": 1,
-  "name": "Meeting room",
-  "address": "Street Addr 1",
-  "created_at": "2018-04-17 10:01:27",
-  "updated_at": "2018-04-17 10:01:27"
+  "success": true,
+  "message": "",
+  "payload": {
+    "locationId": 1,
+    "name": "Meeting room",
+    "address": "Street Addr 1",
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }
 }
 ```
 
@@ -631,9 +666,15 @@ _Response body:_ Created location
 
 ```json
 {
-  "locationId": 1,
-  "name": "Meeting room",
-  "address": "Street Addr 1"
+  "success": true,
+  "message": "",
+  "payload": {
+    "locationId": 1,
+    "name": "Meeting room",
+    "address": "Street Addr 1",
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }
 }
 ```
 
@@ -658,225 +699,30 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
-  {
-    "permissionId": 1,
-    "name": "BAN_USER",
-    "value": 1,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 2,
-    "name": "EDIT_USER_ROLE",
-    "value": 2,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 3,
-    "name": "MAKE_USER_ADMIN",
-    "value": 4,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 4,
-    "name": "ALLOW_USER_LOGIN",
-    "value": 8,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 5,
-    "name": "ADD_KEY_TO_USER",
-    "value": 16,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 6,
-    "name": "REMOVE_KEY_FROM_USER",
-    "value": 32,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 7,
-    "name": "CHANGE_KEY_TYPE_OF_USER",
-    "value": 64,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 8,
-    "name": "ALLOW_VIEW_KEYS",
-    "value": 128,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 9,
-    "name": "ADD_USER_TO_UNION",
-    "value": 256,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 10,
-    "name": "REMOVE_USER_FROM_UNION",
-    "value": 512,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 11,
-    "name": "ADD_STUDENT_UNION",
-    "value": 1024,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 12,
-    "name": "REMOVE_STUDENT_UNION",
-    "value": 2048,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 13,
-    "name": "EDIT_STUDENT_UNION",
-    "value": 4096,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 14,
-    "name": "ALLOW_VIEW_STUDENT_UNIONS",
-    "value": 8192,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 15,
-    "name": "ADD_EVENT",
-    "value": 16384,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 16,
-    "name": "EDIT_EVENT",
-    "value": 32768,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 17,
-    "name": "REMOVE_EVENT",
-    "value": 65536,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 18,
-    "name": "ALLOW_VIEW_EVENTS",
-    "value": 131072,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 19,
-    "name": "EDIT_RULES",
-    "value": 262144,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 20,
-    "name": "ALLOW_VIEW_RULES",
-    "value": 524288,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 21,
-    "name": "ADD_POSTS",
-    "value": 1048576,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 22,
-    "name": "EDIT_AND_REMOVE_OWN_POSTS",
-    "value": 2097152,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 23,
-    "name": "REMOVE_POSTS",
-    "value": 4194304,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 24,
-    "name": "ALLOW_VIEW_POSTS",
-    "value": 8388608,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 25,
-    "name": "EDIT_OTHERS_POSTS",
-    "value": 16777216,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 26,
-    "name": "SEND_MAILS",
-    "value": 33554432,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 27,
-    "name": "ADD_LOCATION",
-    "value": 67108864,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  },
-  {
-    "permissionId": 28,
-    "name": "EDIT_LOCATION",
-    "value": 134217728,
-    "created_at": "2018-04-17 10:01:26",
-    "updated_at": "2018-04-17 10:01:26"
-  }
-]
-```
-
-#### GET /api/v1/permission/:permissionId
-
-_Returns:_ **A single permission in the service by its id.**
-
-_Request parameters:_ `permissionId` (URL parameter, integer)
-
-_Response status code:_ **HTTP 200** (success), **HTTP 500** (server error)
-
-_Response content-type:_ **application/json**
-
-_Response body:_ **GET /api/v1/permission/1**
-
-```json
 {
-  "permissionId": 1,
-  "name": "BAN_USER",
-  "value": 1,
-  "created_at": "2018-04-17 10:01:26",
-  "updated_at": "2018-04-17 10:01:26"
+  "success": true,
+  "message": "",
+  "payload": {
+    "ALLOW_REMOVE_USER": 1,
+    "ALLOW_VIEW_USERS": 2,
+    "ALLOW_ADD_REMOVE_KEYS": 4,
+    "ALLOW_VIEW_KEYS": 8,
+    "ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS": 16,
+    "ALLOW_VIEW_STUDENT_UNIONS": 32,
+    "ALLOW_ADD_EDIT_REMOVE_EVENTS": 64,
+    "ALLOW_VIEW_EVENTS": 128,
+    "ALLOW_ADD_EDIT_REMOVE_RULES": 256,
+    "ALLOW_VIEW_RULES": 512,
+    "ALLOW_ADD_EDIT_REMOVE_POSTS": 1024,
+    "ALLOW_VIEW_POSTS": 2048,
+    "ALLOW_ADD_EDIT_REMOVE_LOCATIONS": 4096,
+    "ALLOW_VIEW_LOCATIONS": 8192,
+    "ALLOW_ADD_EDIT_REMOVE_MESSAGES": 16384,
+    "ALLOW_VIEW_MESSAGES": 32768,
+    "ALLOW_ADD_EDIT_REMOVE_PERMISSIONS": 65536,
+    "ALLOW_VIEW_PERMISSIONS": 131072,
+    "ACCESS_SPOTIFY_API": 262144
+  }
 }
 ```
 
@@ -895,17 +741,19 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-  {
+{
+  "success": true,
+  "message": "",
+  "payload": [{
     "sessionId": 2,
     "userId": 1,
     "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
-    "endMessage": null,
-    "startTime": 1530478680000,
-    "endTime": null,
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27"
-  }
-]
+    "endMessage": "",
+    "startTime": "2018-07-01 23:58:00",
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }]
+}
 ```
 
 #### GET /api/v1/session/user/:userId
@@ -923,30 +771,28 @@ _Response content-type:_ **application/json**
 _Response body:_ **GET /api/v1/session/user/1**
 
 ```json
-[
-  {
+{
+  "success": true,
+  "message": "",
+  "payload": [{
     "sessionId": 1,
     "userId": 1,
     "startMessage": "Let's get this party started.",
-    "endMessage":
-      "I have left the building. Moved people under my supervision to another keyholder.",
-    "startTime": 1498856400000,
-    "endTime": 1498877880000,
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27"
-  },
-  {
+    "endMessage": "I have left the building. Moved people under my supervision to another keyholder.",
+    "startTime": "2017-07-01 00:00:00",
+    "endTime": "2017-07-01 00:10:00",
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }, {
     "sessionId": 2,
     "userId": 1,
-    "startMessage":
-      "Good evening, I'm taking responsibility of a few exchange students.",
-    "endMessage": null,
-    "startTime": 1530478680000,
-    "endTime": null,
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27"
-  }
-]
+    "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
+    "endMessage": "",
+    "startTime": "2018-07-01 23:58:00",
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }]
+}
 ```
 
 #### GET /api/v1/session/ongoing/user/:userId
@@ -964,19 +810,19 @@ _Response content-type:_ **application/json**
 _Response body:_ **GET /api/v1/session/ongoing/user/1**
 
 ```json
-[
-  {
+{
+  "success": true,
+  "message": "",
+  "payload": [{
     "sessionId": 2,
     "userId": 1,
-    "startMessage":
-      "Good evening, I'm taking responsibility of a few exchange students.",
-    "endMessage": null,
-    "startTime": 1530478680000,
-    "endTime": null,
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27"
-  }
-]
+    "startMessage": "Good evening, I'm taking responsibility of a few exchange students.",
+    "endMessage": "",
+    "startTime": "2018-07-01 23:58:00",
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08"
+  }]
+}
 ```
 
 #### POST /api/v1/session/start
@@ -997,7 +843,7 @@ Required: `startMessage`
 }
 ```
 
-_Response status code:_ **HTTP 200** (success on starting a new session), **HTTP 500** (server error)
+_Response status code:_ **HTTP 201** (success on starting a new session), **HTTP 500** (server error)
 
 _Response content-type:_ **application/json**
 
@@ -1005,6 +851,7 @@ _Response body:_ Status message
 
 ```json
 {
+  "success": true,
   "message": "Session started"
 }
 ```
@@ -1035,6 +882,7 @@ _Response body:_ Status message
 
 ```json
 {
+  "success": true,
   "message": "Session ended with message 'End message of the session.'"
 }
 ```
@@ -1052,22 +900,18 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
-  {
+{
+  "success": true,
+  "message": "",
+  "payload": [{
     "messageId": 1,
-    "created_at": "2018-04-17 10:13:22",
-    "updated_at": "2018-04-17 10:13:22",
+    "created_at": "2018-12-29 09:30:43",
+    "updated_at": "2018-12-29 09:30:43",
     "userId": 1,
+    "title": "(No title)",
     "message": "Hello world!"
-  },
-  {
-    "messageId": 2,
-    "created_at": "2018-04-17 10:13:38",
-    "updated_at": "2018-04-17 10:13:38",
-    "userId": 1,
-    "message": "Hello world, second time!"
-  }
-]
+  }]
+}
 ```
 
 #### GET /api/v1/message/:messageId
@@ -1084,11 +928,16 @@ _Response body:_ **GET /api/v1/message/1**
 
 ```json
 {
-  "messageId": 1,
-  "created_at": "2018-04-17 10:13:22",
-  "updated_at": "2018-04-17 10:13:22",
-  "userId": 1,
-  "message": "Hello world!"
+  "success": true,
+  "message": "",
+  "payload": {
+    "messageId": 1,
+    "created_at": "2018-12-29 09:30:43",
+    "updated_at": "2018-12-29 09:30:43",
+    "userId": 1,
+    "title": "(No title)",
+    "message": "Hello world!"
+  }
 }
 ```
 
@@ -1117,14 +966,18 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
-  {
-    "messageId": 1,
-    "timestamp": 1523950976094,
+{
+  "success": true,
+  "message": "",
+  "payload": {
+    "created_at": "2018-12-29T09:30:42.572Z",
+    "updated_at": "2018-12-29T09:30:42.572Z",
+    "message": "Hello world!",
+    "title": "(No title)",
     "userId": 1,
-    "message": "Hello world!"
+    "messageId": 1
   }
-]
+}
 ```
 
 #### DELETE /api/v1/message/:messageId
@@ -1148,16 +1001,18 @@ _Response content-type:_ **application/json**
 _Response body:_
 
 ```json
-[
-  {
+{
+  "success": true,
+  "message": "",
+  "payload": [{
     "postId": 1,
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27",
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08",
     "author": 1,
     "title": "Welcome to our site",
     "message": "Welcome to the new clubhouse management website."
-  }
-]
+  }]
+}
 ```
 
 #### GET /api/v1/newspost/:postId
@@ -1174,12 +1029,16 @@ _Response body:_ **GET /api/v1/newspost/1**
 
 ```json
 {
-  "postId": 1,
-  "created_at": "2018-04-17 10:01:27",
-  "updated_at": "2018-04-17 10:01:27",
-  "author": 1,
-  "title": "Welcome to our site",
-  "message": "Welcome to the new clubhouse management website."
+  "success": true,
+  "message": "",
+  "payload": {
+    "postId": 1,
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08",
+    "author": 1,
+    "title": "Welcome to our site",
+    "message": "Welcome to the new clubhouse management website."
+  }
 }
 ```
 
@@ -1196,24 +1055,18 @@ _Response content-type:_ **application/json**
 _Response body:_ **GET /api/v1/newspost/user/1**
 
 ```json
-[
-  {
+{
+  "success": true,
+  "message": "",
+  "payload": [{
     "postId": 1,
-    "created_at": "2018-04-17 10:01:27",
-    "updated_at": "2018-04-17 10:01:27",
+    "created_at": "2018-12-29 09:14:08",
+    "updated_at": "2018-12-29 09:14:08",
     "author": 1,
     "title": "Welcome to our site",
     "message": "Welcome to the new clubhouse management website."
-  },
-  {
-    "postId": 2,
-    "created_at": "2018-04-18 05:27:28",
-    "updated_at": "2018-04-18 05:27:28",
-    "author": 1,
-    "title": "Hello world",
-    "message": "First post"
-  }
-]
+  }]
+}
 ```
 
 #### POST /api/v1/newspost
@@ -1230,8 +1083,8 @@ Required: `title` and `message`
 
 ```json
 {
-  "title": "Welcome to our site",
-  "message": "Welcome to the new clubhouse management website."
+  "title": "Hello world",
+  "message": "First post"
 }
 ```
 
@@ -1243,10 +1096,16 @@ _Response body:_
 
 ```json
 {
-  "postId": 1,
-  "author": 1,
-  "title": "Welcome to our site",
-  "message": "Welcome to the new clubhouse management website."
+  "success": true,
+  "message": "",
+  "payload": {
+    "created_at": "2018-12-29T09:33:38.474Z",
+    "updated_at": "2018-12-29T09:33:38.474Z",
+    "message": "First post",
+    "title": "Hello world",
+    "author": 1,
+    "postId": 2
+  }
 }
 ```
 
@@ -1264,6 +1123,7 @@ _Response body:_ **DELETE /api/v1/newspost/1**
 
 ```json
 {
+  "success": true,
   "message": "Newspost deleted"
 }
 ```

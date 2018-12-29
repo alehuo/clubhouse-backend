@@ -1,9 +1,6 @@
 import { DbUser } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import {
-  addTimestamps,
-  updateOnUpdateTimestamp
-} from "../utils/TimestampGenerator";
+import moment from "moment";
 import Dao from "./Dao";
 
 const TABLE_NAME = "users";
@@ -35,15 +32,18 @@ export default class UserDao implements Dao<DbUser> {
     if (user.userId) {
       delete user.userId;
     }
-    addTimestamps(user);
+    user.created_at = moment().toISOString();
+    user.updated_at = moment().toISOString();
     return Promise.resolve(this.knex(TABLE_NAME).insert(user));
   }
 
   public update(user: DbUser): PromiseLike<boolean> {
-    updateOnUpdateTimestamp(user);
+    const userId = user.userId;
+    delete user.userId;
+    user.updated_at = moment().toISOString();
     return Promise.resolve(
       this.knex(TABLE_NAME)
-        .where({ userId: user.userId })
+        .where({ userId })
         .update(user)
     );
   }

@@ -23,22 +23,18 @@ const calendarUrl = "/api/v1/calendar";
 
 describe("CalendarEventController", () => {
   // Roll back
-  beforeEach((done) => {
-    knex.migrate.rollback().then(() => {
-      knex.migrate.latest().then(() => {
-        knex.seed.run().then(() => {
-          done();
-        });
-      });
-    });
+  beforeEach(async function() {
+    this.timeout(60 * 1000);
+    await knex.migrate.rollback();
+    await knex.migrate.latest();
+    await knex.seed.run();
   });
 
   // After each
-  afterEach((done) => {
-    knex.migrate.rollback().then(() => {
-      done();
-    });
+  afterEach(async function() {
+    await knex.migrate.rollback();
   });
+
   /*
   describe("API endpoint protection", () => {
     it("Missing Authorization header should throw an error", (done) => {

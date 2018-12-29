@@ -357,7 +357,13 @@ export default class UserController extends Controller {
 
             return res
               .status(StatusCode.CREATED)
-              .json(MessageFactory.createResponse<User>(true, "", savedDbUser));
+              .json(
+                MessageFactory.createResponse<User>(
+                  true,
+                  "",
+                  userFilter(savedDbUser)
+                )
+              );
           }
         } catch (err) {
           return res

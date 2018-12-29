@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/v1/watch/stop HTTP/1.1
+POST http://localhost:8080/api/v1/session/stop HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{clubhouse_token}}
 

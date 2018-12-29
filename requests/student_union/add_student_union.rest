@@ -3,6 +3,6 @@ content-type: application/json
 Authorization: Bearer {{clubhouse_token}}
 
 {
-    "name": "HelloWorldl2",
+    "name": "HelloWorld",
     "description": "Description for student union"
 }

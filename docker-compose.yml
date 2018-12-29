@@ -3,6 +3,7 @@ volumes:
   clubhouse-mysql-data:
 services:
   mysli:
+    container_name: "clubhouse-mysli"
     image: mysql:5.6
     environment:
       MYSQL_ROOT_PASSWORD: my-secret-pw
