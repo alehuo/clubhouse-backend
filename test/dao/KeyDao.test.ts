@@ -6,6 +6,7 @@ import "mocha";
 import moment from "moment";
 import KeyDao from "../../src/dao/KeyDao";
 import * as Database from "../../src/Database";
+import { dtFormat } from "../../src/index";
 const should = chai.should();
 
 const knex = Database.connect();
@@ -27,9 +28,9 @@ const dbKeys: Key[] = [
     userId: 1,
     unionId: 1,
     description: "Lorem ipsum",
-    dateAssigned: moment().toISOString(),
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    dateAssigned: moment().format(dtFormat),
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     keyId: 2,
@@ -37,9 +38,9 @@ const dbKeys: Key[] = [
     userId: 2,
     unionId: 2,
     description: "Key description",
-    dateAssigned: moment().toISOString(),
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    dateAssigned: moment().format(dtFormat),
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 describe("KeyDao", () => {
@@ -151,9 +152,9 @@ describe("KeyDao", () => {
         userId: 2,
         unionId: 2,
         description: "Test key",
-        dateAssigned: moment().toISOString(),
-        created_at: moment().toISOString(),
-        updated_at: moment().toISOString()
+        dateAssigned: moment().format(dtFormat),
+        created_at: moment().format(dtFormat),
+        updated_at: moment().format(dtFormat)
       });
 
       const all2 = await keyDao.findAll();

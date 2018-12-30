@@ -1,6 +1,7 @@
 import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
+import { dtFormat } from "../../src/index";
 
 const events: CalendarEvent[] = [
   {
@@ -13,8 +14,8 @@ const events: CalendarEvent[] = [
     addedBy: 1,
     unionId: 1,
     locationId: 2,
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     eventId: 2,
@@ -26,8 +27,8 @@ const events: CalendarEvent[] = [
     addedBy: 1,
     unionId: 1,
     locationId: 1,
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 

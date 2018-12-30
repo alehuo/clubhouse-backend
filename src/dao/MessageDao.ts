@@ -2,6 +2,7 @@ import { Message } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
 import Dao from "./Dao";
+import { dtFormat } from "../index";
 
 const TABLE_NAME = "messages";
 
@@ -55,8 +56,8 @@ export default class MessageDao implements Dao<Message> {
     if (message.messageId) {
       delete message.messageId;
     }
-    message.created_at = moment().toISOString();
-    message.updated_at = moment().toISOString();
+    message.created_at = moment().format(dtFormat);
+    message.updated_at = moment().format(dtFormat);
     return Promise.resolve(this.knex(TABLE_NAME).insert(message));
   }
 

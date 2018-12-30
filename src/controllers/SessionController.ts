@@ -147,7 +147,7 @@ export default class SessionController extends Controller {
             userId,
             startMessage,
             endMessage: "",
-            startTime: moment().toISOString(),
+            startTime: moment().format(dtFormat),
             endTime: "",
             ended: 0,
             started: 1,

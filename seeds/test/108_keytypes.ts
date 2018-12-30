@@ -1,25 +1,26 @@
 import { KeyType } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
+import { dtFormat } from "../../src/index";
 
 const keyTypes: KeyType[] = [
   {
     keyTypeId: 1,
     title: "24hr",
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     keyTypeId: 2,
     title: "Day",
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     keyTypeId: 3,
     title: "Test key",
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 

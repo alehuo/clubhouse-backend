@@ -2,6 +2,7 @@ import { DbUser } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
 import Dao from "./Dao";
+import { dtFormat } from "../index";
 
 const TABLE_NAME = "users";
 
@@ -40,7 +41,7 @@ export default class UserDao implements Dao<DbUser> {
   public update(user: DbUser): PromiseLike<boolean> {
     const userId = user.userId;
     delete user.userId;
-    user.updated_at = moment().toISOString();
+    user.updated_at = moment().format(dtFormat);
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .where({ userId })

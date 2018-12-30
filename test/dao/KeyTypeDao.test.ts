@@ -6,6 +6,7 @@ import "mocha";
 import moment from "moment";
 import KeyTypeDao from "../../src/dao/KeyTypeDao";
 import * as Database from "../../src/Database";
+import { dtFormat } from "../../src/index";
 const should = chai.should();
 
 const knex = Database.connect();
@@ -25,20 +26,20 @@ const dbKeyTypes: KeyType[] = [
   {
     keyTypeId: 1,
     title: "24hr",
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     keyTypeId: 2,
     title: "Day",
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     keyTypeId: 3,
     title: "Test key",
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 

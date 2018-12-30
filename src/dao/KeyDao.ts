@@ -2,6 +2,7 @@ import { Key } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
 import Dao from "./Dao";
+import { dtFormat } from "../index";
 
 const TABLE_NAME = "keys";
 
@@ -43,7 +44,7 @@ export default class KeyDao implements Dao<Key> {
   public update(entity: Key): PromiseLike<number[]> {
     const id = entity.keyId;
     delete entity.keyId;
-    entity.updated_at = moment().toISOString();
+    entity.updated_at = moment().format(dtFormat);
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .update(entity)
@@ -52,8 +53,8 @@ export default class KeyDao implements Dao<Key> {
   }
   public save(entity: Key): PromiseLike<number[]> {
     delete entity.keyId;
-    entity.created_at = moment().toISOString();
-    entity.updated_at = moment().toISOString();
+    entity.created_at = moment().format(dtFormat);
+    entity.updated_at = moment().format(dtFormat);
     return Promise.resolve(this.knex(TABLE_NAME).insert(entity));
   }
 }

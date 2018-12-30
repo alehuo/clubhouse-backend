@@ -2,6 +2,7 @@ import { DbUser } from "@alehuo/clubhouse-shared";
 import bcrypt from "bcrypt";
 import Knex from "knex";
 import moment from "moment";
+import { dtFormat } from "../../src/index";
 
 // Generate salt
 const salt = bcrypt.genSaltSync(10);
@@ -14,8 +15,8 @@ const users: DbUser[] = [
     lastName: "User",
     permissions: 524287,
     password: bcrypt.hashSync("testuser", salt),
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     userId: 2,
@@ -24,8 +25,8 @@ const users: DbUser[] = [
     lastName: "User2",
     permissions: 8,
     password: bcrypt.hashSync("testuser2", salt),
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 

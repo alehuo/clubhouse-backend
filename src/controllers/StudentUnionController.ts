@@ -16,6 +16,7 @@ import { isString } from "util";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { StatusCode } from "../utils/StatusCodes";
+import { dtFormat } from "../index";
 
 /**
  * Student union controller.
@@ -151,8 +152,8 @@ export default class StudentUnionController extends Controller {
                 ...{ name, description },
                 ...{
                   unionId: savedStudentUnion[0],
-                  created_at: moment().toISOString(),
-                  updated_at: moment().toISOString()
+                  created_at: moment().format(dtFormat),
+                  updated_at: moment().format(dtFormat)
                 }
               })
             );

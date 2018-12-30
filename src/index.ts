@@ -44,6 +44,8 @@ import { InvalidRouteMiddleware } from "./middleware/InvalidRouteMiddleware";
 import { apiHeader, apiUrl } from "./utils/ApiUtils";
 import { WebSocketServer } from "./WebSocket";
 
+export const dtFormat = "YYYY-MM-DD HH:mm:ss";
+
 // Express instance
 const app = express();
 

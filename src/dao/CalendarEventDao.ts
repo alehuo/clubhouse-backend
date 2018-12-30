@@ -2,6 +2,7 @@ import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
 import Dao from "./Dao";
+import { dtFormat } from "../index";
 
 const TABLE_NAME = "calendarEvents";
 
@@ -40,8 +41,8 @@ export default class CalendarEventDao implements Dao<CalendarEvent> {
     if (calendarEvent.eventId) {
       delete calendarEvent.eventId;
     }
-    calendarEvent.created_at = moment().toISOString();
-    calendarEvent.updated_at = moment().toISOString();
+    calendarEvent.created_at = moment().format(dtFormat);
+    calendarEvent.updated_at = moment().format(dtFormat);
     return Promise.resolve(this.knex(TABLE_NAME).insert(calendarEvent));
   }
 

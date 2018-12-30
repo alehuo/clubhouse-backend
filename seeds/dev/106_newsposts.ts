@@ -1,6 +1,7 @@
 import { Newspost } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
+import { dtFormat } from "../../src/index";
 
 const newsposts: Newspost[] = [
   {
@@ -8,8 +9,8 @@ const newsposts: Newspost[] = [
     author: 1,
     title: "Welcome to our site",
     message: "Welcome to the new clubhouse management website.",
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 

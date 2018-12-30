@@ -2,6 +2,7 @@ import { KeyType } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
 import Dao from "./Dao";
+import { dtFormat } from "../index";
 
 const TABLE_NAME = "keyTypes";
 
@@ -29,7 +30,7 @@ export default class KeyTypeDao implements Dao<KeyType> {
   public update(entity: KeyType): PromiseLike<number[]> {
     const id = entity.keyTypeId;
     delete entity.keyTypeId;
-    entity.updated_at = moment().toISOString();
+    entity.updated_at = moment().format(dtFormat);
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .update(entity)
@@ -38,8 +39,8 @@ export default class KeyTypeDao implements Dao<KeyType> {
   }
   public save(entity: KeyType): PromiseLike<number[]> {
     delete entity.keyTypeId;
-    entity.created_at = moment().toISOString();
-    entity.updated_at = moment().toISOString();
+    entity.created_at = moment().format(dtFormat);
+    entity.updated_at = moment().format(dtFormat);
     return Promise.resolve(this.knex(TABLE_NAME).insert(entity));
   }
 }

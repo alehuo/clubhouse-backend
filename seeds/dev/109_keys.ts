@@ -1,6 +1,7 @@
 import { Key } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
+import { dtFormat } from "../../src/index";
 
 const keys: Key[] = [
   {
@@ -9,9 +10,9 @@ const keys: Key[] = [
     userId: 1,
     unionId: 1,
     description: "Lorem ipsum",
-    dateAssigned: moment().toISOString(),
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    dateAssigned: moment().format(dtFormat),
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     keyId: 2,
@@ -19,9 +20,9 @@ const keys: Key[] = [
     userId: 2,
     unionId: 2,
     description: "Key description",
-    dateAssigned: moment().toISOString(),
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    dateAssigned: moment().format(dtFormat),
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 

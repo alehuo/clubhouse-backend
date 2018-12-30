@@ -2,6 +2,7 @@ import { Rule } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
 import Dao from "./Dao";
+import { dtFormat } from "../index";
 
 const table = "rules";
 
@@ -24,7 +25,7 @@ export default class RuleDao implements Dao<Rule> {
   public save(entity: Rule): PromiseLike<number[]> {
     const ruleId = entity.ruleId;
     delete entity.ruleId;
-    entity.updated_at = moment().toISOString();
+    entity.updated_at = moment().format(dtFormat);
     return Promise.resolve(
       this.knex(table)
         .update(entity)

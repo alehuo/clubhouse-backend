@@ -1,6 +1,7 @@
 import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
+import { dtFormat } from "../../src/index";
 
 const events: CalendarEvent[] = [
   {
@@ -8,30 +9,30 @@ const events: CalendarEvent[] = [
     name: "Friday hangouts",
     description: "Friday hangouts at our clubhouse",
     restricted: 0,
-    startTime: moment().toISOString(),
+    startTime: moment().format(dtFormat),
     endTime: moment()
       .add(3, "hours")
       .toISOString(),
     addedBy: 1,
     unionId: 1,
     locationId: 2,
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     eventId: 2,
     name: "Board meeting",
     description: "Board meeting",
     restricted: 0,
-    startTime: moment().toISOString(),
+    startTime: moment().format(dtFormat),
     endTime: moment()
       .add(3, "hours")
       .toISOString(),
     addedBy: 1,
     unionId: 1,
     locationId: 1,
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 

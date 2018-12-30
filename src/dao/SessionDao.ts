@@ -2,6 +2,7 @@ import { Session } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
 import Dao from "./Dao";
+import { dtFormat } from "../index";
 
 const TABLE_NAME = "sessions";
 
@@ -49,8 +50,8 @@ export default class SessionDao implements Dao<Session> {
     if (session.sessionId) {
       delete session.sessionId;
     }
-    session.created_at = moment().toISOString();
-    session.updated_at = moment().toISOString();
+    session.created_at = moment().format(dtFormat);
+    session.updated_at = moment().format(dtFormat);
     return Promise.resolve(this.knex(TABLE_NAME).insert(session));
   }
 
@@ -58,7 +59,7 @@ export default class SessionDao implements Dao<Session> {
     sessionId: number,
     endMessage: string
   ): PromiseLike<Session> {
-    const currentTimestamp = moment().toISOString();
+    const currentTimestamp = moment().format(dtFormat);
     return Promise.resolve(
       this.knex(TABLE_NAME)
         .update({

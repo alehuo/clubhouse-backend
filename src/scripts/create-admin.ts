@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import moment from "moment";
 import UserDao from "../dao/UserDao";
 import * as Database from "../Database";
+import { dtFormat } from "../index";
 
 const knex = Database.connect();
 const userDao = new UserDao(knex);
@@ -22,8 +23,8 @@ const createAdminUser = async (email: string, password: string) => {
     lastName: "Admin",
     password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
     permissions: 524287,
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   };
   await userDao.save(user);
   console.log("Created admin user");

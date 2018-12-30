@@ -1,21 +1,22 @@
 import { Location } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
+import { dtFormat } from "../../src/index";
 
 const locations: Location[] = [
   {
     locationId: 1,
     name: "Meeting room",
     address: "Street Addr 1",
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     locationId: 2,
     name: "Club",
     address: "Street Addr 1",
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 

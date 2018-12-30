@@ -1,6 +1,7 @@
 import { Session } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
+import { dtFormat } from "../../src/index";
 
 const sessions: Session[] = [
   {
@@ -13,8 +14,8 @@ const sessions: Session[] = [
     endTime: moment(new Date(2017, 6, 1, 0, 10)).toISOString(),
     started: 1,
     ended: 1,
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   },
   {
     sessionId: 2,
@@ -26,8 +27,8 @@ const sessions: Session[] = [
     endTime: "",
     started: 1,
     ended: 0,
-    created_at: moment().toISOString(),
-    updated_at: moment().toISOString()
+    created_at: moment().format(dtFormat),
+    updated_at: moment().format(dtFormat)
   }
 ];
 

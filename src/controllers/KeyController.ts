@@ -95,7 +95,7 @@ export default class KeyController extends Controller {
           keyType,
           userId,
           unionId,
-          dateAssigned: moment().toISOString(),
+          dateAssigned: moment().format(dtFormat),
           created_at: "", // Placeholder
           updated_at: "" // Placeholder
         };
