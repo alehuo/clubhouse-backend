@@ -1,8 +1,8 @@
 import { Rule } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
-import Dao from "./Dao";
 import { dtFormat } from "../index";
+import Dao from "./Dao";
 
 const table = "rules";
 

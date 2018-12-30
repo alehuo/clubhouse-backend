@@ -9,6 +9,7 @@ import { isSession, Session, sessionFilter } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { isString } from "util";
 import UserDao from "../dao/UserDao";
+import { dtFormat } from "../index";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { sendEmail } from "../utils/Mailer";
 import { StatusCode } from "../utils/StatusCodes";

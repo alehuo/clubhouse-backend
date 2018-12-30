@@ -9,7 +9,7 @@ const testConnectionObject: Knex.MySqlConnectionConfig = {
   database: process.env.MYSQL_DB_NAME + "_test",
   dateStrings: true,
   charset: "utf8",
-  timezone: "UTC"
+  timezone: "Europe/Helsinki"
 };
 
 const devConnectionObject: Knex.MySqlConnectionConfig = {
@@ -19,7 +19,7 @@ const devConnectionObject: Knex.MySqlConnectionConfig = {
   database: process.env.MYSQL_DB_NAME + "_dev",
   dateStrings: true,
   charset: "utf8",
-  timezone: "UTC"
+  timezone: "Europe/Helsinki"
 };
 
 const prodConnectionObject: Knex.MySqlConnectionConfig = {
@@ -29,7 +29,7 @@ const prodConnectionObject: Knex.MySqlConnectionConfig = {
   database: process.env.MYSQL_DB_NAME,
   dateStrings: true,
   charset: "utf8",
-  timezone: "UTC"
+  timezone: "Europe/Helsinki"
 };
 
 const development: Knex.Config = {
