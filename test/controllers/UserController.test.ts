@@ -31,7 +31,6 @@ describe("UserController", () => {
     await knex.migrate.rollback();
   });
 
-
   describe("API endpoint protection", () => {
     it("Missing Authorization header should throw an error", (done) => {
       chai

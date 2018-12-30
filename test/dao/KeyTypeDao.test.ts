@@ -133,7 +133,7 @@ describe("KeyTypeDao", () => {
       should.exist(keyType.title);
       keyType.title.should.equal("Test key");
 
-      //keyType.updated_at.should.equal(keyType.created_at);
+      // keyType.updated_at.should.equal(keyType.created_at);
     });
   });
 
