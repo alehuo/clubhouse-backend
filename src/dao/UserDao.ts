@@ -32,8 +32,8 @@ export default class UserDao implements Dao<DbUser> {
     if (user.userId) {
       delete user.userId;
     }
-    user.created_at = moment().toISOString();
-    user.updated_at = moment().toISOString();
+    user.created_at = moment().format("YYYY-MM-DD HH:mm:ss");
+    user.updated_at = moment().format("YYYY-MM-DD HH:mm:ss");
     return Promise.resolve(this.knex(TABLE_NAME).insert(user));
   }
 
