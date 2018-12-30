@@ -1,6 +1,7 @@
 import { StudentUnion } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
-import { addTimestamps } from "../utils/TimestampGenerator";
+import moment from "moment";
+import { dtFormat } from "../index";
 import Dao from "./Dao";
 
 const TABLE_NAME = "studentUnions";
@@ -32,7 +33,8 @@ export default class StudentUnionDao implements Dao<StudentUnion> {
     if (stdu.unionId) {
       delete stdu.unionId;
     }
-    addTimestamps(stdu);
+    stdu.created_at = moment().format(dtFormat);
+    stdu.updated_at = moment().format(dtFormat);
     return Promise.resolve(this.knex(TABLE_NAME).insert(stdu));
   }
 
