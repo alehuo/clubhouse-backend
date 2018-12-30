@@ -366,6 +366,7 @@ export default class UserController extends Controller {
               );
           }
         } catch (err) {
+          console.log(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
