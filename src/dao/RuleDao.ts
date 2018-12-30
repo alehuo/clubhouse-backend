@@ -23,13 +23,11 @@ export default class RuleDao implements Dao<Rule> {
     throw new Error("Method not implemented.");
   }
   public save(entity: Rule): PromiseLike<number[]> {
-    const ruleId = entity.ruleId;
-    delete entity.ruleId;
+    if (entity.ruleId) {
+      delete entity.ruleId;
+    }
+    entity.created_at = moment().format(dtFormat);
     entity.updated_at = moment().format(dtFormat);
-    return Promise.resolve(
-      this.knex(table)
-        .update(entity)
-        .where({ ruleId })
-    );
+    return Promise.resolve(this.knex(table).insert(entity));
   }
 }
