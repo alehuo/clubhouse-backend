@@ -41,7 +41,12 @@ const development: Knex.Config = {
   },
   pool: {
     min: 2,
-    max: 10
+    max: 10,
+    afterCreate(conn, done) {
+      conn.query('SET time_zone="Europe/Helsinki";', function(err: any) {
+        done(err, conn);
+      });
+    }
   }
 };
 
@@ -54,7 +59,12 @@ const test: Knex.Config = {
   },
   pool: {
     min: 2,
-    max: 10
+    max: 10,
+    afterCreate(conn, done) {
+      conn.query('SET time_zone="Europe/Helsinki";', function(err: any) {
+        done(err, conn);
+      });
+    }
   }
 };
 
@@ -67,7 +77,12 @@ const production: Knex.Config = {
   },
   pool: {
     min: 2,
-    max: 10
+    max: 10,
+    afterCreate(conn, done) {
+      conn.query('SET time_zone="Europe/Helsinki";', function(err: any) {
+        done(err, conn);
+      });
+    }
   },
   migrations: {
     tableName: "knex_migrations"
