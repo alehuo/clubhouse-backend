@@ -49,7 +49,7 @@ export default class StudentUnionController extends Controller {
               )
             );
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createError("Server error", err as Error));
@@ -89,7 +89,7 @@ export default class StudentUnionController extends Controller {
               .json(MessageFactory.createError("Student union not found"));
           }
         } catch (ex) {
-          logger.log("error", ex);
+          logger.error(ex);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createError("Server error", ex as Error));
@@ -161,7 +161,7 @@ export default class StudentUnionController extends Controller {
             );
           }
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createError("Server error", err as Error));
@@ -194,7 +194,7 @@ export default class StudentUnionController extends Controller {
                 );
             }
           } catch (err) {
-            logger.log("error", err);
+            logger.error(err);
             return res
               .status(StatusCode.INTERNAL_SERVER_ERROR)
               .json(

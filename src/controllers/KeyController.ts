@@ -35,7 +35,7 @@ export default class KeyController extends Controller {
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createModelValidationError("Key"));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error: Cannot get keys"));
@@ -60,7 +60,7 @@ export default class KeyController extends Controller {
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createModelValidationError("Key"));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error: Cannot get key"));
@@ -138,7 +138,7 @@ export default class KeyController extends Controller {
               .json(MessageFactory.createError("Error adding new key"));
           }
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -169,7 +169,7 @@ export default class KeyController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createMessage("Key deleted"));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error: Cannot delete key"));

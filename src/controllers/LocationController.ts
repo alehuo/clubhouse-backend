@@ -37,7 +37,7 @@ export default class LocationController extends Controller {
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createModelValidationError("Location"));
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -79,7 +79,7 @@ export default class LocationController extends Controller {
               .json(MessageFactory.createError("Location not found"));
           }
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -134,7 +134,7 @@ export default class LocationController extends Controller {
             });
           }
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -173,7 +173,7 @@ export default class LocationController extends Controller {
               .json(MessageFactory.createError("Location not found"));
           }
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(

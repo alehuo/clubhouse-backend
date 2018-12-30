@@ -24,7 +24,7 @@ export default class RuleController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Rule[]>(true, "", rules));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error: cannot fetch rules"));
@@ -75,7 +75,7 @@ export default class RuleController extends Controller {
               .json(MessageFactory.createError("Error swapping rules"));
           }
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -103,7 +103,7 @@ export default class RuleController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Rule>(true, "", rule));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error: cannot fetch rule"));

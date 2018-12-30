@@ -44,7 +44,7 @@ export default class SessionController extends Controller {
             )
           );
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -74,7 +74,7 @@ export default class SessionController extends Controller {
             )
           );
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -109,7 +109,7 @@ export default class SessionController extends Controller {
               )
             );
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -204,14 +204,14 @@ export default class SessionController extends Controller {
               WsMessage(MessageType.SessionStart, req.body.startMessage, userId)
             );
           } catch (err) {
-            logger.log("error", err);
+            logger.error(err);
           }
 
           return res
             .status(StatusCode.CREATED)
             .json(MessageFactory.createMessage("Session started"));
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -316,7 +316,7 @@ export default class SessionController extends Controller {
               WsMessage(MessageType.SessionEnd, req.body.endMessage, userId)
             );
           } catch (err) {
-            logger.log("error", err);
+            logger.error(err);
           }
 
           return res
@@ -327,7 +327,7 @@ export default class SessionController extends Controller {
               )
             );
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -365,7 +365,7 @@ export default class SessionController extends Controller {
           );
         }
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error", err as Error));

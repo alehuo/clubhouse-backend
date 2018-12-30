@@ -62,7 +62,7 @@ export default class UserController extends Controller {
             )
           );
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -95,7 +95,7 @@ export default class UserController extends Controller {
             );
         }
       } catch (ex) {
-        logger.log("error", ex);
+        logger.error(ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -128,7 +128,7 @@ export default class UserController extends Controller {
             );
         }
       } catch (ex) {
-        logger.log("error", ex);
+        logger.error(ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -252,7 +252,7 @@ export default class UserController extends Controller {
           }
         }
       } catch (ex) {
-        logger.log("error", ex);
+        logger.error(ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -371,7 +371,7 @@ export default class UserController extends Controller {
               );
           }
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -482,7 +482,7 @@ export default class UserController extends Controller {
               );
           }
         } catch (ex) {
-          logger.log("error", ex);
+          logger.error(ex);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(

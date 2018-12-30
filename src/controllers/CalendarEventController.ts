@@ -77,7 +77,7 @@ export default class CalendarEventController extends Controller {
               .json(MessageFactory.createError("Failed to add calendar event"));
           }
         } catch (ex) {
-          logger.log("error", ex);
+          logger.error(ex);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -108,7 +108,7 @@ export default class CalendarEventController extends Controller {
             )
           );
       } catch (ex) {
-        logger.log("error", ex);
+        logger.error(ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -131,7 +131,7 @@ export default class CalendarEventController extends Controller {
         res.setHeader("Content-type", "text/calendar");
         return res.send(ical);
       } catch (ex) {
-        logger.log("error", ex);
+        logger.error(ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -168,7 +168,7 @@ export default class CalendarEventController extends Controller {
             );
         }
       } catch (ex) {
-        logger.log("error", ex);
+        logger.error(ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -208,7 +208,7 @@ export default class CalendarEventController extends Controller {
             }
           }
         } catch (ex) {
-          logger.log("error", ex);
+          logger.error(ex);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -239,7 +239,7 @@ export default class CalendarEventController extends Controller {
           return res.send(calData);
         }
       } catch (ex) {
-        logger.log("error", ex);
+        logger.error(ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(

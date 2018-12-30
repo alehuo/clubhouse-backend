@@ -31,7 +31,7 @@ export default class MessageController extends Controller {
             .json(MessageFactory.createModelValidationError("Message"));
         }
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -62,7 +62,7 @@ export default class MessageController extends Controller {
             .json(MessageFactory.createError("Message not found"));
         }
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -133,7 +133,7 @@ export default class MessageController extends Controller {
             })
           );
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -171,7 +171,7 @@ export default class MessageController extends Controller {
             .json(MessageFactory.createError("Message not found"));
         }
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(

@@ -27,7 +27,7 @@ export default class KeyTypeController extends Controller {
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createModelValidationError("KeyType"));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -54,7 +54,7 @@ export default class KeyTypeController extends Controller {
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createModelValidationError("KeyType"));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -102,7 +102,7 @@ export default class KeyTypeController extends Controller {
               .json(MessageFactory.createError("Error adding new key type"));
           }
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -146,7 +146,7 @@ export default class KeyTypeController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createMessage("Key type deleted"));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(

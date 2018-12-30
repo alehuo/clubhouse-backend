@@ -32,7 +32,7 @@ export default class NewsPostController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Newspost[]>(true, "", newsPosts));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -61,7 +61,7 @@ export default class NewsPostController extends Controller {
           .status(StatusCode.NOT_FOUND)
           .json(MessageFactory.createError("Newspost not found"));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -85,7 +85,7 @@ export default class NewsPostController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Newspost[]>(true, "", newsPost));
       } catch (err) {
-        logger.log("error", err);
+        logger.error(err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -139,7 +139,7 @@ export default class NewsPostController extends Controller {
             .status(StatusCode.BAD_REQUEST)
             .json(MessageFactory.createError("Error saving newspost"));
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -178,7 +178,7 @@ export default class NewsPostController extends Controller {
               .json(MessageFactory.createError("Newspost not found"));
           }
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(

@@ -30,7 +30,7 @@ export default class PermissionController extends Controller {
             )
           );
         } catch (err) {
-          logger.log("error", err);
+          logger.error(err);
           return res
             .status(500)
             .json(
