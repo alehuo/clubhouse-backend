@@ -152,7 +152,7 @@ export default class SessionController extends Controller {
             startMessage,
             endMessage: "",
             startTime: moment().format(dtFormat),
-            endTime: "",
+            endTime: moment().format(dtFormat),
             ended: 0,
             started: 1,
             created_at: "", // Placeholder
