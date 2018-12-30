@@ -25,6 +25,7 @@ import KeyDao from "../dao/KeyDao";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
 import SessionDao from "../dao/SessionDao";
+import { logger } from "../index";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
@@ -61,6 +62,7 @@ export default class UserController extends Controller {
             )
           );
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -93,6 +95,7 @@ export default class UserController extends Controller {
             );
         }
       } catch (ex) {
+        logger.log("error", ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -125,6 +128,7 @@ export default class UserController extends Controller {
             );
         }
       } catch (ex) {
+        logger.log("error", ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -248,6 +252,7 @@ export default class UserController extends Controller {
           }
         }
       } catch (ex) {
+        logger.log("error", ex);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -366,7 +371,7 @@ export default class UserController extends Controller {
               );
           }
         } catch (err) {
-          console.log(err);
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -477,6 +482,7 @@ export default class UserController extends Controller {
               );
           }
         } catch (ex) {
+          logger.log("error", ex);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(

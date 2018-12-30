@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { logger } from "../index";
 
 let transporter = nodemailer.createTransport({
   host: process.env.SMTP_SERVER,
@@ -39,10 +40,10 @@ export const sendEmail = async (
 
     // Debug output
     if (process.env.NODE_ENV !== "production") {
-      console.log("Message sent: %s", res.messageId);
-      console.log("Sent message: ", res.message);
+      logger.log("info", "Message sent: " + res.messageId);
+      logger.log("info", "Message sent: " + res.message);
       // Preview only available when sending through an Ethereal account
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(res));
+      logger.log("info", "Preview URL: " + nodemailer.getTestMessageUrl(res));
     }
   }
 };

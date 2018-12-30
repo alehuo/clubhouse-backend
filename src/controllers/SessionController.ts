@@ -9,7 +9,7 @@ import { isSession, Session, sessionFilter } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { isString } from "util";
 import UserDao from "../dao/UserDao";
-import { dtFormat } from "../index";
+import { dtFormat, logger } from "../index";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { sendEmail } from "../utils/Mailer";
 import { StatusCode } from "../utils/StatusCodes";
@@ -44,6 +44,7 @@ export default class SessionController extends Controller {
             )
           );
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -73,6 +74,7 @@ export default class SessionController extends Controller {
             )
           );
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -107,6 +109,7 @@ export default class SessionController extends Controller {
               )
             );
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -201,13 +204,14 @@ export default class SessionController extends Controller {
               WsMessage(MessageType.SessionStart, req.body.startMessage, userId)
             );
           } catch (err) {
-            console.log("WebSocket error: " + err);
+            logger.log("error", err);
           }
 
           return res
             .status(StatusCode.CREATED)
             .json(MessageFactory.createMessage("Session started"));
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -312,7 +316,7 @@ export default class SessionController extends Controller {
               WsMessage(MessageType.SessionEnd, req.body.endMessage, userId)
             );
           } catch (err) {
-            console.log("WebSocket error: " + err);
+            logger.log("error", err);
           }
 
           return res
@@ -323,6 +327,7 @@ export default class SessionController extends Controller {
               )
             );
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -360,6 +365,7 @@ export default class SessionController extends Controller {
           );
         }
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error", err as Error));

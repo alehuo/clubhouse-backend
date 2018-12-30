@@ -3,6 +3,7 @@ import express from "express";
 import { isStatistics, Statistics } from "@alehuo/clubhouse-shared";
 import StatisticsDao from "../dao/StatisticsDao";
 import UserDao from "../dao/UserDao";
+import { logger } from "../index";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
@@ -29,6 +30,7 @@ export default class StatisticsController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Statistics>(true, "", result[0]));
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -60,6 +62,7 @@ export default class StatisticsController extends Controller {
             .json(MessageFactory.createError("Statistics not found"));
         }
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(500)
           .json(

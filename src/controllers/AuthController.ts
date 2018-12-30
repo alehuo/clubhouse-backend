@@ -6,6 +6,7 @@ import Controller from "./Controller";
 import { DbUser, isString, Permission } from "@alehuo/clubhouse-shared";
 import axios from "axios";
 import uuid from "uuid/v4";
+import { logger } from "../index";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import { hasPermissions } from "../utils/PermissionUtils";
@@ -87,6 +88,7 @@ export default class AuthController extends Controller {
                   );
               }
             } catch (ex) {
+              logger.log("error", ex);
               return res
                 .status(StatusCode.INTERNAL_SERVER_ERROR)
                 .json(
@@ -98,6 +100,7 @@ export default class AuthController extends Controller {
             }
           }
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -182,7 +185,7 @@ export default class AuthController extends Controller {
           console.log(response.data.access_token);
           return res.status(StatusCode.OK).send("OK");
         } catch (err) {
-          console.error(err.response.data);
+          logger.log("error", err);
           return res.status(StatusCode.UNAUTHORIZED).send("Unauthorized (5)");
         }
       }

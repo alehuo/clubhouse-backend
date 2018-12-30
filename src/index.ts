@@ -13,6 +13,7 @@ import helmet from "helmet";
 import http from "http";
 import morgan from "morgan";
 import path from "path";
+import winston from "winston";
 import AuthController from "./controllers/AuthController";
 import CalendarEventController from "./controllers/CalendarEventController";
 import KeyController from "./controllers/KeyController";
@@ -45,6 +46,15 @@ import { apiHeader, apiUrl } from "./utils/ApiUtils";
 import { WebSocketServer } from "./WebSocket";
 
 export const dtFormat = "YYYY-MM-DD HH:mm:ss";
+
+export const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+      handleExceptions: true
+    })
+  ]
+});
 
 // Express instance
 const app = express();
@@ -204,7 +214,7 @@ const port = Number(process.env.PORT || 3001);
 
 // Listen
 server.listen(port, () => {
-  console.log("Server running at ::%d", port);
+  logger.log("info", "Server running at ::" + port);
 });
 
 export default server;

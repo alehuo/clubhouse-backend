@@ -63,9 +63,10 @@
 | 26.12.2018 | 1.5h  | Implemented KeyTypeController & tests for KeyTypeController. Improved tests for CalendarEventController. Fixed a bug where the user was unable to create an event.                                                                                                                                                                                        |
 | 27.12.2018 | 1.2h  | Added generic type to RequestParamMiddleware to enforce strict request param key check. Cleanup and code refactoring. Added KeyController & rest files for KeyController.                                                                                                                                                                                 |
 | 29.12.2018 | 0.5h  | Updated some API docs, small bug fixes. Modified test migration timeout to fix a rare condition where the migratin fails to run due to 10000ms timeout                                                                                                                                                                                                    |
+| 30.12.2018 | 1.0h  | Bug fixes, added Winston to log back-end exceptions                                                                                                                                                                                                                                                                                                       |
 
 Total:
 
 61.0 h (part 1)
 
-53.2 h (part 2)
+54.2 h (part 2)

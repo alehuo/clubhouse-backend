@@ -12,6 +12,7 @@ import {
   Permission
 } from "@alehuo/clubhouse-shared";
 import { isString } from "util";
+import { logger } from "../index";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { StatusCode } from "../utils/StatusCodes";
@@ -36,6 +37,7 @@ export default class LocationController extends Controller {
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createModelValidationError("Location"));
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -77,6 +79,7 @@ export default class LocationController extends Controller {
               .json(MessageFactory.createError("Location not found"));
           }
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -131,6 +134,7 @@ export default class LocationController extends Controller {
             });
           }
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -169,6 +173,7 @@ export default class LocationController extends Controller {
               .json(MessageFactory.createError("Location not found"));
           }
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(

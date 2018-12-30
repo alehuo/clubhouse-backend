@@ -13,10 +13,10 @@ import {
 } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { isString } from "util";
+import { dtFormat, logger } from "../index";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { StatusCode } from "../utils/StatusCodes";
-import { dtFormat } from "../index";
 
 /**
  * Student union controller.
@@ -49,6 +49,7 @@ export default class StudentUnionController extends Controller {
               )
             );
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createError("Server error", err as Error));
@@ -88,6 +89,7 @@ export default class StudentUnionController extends Controller {
               .json(MessageFactory.createError("Student union not found"));
           }
         } catch (ex) {
+          logger.log("error", ex);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createError("Server error", ex as Error));
@@ -159,6 +161,7 @@ export default class StudentUnionController extends Controller {
             );
           }
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createError("Server error", err as Error));
@@ -191,6 +194,7 @@ export default class StudentUnionController extends Controller {
                 );
             }
           } catch (err) {
+            logger.log("error", err);
             return res
               .status(StatusCode.INTERNAL_SERVER_ERROR)
               .json(

@@ -2,6 +2,7 @@ import { isKeyType, KeyType } from "@alehuo/clubhouse-shared";
 import { isString } from "util";
 import KeyDao from "../dao/KeyDao";
 import KeyTypeDao from "../dao/KeyTypeDao";
+import { logger } from "../index";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
@@ -26,6 +27,7 @@ export default class KeyTypeController extends Controller {
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createModelValidationError("KeyType"));
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -52,6 +54,7 @@ export default class KeyTypeController extends Controller {
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createModelValidationError("KeyType"));
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -99,6 +102,7 @@ export default class KeyTypeController extends Controller {
               .json(MessageFactory.createError("Error adding new key type"));
           }
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -142,6 +146,7 @@ export default class KeyTypeController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createMessage("Key type deleted"));
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(

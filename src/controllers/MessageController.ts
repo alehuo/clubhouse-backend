@@ -4,6 +4,7 @@ import Controller from "./Controller";
 import { isMessage, Message } from "@alehuo/clubhouse-shared";
 import MessageDao from "../dao/MessageDao";
 import UserDao from "../dao/UserDao";
+import { logger } from "../index";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { sendEmail } from "../utils/Mailer";
@@ -30,6 +31,7 @@ export default class MessageController extends Controller {
             .json(MessageFactory.createModelValidationError("Message"));
         }
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -60,6 +62,7 @@ export default class MessageController extends Controller {
             .json(MessageFactory.createError("Message not found"));
         }
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(
@@ -130,6 +133,7 @@ export default class MessageController extends Controller {
             })
           );
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -167,6 +171,7 @@ export default class MessageController extends Controller {
             .json(MessageFactory.createError("Message not found"));
         }
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(

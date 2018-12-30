@@ -1,6 +1,7 @@
 import { isRule, Rule } from "@alehuo/clubhouse-shared";
 import express from "express";
 import RuleDao from "../dao/RuleDao";
+import { logger } from "../index";
 import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
 import Controller from "./Controller";
@@ -23,6 +24,7 @@ export default class RuleController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Rule[]>(true, "", rules));
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error: cannot fetch rules"));
@@ -73,6 +75,7 @@ export default class RuleController extends Controller {
               .json(MessageFactory.createError("Error swapping rules"));
           }
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(
@@ -100,6 +103,7 @@ export default class RuleController extends Controller {
           .status(StatusCode.OK)
           .json(MessageFactory.createResponse<Rule>(true, "", rule));
       } catch (err) {
+        logger.log("error", err);
         return res
           .status(StatusCode.INTERNAL_SERVER_ERROR)
           .json(MessageFactory.createError("Server error: cannot fetch rule"));

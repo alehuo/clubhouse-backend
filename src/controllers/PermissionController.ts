@@ -5,6 +5,7 @@ import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { Permission } from "@alehuo/clubhouse-shared";
+import { logger } from "../index";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { getPermissions } from "../utils/PermissionUtils";
 import { StatusCode } from "../utils/StatusCodes";
@@ -29,6 +30,7 @@ export default class PermissionController extends Controller {
             )
           );
         } catch (err) {
+          logger.log("error", err);
           return res
             .status(500)
             .json(
