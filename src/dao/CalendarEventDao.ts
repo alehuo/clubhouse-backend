@@ -1,7 +1,7 @@
 import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
-import { dtFormat } from "../index";
+import { dtFormat } from "../utils/DtFormat";
 import Dao from "./Dao";
 
 const TABLE_NAME = "calendarEvents";

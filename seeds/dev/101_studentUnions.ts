@@ -1,7 +1,7 @@
 import { StudentUnion } from "@alehuo/clubhouse-shared";
 import * as Knex from "knex";
 import moment from "moment";
-import { dtFormat } from "../../src/index";
+import { dtFormat } from "../../src/utils/DtFormat";
 
 const stdus: StudentUnion[] = [
   {

@@ -13,9 +13,10 @@ import {
 } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { isString } from "util";
-import { dtFormat, logger } from "../index";
+import { logger } from "../index";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
+import { dtFormat } from "../utils/DtFormat";
 import { StatusCode } from "../utils/StatusCodes";
 
 /**

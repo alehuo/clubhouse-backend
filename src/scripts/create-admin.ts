@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import moment from "moment";
 import UserDao from "../dao/UserDao";
 import * as Database from "../Database";
-import { dtFormat } from "../index";
+import { dtFormat } from "../utils/DtFormat";
 
 const knex = Database.connect();
 const userDao = new UserDao(knex);

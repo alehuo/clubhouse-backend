@@ -1,7 +1,7 @@
 import { Key } from "@alehuo/clubhouse-shared";
 import Knex from "knex";
 import moment from "moment";
-import { dtFormat } from "../../src/index";
+import { dtFormat } from "../../src/utils/DtFormat";
 
 const keys: Key[] = [
   {

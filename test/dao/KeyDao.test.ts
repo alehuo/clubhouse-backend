@@ -6,7 +6,7 @@ import "mocha";
 import moment from "moment";
 import KeyDao from "../../src/dao/KeyDao";
 import * as Database from "../../src/Database";
-import { dtFormat } from "../../src/index";
+import { dtFormat } from "../../src/utils/DtFormat";
 const should = chai.should();
 
 const knex = Database.connect();
