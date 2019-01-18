@@ -64,9 +64,12 @@
 | 27.12.2018 | 1.2h  | Added generic type to RequestParamMiddleware to enforce strict request param key check. Cleanup and code refactoring. Added KeyController & rest files for KeyController.                                                                                                                                                                                 |
 | 29.12.2018 | 0.5h  | Updated some API docs, small bug fixes. Modified test migration timeout to fix a rare condition where the migratin fails to run due to 10000ms timeout                                                                                                                                                                                                    |
 | 30.12.2018 | 1.0h  | Bug fixes, added Winston to log back-end exceptions                                                                                                                                                                                                                                                                                                       |
+| 19.01.2019 | 0.5h  | Fixed an issue where exported timestamp format in index.js would cause the server to fire up in port 8080 and cause a failure when seeding the database.                                                                                                                                                                                                                                                                                                       |
 
 Total:
 
 61.0 h (part 1)
 
 54.2 h (part 2)
+
+0.5 h (post-course)
