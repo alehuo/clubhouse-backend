@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@alehuo/clubhouse-shared": "https://github.com/alehuo/clubhouse-shared.git",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bcrypt": "3.0.2",
     "chai-http": "^4.0.0",
     "cookie-parser": "^1.4.3",
