@@ -144,6 +144,10 @@ You need to create databases `DB_NAME_test`, `DB_NAME_dev` and `DB_NAME`, where 
 3. Run `yarn migrate-docker`
 4. Run `yarn seed-docker` to seed your database with example users
 
+### Credentials
+
+By default, two users are created. Login with ```testuser@email.com::testuser``` or ```testuser2@email.com::testuser2```.
+
 ## Running tests & calculating code coverage
 
 To run tests, run `yarn test`. To run tests in a container environment, run `yarn test-docker`.

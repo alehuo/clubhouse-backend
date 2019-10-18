@@ -48,10 +48,7 @@ export default class PermissionController extends Controller {
       const permissions: number = res.locals.token.data.permissions;
       const permlist = getPermissions(permissions);
       return res.status(StatusCode.OK).json(
-        MessageFactory.createResponse<{
-          permissions: number;
-          permission_list: string[];
-        }>(true, "", {
+        MessageFactory.createResponse(true, "", {
           permissions,
           permission_list: permlist
         })

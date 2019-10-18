@@ -98,7 +98,7 @@ export default class LocationController extends Controller {
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req, res) => {
         try {
-          const { name, address }: Partial<Location> = req.body;
+          const { name, address }: Pick<Location, "name" | "address"> = req.body;
           if (!isString(name) || !isString(address)) {
             return res
               .status(StatusCode.BAD_REQUEST)

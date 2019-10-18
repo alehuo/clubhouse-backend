@@ -38,7 +38,7 @@ export default class AuthController extends Controller {
       RequestParamMiddleware<DbUser>("email", "password"),
       async (req, res) => {
         try {
-          const { email, password }: Partial<DbUser> = req.body;
+          const { email, password }: Pick<DbUser, "email" | "password"> = req.body;
 
           if (!isString(email) || !isString(password)) {
             return res
@@ -121,8 +121,9 @@ export default class AuthController extends Controller {
       }
       // Validate token
       try {
-        // TODO: Typings
-        const tokenData: any = await VerifyToken(token);
+        const tokenData = await VerifyToken(token);
+        // TODO: Remove ts-ignore
+        // @ts-ignore
         const permissions: number = tokenData.data.permissions;
         // If the user doesn't have the permission to use the Spotify API, return an error
         if (!hasPermissions(permissions, Permission.ACCESS_SPOTIFY_API)) {

@@ -167,7 +167,7 @@ export default class UserController extends Controller {
             lastName,
             email,
             password
-          }: Partial<DbUser> = req.body;
+          }: Pick<DbUser, "firstName" | "lastName" | "email" | "password"> = req.body;
           user.firstName = firstName ? firstName : user.firstName;
           user.lastName = lastName ? lastName : user.lastName;
           if (email && user.email !== email) {
@@ -279,7 +279,7 @@ export default class UserController extends Controller {
             firstName,
             lastName,
             password
-          }: Partial<DbUser> = req.body;
+          }: Pick<DbUser, "email" | "firstName" | "lastName" | "password"> = req.body;
 
           if (
             !isString(email) ||

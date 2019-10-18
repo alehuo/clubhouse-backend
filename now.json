@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "name": "clubhouse-api",
+  "alias": "clubhouse-api.alehuo.dev",
+  "builds": [{ "src": "src/**/*.ts", "use": "@now/node" }]
+}

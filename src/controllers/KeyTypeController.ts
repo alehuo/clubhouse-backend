@@ -68,7 +68,7 @@ export default class KeyTypeController extends Controller {
       RequestParamMiddleware<KeyType>("title"),
       JWTMiddleware,
       async (req, res) => {
-        const { title }: Partial<KeyType> = req.body;
+        const { title }: Pick<KeyType, "title"> = req.body;
         if (!isString(title)) {
           return res
             .status(StatusCode.BAD_REQUEST)

@@ -129,7 +129,7 @@ export default class SessionController extends Controller {
       RequestParamMiddleware<Session>("startMessage"),
       JWTMiddleware,
       async (req, res) => {
-        const { startMessage }: Partial<Session> = req.body;
+        const { startMessage }: Pick<Session, "startMessage"> = req.body;
 
         if (!isString(startMessage)) {
           return res.status(400).json("Invalid format for start message.");
@@ -230,7 +230,7 @@ export default class SessionController extends Controller {
       RequestParamMiddleware<Session>("endMessage"),
       JWTMiddleware,
       async (req, res) => {
-        const { endMessage }: Partial<Session> = req.body;
+        const { endMessage }: Pick<Session, "endMessage"> = req.body;
         try {
           const userId = Number(res.locals.token.data.userId);
           const sessions = await this.sessionDao.findOngoingByUser(userId);
@@ -348,17 +348,15 @@ export default class SessionController extends Controller {
         const otherSessions = await this.sessionDao.findAllOngoing();
         const peopleCount = otherSessions.length;
         if (sessions.length === 0) {
-          // TODO: Typings
           return res.status(StatusCode.OK).json(
-            MessageFactory.createResponse<any>(true, "", {
+            MessageFactory.createResponse(true, "", {
               running: sessions && sessions.length !== 0,
               peopleCount
             })
           );
         } else {
-          // TODO: Typings
           return res.status(StatusCode.OK).json(
-            MessageFactory.createResponse<any>(true, "", {
+            MessageFactory.createResponse(true, "", {
               running: sessions && sessions.length !== 0,
               peopleCount,
               startTime: sessions[0].startTime

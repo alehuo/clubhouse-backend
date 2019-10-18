@@ -105,7 +105,7 @@ export default class StudentUnionController extends Controller {
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req, res) => {
         try {
-          const { name, description }: Partial<StudentUnion> = req.body;
+          const { name, description }: Pick<StudentUnion, "name" | "description"> = req.body;
 
           if (!isString(name) || !isString(description)) {
             return res
