@@ -1,26 +1,24 @@
-import express from "express";
 import Controller from "./Controller";
 
 import { isMessage, Message } from "@alehuo/clubhouse-shared";
 import MessageDao from "../dao/MessageDao";
 import UserDao from "../dao/UserDao";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { sendEmail } from "../utils/Mailer";
 import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
 
-export default class MessageController extends Controller {
-  constructor(private messageDao: MessageDao, private userDao: UserDao) {
+class MessageController extends Controller {
+  constructor() {
     super();
   }
-
-  public routes(): express.Router {
+  public routes() {
     // All messages
     this.router.get("", JWTMiddleware, async (req, res) => {
       try {
-        const messages = await this.messageDao.findAll();
+        const messages = await MessageDao.findAll();
         if (messages.every(isMessage)) {
           return res
             .status(StatusCode.OK)
@@ -45,7 +43,7 @@ export default class MessageController extends Controller {
     // A single message
     this.router.get("/:messageId(\\d+)", JWTMiddleware, async (req, res) => {
       try {
-        const message = await this.messageDao.findOne(req.params.messageId);
+        const message = await MessageDao.findOne(Number(req.params.messageId));
         if (message) {
           if (isMessage(message)) {
             return res
@@ -97,9 +95,9 @@ export default class MessageController extends Controller {
               .json(MessageFactory.createModelValidationError("Message"));
           }
 
-          const savedMessage = await this.messageDao.save(msg);
+          const savedMessage = await MessageDao.save(msg);
 
-          const user = await this.userDao.findOne(userId);
+          const user = await UserDao.findOne(userId);
 
           // TODO: Websocket integration
 
@@ -148,14 +146,14 @@ export default class MessageController extends Controller {
 
     this.router.delete("/:messageId(\\d+)", JWTMiddleware, async (req, res) => {
       try {
-        const message = await this.messageDao.findOne(req.params.messageId);
+        const message = await MessageDao.findOne(Number(req.params.messageId));
         if (message) {
           if (!isMessage(message)) {
             return res
               .status(StatusCode.INTERNAL_SERVER_ERROR)
               .json(MessageFactory.createModelValidationError("Message"));
           }
-          const result = await this.messageDao.remove(req.params.messageId);
+          const result = await MessageDao.remove(Number(req.params.messageId));
           if (result) {
             return res
               .status(StatusCode.OK)
@@ -186,3 +184,5 @@ export default class MessageController extends Controller {
     return this.router;
   }
 }
+
+export default new MessageController();

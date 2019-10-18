@@ -1,4 +1,3 @@
-import express from "express";
 import SessionDao from "../dao/SessionDao";
 import Controller from "./Controller";
 
@@ -8,28 +7,24 @@ import { MessageFactory } from "../utils/MessageFactory";
 import { isSession, Session, sessionFilter } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { isString } from "util";
+import { ws } from "../app";
 import UserDao from "../dao/UserDao";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { dtFormat } from "../utils/DtFormat";
 import { sendEmail } from "../utils/Mailer";
 import { StatusCode } from "../utils/StatusCodes";
-import { MessageType, WebSocketServer, WsMessage } from "../WebSocket";
+import { MessageType, WsMessage } from "../WebSocket";
 
-export default class SessionController extends Controller {
-  constructor(
-    private sessionDao: SessionDao,
-    private userDao: UserDao,
-    private ws: WebSocketServer
-  ) {
+class SessionController extends Controller {
+  constructor() {
     super();
   }
-
-  public routes(): express.Router {
+  public routes() {
     // All session that are currently running
     this.router.get("/ongoing", JWTMiddleware, async (req, res) => {
       try {
-        const sessions = await this.sessionDao.findAllOngoing();
+        const sessions = await SessionDao.findAllOngoing();
         if (!sessions.every(isSession)) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -59,7 +54,7 @@ export default class SessionController extends Controller {
     // All sessions from a single user
     this.router.get("/user/:userId(\\d+)", JWTMiddleware, async (req, res) => {
       try {
-        const sessions = await this.sessionDao.findByUser(req.params.userId);
+        const sessions = await SessionDao.findByUser(Number(req.params.userId));
         if (!sessions.every(isSession)) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -92,8 +87,8 @@ export default class SessionController extends Controller {
       JWTMiddleware,
       async (req, res) => {
         try {
-          const sessions = await this.sessionDao.findOngoingByUser(
-            req.params.userId
+          const sessions = await SessionDao.findOngoingByUser(
+            Number(req.params.userId)
           );
           if (!sessions.every(isSession)) {
             return res
@@ -137,7 +132,7 @@ export default class SessionController extends Controller {
 
         try {
           const userId = Number(res.locals.token.data.userId);
-          const sessions = await this.sessionDao.findOngoingByUser(userId);
+          const sessions = await SessionDao.findOngoingByUser(userId);
           if (sessions && sessions.length > 0) {
             return res
               .status(StatusCode.BAD_REQUEST)
@@ -166,9 +161,9 @@ export default class SessionController extends Controller {
               .json(MessageFactory.createModelValidationError("Session"));
           }
 
-          const user = await this.userDao.findOne(userId);
+          const user = await UserDao.findOne(userId);
 
-          await this.sessionDao.save(session);
+          await SessionDao.save(session);
 
           const title =
             (process.env.MAIL_PREFIX
@@ -201,7 +196,7 @@ export default class SessionController extends Controller {
           await sendEmail(["testuser@test.com"], title, message, htmlMessage);
 
           try {
-            await this.ws.broadcastMessage(
+            await ws.broadcastMessage(
               WsMessage(MessageType.SessionStart, req.body.startMessage, userId)
             );
           } catch (err) {
@@ -233,7 +228,7 @@ export default class SessionController extends Controller {
         const { endMessage }: Pick<Session, "endMessage"> = req.body;
         try {
           const userId = Number(res.locals.token.data.userId);
-          const sessions = await this.sessionDao.findOngoingByUser(userId);
+          const sessions = await SessionDao.findOngoingByUser(userId);
           if (sessions) {
             if (sessions.length === 0) {
               return res
@@ -275,12 +270,9 @@ export default class SessionController extends Controller {
               );
           }
 
-          await this.sessionDao.endSession(
-            currentSession.sessionId,
-            endMessage
-          );
+          await SessionDao.endSession(currentSession.sessionId, endMessage);
 
-          const user = await this.userDao.findOne(userId);
+          const user = await UserDao.findOne(userId);
 
           const title =
             (process.env.MAIL_PREFIX
@@ -313,7 +305,7 @@ export default class SessionController extends Controller {
           await sendEmail(["testuser@test.com"], title, message, htmlMessage);
 
           try {
-            await this.ws.broadcastMessage(
+            await ws.broadcastMessage(
               WsMessage(MessageType.SessionEnd, req.body.endMessage, userId)
             );
           } catch (err) {
@@ -344,8 +336,8 @@ export default class SessionController extends Controller {
       try {
         const userId: number = res.locals.token.data.userId;
         // This should return only one session, as only one active is permitted
-        const sessions = await this.sessionDao.findOngoingByUser(userId);
-        const otherSessions = await this.sessionDao.findAllOngoing();
+        const sessions = await SessionDao.findOngoingByUser(userId);
+        const otherSessions = await SessionDao.findAllOngoing();
         const peopleCount = otherSessions.length;
         if (sessions.length === 0) {
           return res.status(StatusCode.OK).json(
@@ -373,3 +365,5 @@ export default class SessionController extends Controller {
     return this.router;
   }
 }
+
+export default new SessionController();

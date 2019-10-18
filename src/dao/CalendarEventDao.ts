@@ -1,17 +1,15 @@
 import { CalendarEvent } from "@alehuo/clubhouse-shared";
-import Knex from "knex";
+import knex from "../Database";
 import moment from "moment";
 import { dtFormat } from "../utils/DtFormat";
 import Dao from "./Dao";
 
 const TABLE_NAME = "calendarEvents";
 
-export default class CalendarEventDao implements Dao<CalendarEvent> {
-  constructor(private readonly knex: Knex) {}
-
+class CalendarEventDao implements Dao<CalendarEvent> {
   public findAll(): PromiseLike<CalendarEvent[]> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .orderBy("eventId", "ASC")
     );
@@ -19,7 +17,7 @@ export default class CalendarEventDao implements Dao<CalendarEvent> {
 
   public findOne(eventId: number): PromiseLike<CalendarEvent> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ eventId })
         .first()
@@ -30,7 +28,7 @@ export default class CalendarEventDao implements Dao<CalendarEvent> {
     userId: number
   ): PromiseLike<CalendarEvent[]> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .innerJoin("users", "users.userId", TABLE_NAME + ".addedBy")
         .where("users.userId", userId)
@@ -43,14 +41,16 @@ export default class CalendarEventDao implements Dao<CalendarEvent> {
     }
     calendarEvent.created_at = moment().format(dtFormat);
     calendarEvent.updated_at = moment().format(dtFormat);
-    return Promise.resolve(this.knex(TABLE_NAME).insert(calendarEvent));
+    return Promise.resolve(knex(TABLE_NAME).insert(calendarEvent));
   }
 
-  public remove(eventId: number): PromiseLike<boolean> {
+  public remove(eventId: number): PromiseLike<number> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .delete()
         .where({ eventId })
     );
   }
 }
+
+export default new CalendarEventDao()

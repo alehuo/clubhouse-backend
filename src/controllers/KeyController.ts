@@ -5,7 +5,7 @@ import KeyDao from "../dao/KeyDao";
 import KeyTypeDao from "../dao/KeyTypeDao";
 import StudentUnionDao from "../dao/StudentUnionDao";
 import UserDao from "../dao/UserDao";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { dtFormat } from "../utils/DtFormat";
@@ -13,20 +13,14 @@ import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
 import Controller from "./Controller";
 
-export default class KeyController extends Controller {
-  constructor(
-    private readonly keyTypeDao: KeyTypeDao,
-    private readonly keyDao: KeyDao,
-    private readonly studentUnionDao: StudentUnionDao,
-    private readonly userDao: UserDao
-  ) {
+class KeyController extends Controller {
+  constructor() {
     super();
   }
-
   public routes() {
     this.router.get("", JWTMiddleware, async (req, res) => {
       try {
-        const keys = await this.keyDao.findAll();
+        const keys = await KeyDao.findAll();
         if (keys.every(isKey)) {
           return res
             .status(StatusCode.OK)
@@ -46,7 +40,7 @@ export default class KeyController extends Controller {
     this.router.get("/:keyId(\\d+)", JWTMiddleware, async (req, res) => {
       const keyId = Number(req.params.keyId);
       try {
-        const key = await this.keyDao.findOne(keyId);
+        const key = await KeyDao.findOne(keyId);
         if (!key) {
           return res
             .status(StatusCode.NOT_FOUND)
@@ -109,27 +103,27 @@ export default class KeyController extends Controller {
             .json(MessageFactory.createError("Invalid request params"));
         }
         try {
-          const dbUser = await this.userDao.findOne(userId);
+          const dbUser = await UserDao.findOne(userId);
           if (!dbUser) {
             return res
               .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("User not found"));
           }
-          const dbKeyType = await this.keyTypeDao.findOne(keyType);
+          const dbKeyType = await KeyTypeDao.findOne(keyType);
           if (!dbKeyType) {
             return res
               .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Key type not found"));
           }
-          const stdu = await this.studentUnionDao.findOne(unionId);
+          const stdu = await StudentUnionDao.findOne(unionId);
           if (!stdu) {
             return res
               .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Student union not found"));
           }
-          const savedKeyIds = await this.keyDao.save(newKey);
+          const savedKeyIds = await KeyDao.save(newKey);
           if (savedKeyIds[0]) {
-            const savedKey = await this.keyDao.findOne(savedKeyIds[0]);
+            const savedKey = await KeyDao.findOne(savedKeyIds[0]);
             return res
               .status(StatusCode.CREATED)
               .json(MessageFactory.createResponse<Key>(true, "", savedKey));
@@ -152,7 +146,7 @@ export default class KeyController extends Controller {
     this.router.delete("/:keyId(\\d+)", JWTMiddleware, async (req, res) => {
       const keyId = Number(req.params.keyId);
       try {
-        const key = await this.keyDao.findOne(keyId);
+        const key = await KeyDao.findOne(keyId);
         if (!key) {
           return res
             .status(StatusCode.NOT_FOUND)
@@ -164,7 +158,7 @@ export default class KeyController extends Controller {
             .json(MessageFactory.createModelValidationError("Key"));
         }
 
-        await this.keyDao.remove(key.keyId);
+        await KeyDao.remove(key.keyId);
 
         return res
           .status(StatusCode.OK)
@@ -180,3 +174,5 @@ export default class KeyController extends Controller {
     return this.router;
   }
 }
+
+export default new KeyController();

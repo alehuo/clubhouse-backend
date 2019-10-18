@@ -1,5 +1,3 @@
-import express from "express";
-
 import StudentUnionDao from "../dao/StudentUnionDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
@@ -13,7 +11,7 @@ import {
 } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 import { isString } from "util";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { dtFormat } from "../utils/DtFormat";
@@ -22,19 +20,18 @@ import { StatusCode } from "../utils/StatusCodes";
 /**
  * Student union controller.
  */
-export default class StudentUnionController extends Controller {
-  constructor(private studentUnionDao: StudentUnionDao) {
+class StudentUnionController extends Controller {
+  constructor() {
     super();
   }
-
-  public routes(): express.Router {
+  public routes() {
     this.router.get(
       "",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_VIEW_STUDENT_UNIONS),
       async (req, res) => {
         try {
-          const result = await this.studentUnionDao.findAll();
+          const result = await StudentUnionDao.findAll();
           if (!result.every(isStudentUnion)) {
             return res
               .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -64,8 +61,8 @@ export default class StudentUnionController extends Controller {
       PermissionMiddleware(Permission.ALLOW_VIEW_STUDENT_UNIONS),
       async (req, res) => {
         try {
-          const studentUnion = await this.studentUnionDao.findOne(
-            req.params.studentUnionId
+          const studentUnion = await StudentUnionDao.findOne(
+            Number(req.params.studentUnionId)
           );
           if (studentUnion) {
             if (!isStudentUnion(studentUnion)) {
@@ -105,7 +102,10 @@ export default class StudentUnionController extends Controller {
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req, res) => {
         try {
-          const { name, description }: Pick<StudentUnion, "name" | "description"> = req.body;
+          const {
+            name,
+            description
+          }: Pick<StudentUnion, "name" | "description"> = req.body;
 
           if (!isString(name) || !isString(description)) {
             return res
@@ -113,7 +113,7 @@ export default class StudentUnionController extends Controller {
               .json(MessageFactory.createError("Invalid request params"));
           }
 
-          const studentUnion = await this.studentUnionDao.findByName(name);
+          const studentUnion = await StudentUnionDao.findByName(name);
 
           if (studentUnion) {
             return res
@@ -148,7 +148,7 @@ export default class StudentUnionController extends Controller {
                 );
             }
 
-            const savedStudentUnion = await this.studentUnionDao.save(newStdu);
+            const savedStudentUnion = await StudentUnionDao.save(newStdu);
 
             return res.status(StatusCode.CREATED).json(
               MessageFactory.createResponse<StudentUnion>(true, "", {
@@ -175,13 +175,13 @@ export default class StudentUnionController extends Controller {
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_STUDENT_UNIONS),
       async (req, res) => {
-        const studentUnion = await this.studentUnionDao.findOne(
-          req.params.studentUnionId
+        const studentUnion = await StudentUnionDao.findOne(
+          Number(req.params.studentUnionId)
         );
         if (studentUnion) {
           try {
-            const result = await this.studentUnionDao.remove(
-              req.params.studentUnionId
+            const result = await StudentUnionDao.remove(
+              Number(req.params.studentUnionId)
             );
             if (result) {
               return res
@@ -216,3 +216,5 @@ export default class StudentUnionController extends Controller {
     return this.router;
   }
 }
+
+export default new StudentUnionController();

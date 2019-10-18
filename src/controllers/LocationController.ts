@@ -1,5 +1,3 @@
-import express from "express";
-
 import LocationDao from "../dao/LocationDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
@@ -12,24 +10,23 @@ import {
   Permission
 } from "@alehuo/clubhouse-shared";
 import { isString } from "util";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { StatusCode } from "../utils/StatusCodes";
 
-export default class LocationController extends Controller {
-  constructor(private locationDao: LocationDao) {
+class LocationController extends Controller {
+  constructor() {
     super();
   }
-
-  public routes(): express.Router {
+  public routes() {
     this.router.get(
       "",
       JWTMiddleware,
       PermissionMiddleware(Permission.ALLOW_VIEW_LOCATIONS),
       async (req, res) => {
         try {
-          const result = await this.locationDao.findAll();
+          const result = await LocationDao.findAll();
           if (result.every(isLocation)) {
             return res.status(StatusCode.OK).json(result.map(locationFilter));
           }
@@ -57,7 +54,7 @@ export default class LocationController extends Controller {
       async (req, res) => {
         const locationId = Number(req.params.locationId);
         try {
-          const location = await this.locationDao.findOne(locationId);
+          const location = await LocationDao.findOne(locationId);
           if (location) {
             if (isLocation(location)) {
               return res
@@ -98,13 +95,16 @@ export default class LocationController extends Controller {
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_LOCATIONS),
       async (req, res) => {
         try {
-          const { name, address }: Pick<Location, "name" | "address"> = req.body;
+          const {
+            name,
+            address
+          }: Pick<Location, "name" | "address"> = req.body;
           if (!isString(name) || !isString(address)) {
             return res
               .status(StatusCode.BAD_REQUEST)
               .json(MessageFactory.createError("Invalid request parameters"));
           }
-          const location = await this.locationDao.findByName(name);
+          const location = await LocationDao.findByName(name);
           if (location) {
             return res
               .status(StatusCode.BAD_REQUEST)
@@ -124,7 +124,7 @@ export default class LocationController extends Controller {
                 .json(MessageFactory.createModelValidationError("Location"));
             }
 
-            const savedLocation = await this.locationDao.save(locationObj);
+            const savedLocation = await LocationDao.save(locationObj);
 
             return res.status(StatusCode.CREATED).json({
               ...locationObj,
@@ -153,9 +153,9 @@ export default class LocationController extends Controller {
       async (req, res) => {
         const locationId = Number(req.params.locationId);
         try {
-          const locations = await this.locationDao.findOne(locationId);
+          const locations = await LocationDao.findOne(locationId);
           if (locations) {
-            const result = await this.locationDao.remove(locationId);
+            const result = await LocationDao.remove(locationId);
             if (result) {
               return res
                 .status(StatusCode.OK)
@@ -188,3 +188,5 @@ export default class LocationController extends Controller {
     return this.router;
   }
 }
+
+export default new LocationController();

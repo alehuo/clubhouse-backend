@@ -5,13 +5,9 @@ import chai from "chai";
 import "mocha";
 import moment from "moment";
 import KeyDao from "../../src/dao/KeyDao";
-import * as Database from "../../src/Database";
+import knex from "../../src/Database";
 import { dtFormat } from "../../src/utils/DtFormat";
 const should = chai.should();
-
-const knex = Database.connect();
-
-const keyDao = new KeyDao(knex);
 
 const mapToKeys = (dbKeys: any) => {
   const keyTypes: Key[] = [
@@ -64,7 +60,7 @@ describe("KeyDao", () => {
 
   describe("findAll()", () => {
     it("Returns all keys", async () => {
-      const res = await keyDao.findAll();
+      const res = await KeyDao.findAll();
       const keys = mapToKeys(res);
       should.exist(keys.length);
       keys.length.should.equal(2);
@@ -114,7 +110,7 @@ describe("KeyDao", () => {
 
   describe("findOne()", () => {
     it("Returns a single key type", async () => {
-      const res = await keyDao.findOne(1);
+      const res = await KeyDao.findOne(1);
       const key: Key = { ...res };
       const dbKey = dbKeys.find((key) => key.keyId === 1);
       dbKey!.should.not.equal(null);
@@ -142,11 +138,11 @@ describe("KeyDao", () => {
 
   describe("save()", () => {
     it("Saves a new key type", async () => {
-      const all1 = await keyDao.findAll();
+      const all1 = await KeyDao.findAll();
       const keyTypes1 = mapToKeys(all1);
       keyTypes1.length.should.equal(2);
 
-      await keyDao.save({
+      await KeyDao.save({
         keyId: 3,
         keyType: 1,
         userId: 2,
@@ -157,11 +153,11 @@ describe("KeyDao", () => {
         updated_at: moment().format(dtFormat)
       });
 
-      const all2 = await keyDao.findAll();
+      const all2 = await KeyDao.findAll();
       const keyTypes2 = mapToKeys(all2);
       keyTypes2.length.should.equal(3);
 
-      const res = await keyDao.findOne(3);
+      const res = await KeyDao.findOne(3);
       const key: Key = { ...res };
 
       should.exist(key.created_at);
@@ -183,14 +179,14 @@ describe("KeyDao", () => {
 
   describe("update()", () => {
     it("Updates a single key type", async () => {
-      const res = await keyDao.findOne(1);
+      const res = await KeyDao.findOne(1);
       const key: Key = { ...res };
       key.description.should.not.equal("Updated title");
       key.description = "Updated title";
 
-      await keyDao.update(key);
+      await KeyDao.update(key);
 
-      const res2 = await keyDao.findOne(1);
+      const res2 = await KeyDao.findOne(1);
       const key2: Key = { ...res2 };
       key2.description.should.equal("Updated title");
       // key.updated_at.should.not.equal(key2.updated_at);
@@ -199,13 +195,13 @@ describe("KeyDao", () => {
 
   describe("remove()", () => {
     it("Removes a single key type", async () => {
-      const all1 = await keyDao.findAll();
+      const all1 = await KeyDao.findAll();
       const keys1 = mapToKeys(all1);
       keys1.length.should.equal(2);
 
-      await keyDao.remove(1);
+      await KeyDao.remove(1);
 
-      const all2 = await keyDao.findAll();
+      const all2 = await KeyDao.findAll();
       const keys2 = mapToKeys(all2);
       keys2.length.should.equal(1);
     });

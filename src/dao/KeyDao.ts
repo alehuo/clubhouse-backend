@@ -1,20 +1,18 @@
 import { Key } from "@alehuo/clubhouse-shared";
-import Knex from "knex";
+import knex from "../Database";
 import moment from "moment";
 import { dtFormat } from "../utils/DtFormat";
 import Dao from "./Dao";
 
 const TABLE_NAME = "keys";
 
-export default class KeyDao implements Dao<Key> {
-  constructor(private readonly knex: Knex) {}
-
+class KeyDao implements Dao<Key> {
   public findAll(): PromiseLike<Key[]> {
-    return Promise.resolve(this.knex(TABLE_NAME).select());
+    return Promise.resolve(knex(TABLE_NAME).select());
   }
   public findOne(id: number): PromiseLike<Key> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ keyId: id })
         .first()
@@ -22,31 +20,31 @@ export default class KeyDao implements Dao<Key> {
   }
   public findByKeyType(keyTypeId: number): PromiseLike<Key[]> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ keyTypeId })
     );
   }
   public findByUser(userId: number): PromiseLike<Key[]> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ userId })
     );
   }
-  public remove(id: number): PromiseLike<boolean> {
+  public remove(id: number): PromiseLike<number> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .delete()
         .where({ keyId: id })
     );
   }
-  public update(entity: Key): PromiseLike<number[]> {
+  public update(entity: Key): PromiseLike<number> {
     const id = entity.keyId;
     delete entity.keyId;
     entity.updated_at = moment().format(dtFormat);
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .update(entity)
         .where({ keyId: id })
     );
@@ -55,6 +53,8 @@ export default class KeyDao implements Dao<Key> {
     delete entity.keyId;
     entity.created_at = moment().format(dtFormat);
     entity.updated_at = moment().format(dtFormat);
-    return Promise.resolve(this.knex(TABLE_NAME).insert(entity));
+    return Promise.resolve(knex(TABLE_NAME).insert(entity));
   }
 }
+
+export default new KeyDao();

@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import express from "express";
 
 import UserDao from "../dao/UserDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
@@ -25,28 +24,21 @@ import KeyDao from "../dao/KeyDao";
 import MessageDao from "../dao/MessageDao";
 import NewsPostDao from "../dao/NewsPostDao";
 import SessionDao from "../dao/SessionDao";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
 
-export default class UserController extends Controller {
-  constructor(
-    private userDao: UserDao,
-    private calendarEventDao: CalendarEventDao,
-    private messageDao: MessageDao,
-    private newsPostDao: NewsPostDao,
-    private sessionDao: SessionDao,
-    private keyDao: KeyDao
-  ) {
+class UserController extends Controller {
+  constructor() {
     super();
   }
 
-  public routes(): express.Router {
+  public routes() {
     this.router.get("", JWTMiddleware, async (req, res) => {
       try {
-        const result = await this.userDao.findAll();
+        const result = await UserDao.findAll();
         if (!result.every(isDbUser)) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -77,7 +69,7 @@ export default class UserController extends Controller {
     this.router.get("/ownData", JWTMiddleware, async (req, res) => {
       try {
         const userId = Number(res.locals.token.data.userId);
-        const user = await this.userDao.findOne(userId);
+        const user = await UserDao.findOne(userId);
         if (!user) {
           return res
             .status(StatusCode.NOT_FOUND)
@@ -110,7 +102,7 @@ export default class UserController extends Controller {
     this.router.get("/:userId(\\d+)", JWTMiddleware, async (req, res) => {
       try {
         const userId = Number(req.params.userId);
-        const user = await this.userDao.findOne(userId);
+        const user = await UserDao.findOne(userId);
         if (!user) {
           return res
             .status(StatusCode.NOT_FOUND)
@@ -155,7 +147,7 @@ export default class UserController extends Controller {
               )
             );
         }
-        const user = await this.userDao.findOne(userId);
+        const user = await UserDao.findOne(userId);
         if (!user) {
           return res
             .status(StatusCode.NOT_FOUND)
@@ -167,11 +159,14 @@ export default class UserController extends Controller {
             lastName,
             email,
             password
-          }: Pick<DbUser, "firstName" | "lastName" | "email" | "password"> = req.body;
+          }: Pick<
+            DbUser,
+            "firstName" | "lastName" | "email" | "password"
+          > = req.body;
           user.firstName = firstName ? firstName : user.firstName;
           user.lastName = lastName ? lastName : user.lastName;
           if (email && user.email !== email) {
-            const usr = await this.userDao.findByEmail(email.trim());
+            const usr = await UserDao.findByEmail(email.trim());
             if (usr) {
               return res
                 .status(StatusCode.BAD_REQUEST)
@@ -222,9 +217,9 @@ export default class UserController extends Controller {
               : user.password;
           }
           if (errors.length === 0) {
-            const result = await this.userDao.update(user);
+            const result = await UserDao.update(user);
             if (result) {
-              const updatedUser = await this.userDao.findOne(userId);
+              const updatedUser = await UserDao.findOne(userId);
               return res
                 .status(StatusCode.OK)
                 .json(
@@ -279,7 +274,10 @@ export default class UserController extends Controller {
             firstName,
             lastName,
             password
-          }: Pick<DbUser, "email" | "firstName" | "lastName" | "password"> = req.body;
+          }: Pick<
+            DbUser,
+            "email" | "firstName" | "lastName" | "password"
+          > = req.body;
 
           if (
             !isString(email) ||
@@ -292,7 +290,7 @@ export default class UserController extends Controller {
               .json(MessageFactory.createError("Invalid request params"));
           }
 
-          const user = await this.userDao.findByEmail(email.trim());
+          const user = await UserDao.findByEmail(email.trim());
 
           if (user) {
             return res
@@ -357,8 +355,8 @@ export default class UserController extends Controller {
                 .json(MessageFactory.createModelValidationError("User"));
             }
 
-            const savedUser = await this.userDao.save(userToSave);
-            const savedDbUser = await this.userDao.findOne(savedUser[0]);
+            const savedUser = await UserDao.save(userToSave);
+            const savedDbUser = await UserDao.findOne(savedUser[0]);
 
             return res
               .status(StatusCode.CREATED)
@@ -392,7 +390,7 @@ export default class UserController extends Controller {
         const userId = Number(req.params.userId);
         const localUserId = Number(res.locals.token.data.userId);
         try {
-          const user = await this.userDao.findOne(userId);
+          const user = await UserDao.findOne(userId);
           if (!user) {
             return res
               .status(StatusCode.NOT_FOUND)
@@ -412,7 +410,7 @@ export default class UserController extends Controller {
                   )
                 );
             }
-            const calendarEvents = await this.calendarEventDao.findCalendarEventsByUser(
+            const calendarEvents = await CalendarEventDao.findCalendarEventsByUser(
               user.userId
             );
             if (!calendarEvents.every(isCalendarEvent)) {
@@ -424,53 +422,51 @@ export default class UserController extends Controller {
             }
             await Promise.all(
               calendarEvents.map((event) =>
-                this.calendarEventDao.remove(event.eventId)
+                CalendarEventDao.remove(event.eventId)
               )
             );
             // Remove messages
-            const messages = await this.messageDao.findByUser(userId);
+            const messages = await MessageDao.findByUser(userId);
             if (!messages.every(isMessage)) {
               return res
                 .status(StatusCode.INTERNAL_SERVER_ERROR)
                 .json(MessageFactory.createModelValidationError("Message"));
             }
             await Promise.all(
-              messages.map((msg) => this.messageDao.remove(msg.messageId))
+              messages.map((msg) => MessageDao.remove(msg.messageId))
             );
             // Remove newsposts
-            const newsPosts = await this.newsPostDao.findByAuthor(userId);
+            const newsPosts = await NewsPostDao.findByAuthor(userId);
             if (!newsPosts.every(isNewspost)) {
               return res
                 .status(StatusCode.INTERNAL_SERVER_ERROR)
                 .json(MessageFactory.createModelValidationError("NewsPost"));
             }
             await Promise.all(
-              newsPosts.map((newsPost) =>
-                this.newsPostDao.remove(newsPost.postId)
-              )
+              newsPosts.map((newsPost) => NewsPostDao.remove(newsPost.postId))
             );
             // Remove sessions
-            const sessions = await this.sessionDao.findByUser(userId);
+            const sessions = await SessionDao.findByUser(userId);
             if (!sessions.every(isSession)) {
               return res
                 .status(StatusCode.INTERNAL_SERVER_ERROR)
                 .json(MessageFactory.createModelValidationError("Session"));
             }
             await Promise.all(
-              sessions.map((session) => this.sessionDao.remove(session.sessionId))
+              sessions.map((session) => SessionDao.remove(session.sessionId))
             );
 
             // Remove keys
-            const keys = await this.keyDao.findByUser(userId);
+            const keys = await KeyDao.findByUser(userId);
             if (!keys.every(isKey)) {
               return res
                 .status(StatusCode.INTERNAL_SERVER_ERROR)
                 .json(MessageFactory.createModelValidationError("Key"));
             }
-            await Promise.all(keys.map((key) => this.keyDao.remove(key.keyId)));
+            await Promise.all(keys.map((key) => KeyDao.remove(key.keyId)));
 
             // Remove user data
-            await this.userDao.remove(userId);
+            await UserDao.remove(userId);
 
             return res
               .status(StatusCode.OK)
@@ -498,3 +494,5 @@ export default class UserController extends Controller {
     return this.router;
   }
 }
+
+export default new UserController();

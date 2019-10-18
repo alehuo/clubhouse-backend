@@ -1,20 +1,19 @@
 import { StudentUnion } from "@alehuo/clubhouse-shared";
-import Knex from "knex";
+import knex from "../Database";
 import moment from "moment";
 import { dtFormat } from "../utils/DtFormat";
 import Dao from "./Dao";
 
 const TABLE_NAME = "studentUnions";
 
-export default class StudentUnionDao implements Dao<StudentUnion> {
-  constructor(private readonly knex: Knex) {}
+class StudentUnionDao implements Dao<StudentUnion> {
 
   public findAll(): PromiseLike<StudentUnion[]> {
-    return Promise.resolve(this.knex(TABLE_NAME).select());
+    return Promise.resolve(knex(TABLE_NAME).select());
   }
   public findOne(unionId: number): PromiseLike<StudentUnion> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ unionId })
         .first()
@@ -22,7 +21,7 @@ export default class StudentUnionDao implements Dao<StudentUnion> {
   }
   public findByName(name: string): PromiseLike<StudentUnion> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ name })
         .first()
@@ -35,14 +34,16 @@ export default class StudentUnionDao implements Dao<StudentUnion> {
     }
     stdu.created_at = moment().format(dtFormat);
     stdu.updated_at = moment().format(dtFormat);
-    return Promise.resolve(this.knex(TABLE_NAME).insert(stdu));
+    return Promise.resolve(knex(TABLE_NAME).insert(stdu));
   }
 
-  public remove(id: number): PromiseLike<boolean> {
+  public remove(id: number): PromiseLike<number> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .delete()
         .where({ unionId: id })
     );
   }
 }
+
+export default new StudentUnionDao();

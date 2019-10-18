@@ -3,10 +3,9 @@ process.env.PORT = "5090";
 
 import { ApiResponse } from "@alehuo/clubhouse-shared";
 import "mocha";
-import * as Database from "../../src/Database";
+import knex from "../../src/Database";
 import app from "../../src/index";
 
-const knex = Database.connect();
 import chai from "chai";
 const should = chai.should();
 import chaiHttp from "chai-http";

@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { logger } from "../index";
+import { logger } from "../logger";
 
 let transporter = nodemailer.createTransport({
   host: process.env.SMTP_SERVER,

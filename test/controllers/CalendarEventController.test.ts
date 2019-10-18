@@ -4,20 +4,17 @@ process.env.PORT = "5090";
 import { ApiResponse, CalendarEvent } from "@alehuo/clubhouse-shared";
 import "mocha";
 import CalendarEventDao from "../../src/dao/CalendarEventDao";
-import * as Database from "../../src/Database";
+import knex from "../../src/Database";
 import app from "../../src/index";
 import { createICal, iCalFilter } from "../../src/utils/iCalUtils";
 import { generateToken } from "../TestUtils";
 
-const knex = Database.connect();
 import chai from "chai";
 const should = chai.should();
 import chaiHttp from "chai-http";
 import moment from "moment";
 import { StatusCode } from "../../src/utils/StatusCodes";
 chai.use(chaiHttp);
-
-const calendarEventDao = new CalendarEventDao(knex);
 
 const calendarUrl = "/api/v1/calendar";
 
@@ -65,7 +62,7 @@ describe("CalendarEventController", () => {
   */
 
   it("Returns a single calendar event", async () => {
-    const calendarEvent = await calendarEventDao.findOne(1);
+    const calendarEvent = await CalendarEventDao.findOne(1);
 
     const res = await chai
       .request(app)
@@ -99,7 +96,7 @@ describe("CalendarEventController", () => {
   }).timeout(5000);
 
   it("Returns a single calendar event as iCal", async () => {
-    const calendarEvent = await calendarEventDao.findOne(1);
+    const calendarEvent = await CalendarEventDao.findOne(1);
     const mockDate = moment(new Date(2015, 1, 1)).toISOString();
     const calendarEventString = await createICal(
       calendarEvent,
@@ -122,7 +119,7 @@ describe("CalendarEventController", () => {
   }).timeout(5000);
 
   it("Returns all calendar events", async () => {
-    const calendarEvents = await calendarEventDao.findAll();
+    const calendarEvents = await CalendarEventDao.findAll();
     const sortedEvents = calendarEvents.sort((a, b) => a.eventId - b.eventId);
     const res = await chai
       .request(app)

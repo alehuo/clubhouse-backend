@@ -1,12 +1,7 @@
 import { CalendarEvent } from "@alehuo/clubhouse-shared";
 import moment from "moment";
 
-import LocationDao from "../dao/LocationDao";
-import * as Database from "../Database";
-
-const knex = Database.connect();
-
-const locationDao = new LocationDao(knex);
+import locationDao from "../dao/LocationDao";
 
 export const createICal = async (
   data: CalendarEvent,

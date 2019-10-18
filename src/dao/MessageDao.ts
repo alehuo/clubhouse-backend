@@ -1,5 +1,5 @@
 import { Message } from "@alehuo/clubhouse-shared";
-import Knex from "knex";
+import knex from "../Database";
 import moment from "moment";
 import { dtFormat } from "../utils/DtFormat";
 import Dao from "./Dao";
@@ -9,16 +9,14 @@ const TABLE_NAME = "messages";
 /**
  * DAO used to handle messages that people send to the system.
  */
-export default class MessageDao implements Dao<Message> {
-  constructor(private readonly knex: Knex) {}
-
+class MessageDao implements Dao<Message> {
   public findAll(): PromiseLike<Message[]> {
-    return Promise.resolve(this.knex(TABLE_NAME).select());
+    return Promise.resolve(knex(TABLE_NAME).select());
   }
 
   public findOne(messageId: number): PromiseLike<Message> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ messageId })
         .first()
@@ -27,7 +25,7 @@ export default class MessageDao implements Dao<Message> {
 
   public findByUser(userId: number): PromiseLike<Message[]> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ userId })
     );
@@ -39,13 +37,13 @@ export default class MessageDao implements Dao<Message> {
   ): PromiseLike<Message[]> {
     if (!endTime) {
       return Promise.resolve(
-        this.knex(TABLE_NAME)
+        knex(TABLE_NAME)
           .select()
           .whereBetween("timestamp", [startTime, new Date()])
       );
     } else {
       return Promise.resolve(
-        this.knex(TABLE_NAME)
+        knex(TABLE_NAME)
           .select()
           .whereBetween("timestamp", [startTime, endTime])
       );
@@ -58,14 +56,16 @@ export default class MessageDao implements Dao<Message> {
     }
     message.created_at = moment().format(dtFormat);
     message.updated_at = moment().format(dtFormat);
-    return Promise.resolve(this.knex(TABLE_NAME).insert(message));
+    return Promise.resolve(knex(TABLE_NAME).insert(message));
   }
 
-  public remove(messageId: number): PromiseLike<boolean> {
+  public remove(messageId: number): PromiseLike<number> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .delete()
         .where({ messageId })
     );
   }
 }
+
+export default new MessageDao();

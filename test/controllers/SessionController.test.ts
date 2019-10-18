@@ -3,7 +3,7 @@ process.env.PORT = "5090";
 process.env.JWT_SECRET = "HelloWorld";
 
 import "mocha";
-import * as Database from "../../src/Database";
+import knex from "../../src/Database";
 import app from "../../src/index";
 
 import { ApiResponse, Session } from "@alehuo/clubhouse-shared";
@@ -27,7 +27,6 @@ const generateToken: (userData?: any) => string = (userData?: any) => {
   }
 };
 
-const knex = Database.connect();
 import chai from "chai";
 const should = chai.should();
 import chaiHttp from "chai-http";

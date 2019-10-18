@@ -1,9 +1,7 @@
-import express from "express";
-
 import { isStatistics, Statistics } from "@alehuo/clubhouse-shared";
 import StatisticsDao from "../dao/StatisticsDao";
 import UserDao from "../dao/UserDao";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
@@ -12,15 +10,14 @@ import Controller from "./Controller";
 /**
  * Statistics controller.
  */
-export default class StatisticsController extends Controller {
-  constructor(private statisticsDao: StatisticsDao, private userDao: UserDao) {
+class StatisticsController extends Controller {
+  constructor() {
     super();
   }
-
-  public routes(): express.Router {
+  public routes() {
     this.router.get("", JWTMiddleware, async (req, res) => {
       try {
-        const result = await this.statisticsDao.findStatistics();
+        const result = await StatisticsDao.findStatistics();
         if (!isStatistics(result[0])) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -44,14 +41,14 @@ export default class StatisticsController extends Controller {
 
     this.router.get("/:userId(\\d+)", JWTMiddleware, async (req, res) => {
       try {
-        const user = await this.userDao.findOne(req.params.userId);
+        const user = await UserDao.findOne(Number(req.params.userId));
         if (!user) {
           return res
             .status(StatusCode.NOT_FOUND)
             .json(MessageFactory.createError("User not found"));
         }
-        const result = await this.statisticsDao.findStatisticsFromUser(
-          req.params.userId
+        const result = await StatisticsDao.findStatisticsFromUser(
+          Number(req.params.userId)
         );
 
         if (result && result.length === 1) {
@@ -77,3 +74,5 @@ export default class StatisticsController extends Controller {
     return this.router;
   }
 }
+
+export default new StatisticsController();

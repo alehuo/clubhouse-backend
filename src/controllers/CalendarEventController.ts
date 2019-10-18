@@ -1,5 +1,3 @@
-import express from "express";
-
 import CalendarEventDao from "../dao/CalendarEventDao";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
@@ -12,16 +10,15 @@ import {
   isCalendarEvent,
   Permission
 } from "@alehuo/clubhouse-shared";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { StatusCode } from "../utils/StatusCodes";
 
-export default class CalendarEventController extends Controller {
-  constructor(private calendarEventDao: CalendarEventDao) {
+class CalendarEventController extends Controller {
+  constructor() {
     super();
   }
-
-  public routes(): express.Router {
+  public routes() {
     this.router.post(
       "",
       RequestParamMiddleware<CalendarEvent>(
@@ -57,11 +54,9 @@ export default class CalendarEventController extends Controller {
         }
 
         try {
-          const calendarEvent = await this.calendarEventDao.save(
-            calendarEventData
-          );
+          const calendarEvent = await CalendarEventDao.save(calendarEventData);
           if (calendarEvent[0]) {
-            const event = await this.calendarEventDao.findOne(calendarEvent[0]);
+            const event = await CalendarEventDao.findOne(calendarEvent[0]);
             return res
               .status(StatusCode.CREATED)
               .json(
@@ -92,7 +87,7 @@ export default class CalendarEventController extends Controller {
 
     this.router.get("", async (req, res) => {
       try {
-        const events = await this.calendarEventDao.findAll();
+        const events = await CalendarEventDao.findAll();
         if (!events.every(isCalendarEvent)) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -122,7 +117,7 @@ export default class CalendarEventController extends Controller {
 
     this.router.get("/ical", async (req, res) => {
       try {
-        const events = await this.calendarEventDao.findAll();
+        const events = await CalendarEventDao.findAll();
         const ical = await createICalStream(events);
         res.setHeader(
           "Content-disposition",
@@ -145,7 +140,9 @@ export default class CalendarEventController extends Controller {
 
     this.router.get("/:eventId(\\d+)", async (req, res) => {
       try {
-        const event = await this.calendarEventDao.findOne(req.params.eventId);
+        const event = await CalendarEventDao.findOne(
+          Number(req.params.eventId)
+        );
         if (!isCalendarEvent(event)) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -186,14 +183,16 @@ export default class CalendarEventController extends Controller {
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_EVENTS),
       async (req, res) => {
         try {
-          const event = await this.calendarEventDao.findOne(req.params.eventId);
+          const event = await CalendarEventDao.findOne(
+            Number(req.params.eventId)
+          );
           if (!event) {
             return res
               .status(StatusCode.NOT_FOUND)
               .json(MessageFactory.createError("Calendar event not found"));
           } else {
-            const result = await this.calendarEventDao.remove(
-              req.params.eventId
+            const result = await CalendarEventDao.remove(
+              Number(req.params.eventId)
             );
             if (result) {
               return res
@@ -224,7 +223,9 @@ export default class CalendarEventController extends Controller {
     // iCal
     this.router.get("/:eventId(\\d+)/ical", async (req, res) => {
       try {
-        const event = await this.calendarEventDao.findOne(req.params.eventId);
+        const event = await CalendarEventDao.findOne(
+          Number(req.params.eventId)
+        );
         if (!event) {
           return res
             .status(StatusCode.NOT_FOUND)
@@ -254,3 +255,5 @@ export default class CalendarEventController extends Controller {
     return this.router;
   }
 }
+
+export default new CalendarEventController();

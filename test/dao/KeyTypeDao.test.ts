@@ -4,14 +4,10 @@ import { KeyType } from "@alehuo/clubhouse-shared";
 import chai from "chai";
 import "mocha";
 import moment from "moment";
-import KeyTypeDao from "../../src/dao/KeyTypeDao";
-import * as Database from "../../src/Database";
+import keyTypeDao from "../../src/dao/KeyTypeDao";
+import knex from "../../src/Database";
 import { dtFormat } from "../../src/utils/DtFormat";
 const should = chai.should();
-
-const knex = Database.connect();
-
-const keyTypeDao = new KeyTypeDao(knex);
 
 const mapToKeyTypes = (dbKeys: any) => {
   const keyTypes: KeyType[] = [

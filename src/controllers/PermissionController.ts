@@ -1,21 +1,19 @@
-import express from "express";
-
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import Controller from "./Controller";
 
 import { Permission } from "@alehuo/clubhouse-shared";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { getPermissions } from "../utils/PermissionUtils";
 import { StatusCode } from "../utils/StatusCodes";
 
-export default class PermissionController extends Controller {
+class PermissionController extends Controller {
   constructor() {
     super();
   }
 
-  public routes(): express.Router {
+  public routes() {
     this.router.get(
       "",
       JWTMiddleware,
@@ -148,3 +146,5 @@ export default class PermissionController extends Controller {
     return this.router;
   }
 }
+
+export default new PermissionController();

@@ -1,4 +1,3 @@
-import express from "express";
 import Controller from "./Controller";
 
 import NewsPostDao from "../dao/NewsPostDao";
@@ -6,21 +5,20 @@ import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 
 import { isNewspost, Newspost, Permission } from "@alehuo/clubhouse-shared";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { PermissionMiddleware } from "../middleware/PermissionMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { StatusCode } from "../utils/StatusCodes";
 
-export default class NewsPostController extends Controller {
-  constructor(private newsPostDao: NewsPostDao) {
+class NewsPostController extends Controller {
+  constructor() {
     super();
   }
-
-  public routes(): express.Router {
+  public routes() {
     // All newsposts
     this.router.get("", async (req, res) => {
       try {
-        const newsPosts = await this.newsPostDao.findAll();
+        const newsPosts = await NewsPostDao.findAll();
 
         if (!newsPosts.every(isNewspost)) {
           return res
@@ -46,7 +44,9 @@ export default class NewsPostController extends Controller {
     // A single newspost
     this.router.get("/:newsPostId(\\d+)", async (req, res) => {
       try {
-        const newsPost = await this.newsPostDao.findOne(req.params.newsPostId);
+        const newsPost = await NewsPostDao.findOne(
+          Number(req.params.newsPostId)
+        );
         if (newsPost) {
           if (!isNewspost(newsPost)) {
             return res
@@ -75,7 +75,9 @@ export default class NewsPostController extends Controller {
     // All newsposts by a single user
     this.router.get("/user/:userId(\\d+)", async (req, res) => {
       try {
-        const newsPost = await this.newsPostDao.findByAuthor(req.params.userId);
+        const newsPost = await NewsPostDao.findByAuthor(
+          Number(req.params.userId)
+        );
         if (!newsPost.every(isNewspost)) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -126,7 +128,7 @@ export default class NewsPostController extends Controller {
               );
           }
 
-          const newsPost = await this.newsPostDao.save(savedPost);
+          const newsPost = await NewsPostDao.save(savedPost);
           if (newsPost.length > 0) {
             return res.status(StatusCode.CREATED).json(
               MessageFactory.createResponse<Newspost>(true, "", {
@@ -159,11 +161,13 @@ export default class NewsPostController extends Controller {
       PermissionMiddleware(Permission.ALLOW_ADD_EDIT_REMOVE_POSTS),
       async (req, res) => {
         try {
-          const newsPost = await this.newsPostDao.findOne(
-            req.params.newsPostId
+          const newsPost = await NewsPostDao.findOne(
+            Number(req.params.newsPostId)
           );
           if (newsPost) {
-            const result = await this.newsPostDao.remove(req.params.newsPostId);
+            const result = await NewsPostDao.remove(
+              Number(req.params.newsPostId)
+            );
             if (result) {
               return res
                 .status(StatusCode.OK)
@@ -194,3 +198,5 @@ export default class NewsPostController extends Controller {
     return this.router;
   }
 }
+
+export default new NewsPostController();

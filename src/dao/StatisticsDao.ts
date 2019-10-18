@@ -1,17 +1,15 @@
 import { Statistics, UserStatistics } from "@alehuo/clubhouse-shared";
-import Knex from "knex";
+import knex from "../Database";
 import Dao from "./Dao";
 
-export default class StatisticsDao implements Dao<Statistics> {
-  constructor(private readonly knex: Knex) {}
-
+class StatisticsDao implements Dao<Statistics> {
   public findAll(): PromiseLike<Statistics[]> {
     throw new Error("Not implemented");
   }
 
   public findStatistics(): PromiseLike<Statistics[]> {
     return Promise.resolve(
-      this.knex.raw(
+      knex.raw(
         "SELECT (SELECT COUNT(*) from users) AS userCount, " +
           "(SELECT COUNT(*) from calendarEvents) AS eventCount, " +
           "(SELECT COUNT(*) from newsposts) AS newspostCount, " +
@@ -24,7 +22,7 @@ export default class StatisticsDao implements Dao<Statistics> {
 
   public findStatisticsFromUser(userId: number): PromiseLike<UserStatistics[]> {
     return Promise.resolve(
-      this.knex.raw(
+      knex.raw(
         "SELECT (SELECT COUNT(*) from calendarEvents WHERE addedBy = :userId) AS eventCount, " +
           "(SELECT COUNT(*) from newsposts WHERE author = :userId) AS newspostCount, " +
           "(SELECT COALESCE(SUM((endTime - startTime) / (1000.0 * 60 * 60)),0)" +
@@ -44,7 +42,9 @@ export default class StatisticsDao implements Dao<Statistics> {
     throw new Error("Not implemented");
   }
 
-  public remove(locationId: number): PromiseLike<boolean> {
+  public remove(locationId: number): PromiseLike<number> {
     throw new Error("Not implemented");
   }
 }
+
+export default new StatisticsDao();

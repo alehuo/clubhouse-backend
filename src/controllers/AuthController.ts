@@ -6,7 +6,7 @@ import Controller from "./Controller";
 import { DbUser, isString, Permission } from "@alehuo/clubhouse-shared";
 import axios from "axios";
 import uuid from "uuid/v4";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import { hasPermissions } from "../utils/PermissionUtils";
@@ -27,18 +27,20 @@ const redirectUrl = process.env.SPOTIFY_REDIRECT_URL || "";
 const scopes =
   "user-read-currently-playing user-read-playback-state user-read-recently-played";
 
-export default class AuthController extends Controller {
-  constructor(private userDao: UserDao) {
+class AuthController extends Controller {
+  constructor() {
     super();
   }
-
   public routes() {
     this.router.post(
       "",
       RequestParamMiddleware<DbUser>("email", "password"),
       async (req, res) => {
         try {
-          const { email, password }: Pick<DbUser, "email" | "password"> = req.body;
+          const {
+            email,
+            password
+          }: Pick<DbUser, "email" | "password"> = req.body;
 
           if (!isString(email) || !isString(password)) {
             return res
@@ -50,7 +52,7 @@ export default class AuthController extends Controller {
               );
           }
 
-          const user = await this.userDao.findByEmail(email);
+          const user = await UserDao.findByEmail(email);
 
           if (!user) {
             return res
@@ -155,6 +157,7 @@ export default class AuthController extends Controller {
       const state = req.query.state || null;
       const storedState = req.cookies ? req.cookies.spotify_auth_state : null;
       if (state === null || state !== storedState) {
+        // @ts-ignore
         req.clearCookie("spotify_auth_state");
         return res.status(StatusCode.UNAUTHORIZED).send("Unauthorized (4)");
       } else {
@@ -195,3 +198,5 @@ export default class AuthController extends Controller {
     return this.router;
   }
 }
+
+export default new AuthController();

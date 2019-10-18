@@ -2,22 +2,21 @@ import { isKeyType, KeyType } from "@alehuo/clubhouse-shared";
 import { isString } from "util";
 import KeyDao from "../dao/KeyDao";
 import KeyTypeDao from "../dao/KeyTypeDao";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { JWTMiddleware } from "../middleware/JWTMiddleware";
 import { RequestParamMiddleware } from "../middleware/RequestParamMiddleware";
 import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
 import Controller from "./Controller";
 
-export default class KeyTypeController extends Controller {
-  constructor(private keyTypeDao: KeyTypeDao, private keyDao: KeyDao) {
+class KeyTypeController extends Controller {
+  constructor() {
     super();
   }
-
   public routes() {
     this.router.get("", JWTMiddleware, async (req, res) => {
       try {
-        const keyTypes = await this.keyTypeDao.findAll();
+        const keyTypes = await KeyTypeDao.findAll();
         if (keyTypes.every(isKeyType)) {
           return res
             .status(StatusCode.OK)
@@ -39,7 +38,7 @@ export default class KeyTypeController extends Controller {
     this.router.get("/:keyTypeId(\\d+)", JWTMiddleware, async (req, res) => {
       const keyTypeId = Number(req.params.keyTypeId);
       try {
-        const keyType = await this.keyTypeDao.findOne(keyTypeId);
+        const keyType = await KeyTypeDao.findOne(keyTypeId);
         if (!keyType) {
           return res
             .status(StatusCode.NOT_FOUND)
@@ -86,11 +85,9 @@ export default class KeyTypeController extends Controller {
             .json(MessageFactory.createError("Invalid request params"));
         }
         try {
-          const savedKeyTypeIds = await this.keyTypeDao.save(newKeyType);
+          const savedKeyTypeIds = await KeyTypeDao.save(newKeyType);
           if (savedKeyTypeIds[0]) {
-            const savedKeyType = await this.keyTypeDao.findOne(
-              savedKeyTypeIds[0]
-            );
+            const savedKeyType = await KeyTypeDao.findOne(savedKeyTypeIds[0]);
             return res
               .status(StatusCode.CREATED)
               .json(
@@ -117,7 +114,7 @@ export default class KeyTypeController extends Controller {
     this.router.delete("/:keyTypeId(\\d+)", JWTMiddleware, async (req, res) => {
       const keyTypeId = Number(req.params.keyTypeId);
       try {
-        const keyType = await this.keyTypeDao.findOne(keyTypeId);
+        const keyType = await KeyTypeDao.findOne(keyTypeId);
         if (!keyType) {
           return res
             .status(StatusCode.NOT_FOUND)
@@ -128,7 +125,7 @@ export default class KeyTypeController extends Controller {
             .status(StatusCode.INTERNAL_SERVER_ERROR)
             .json(MessageFactory.createModelValidationError("KeyType"));
         }
-        const keys = await this.keyDao.findByKeyType(keyType.keyTypeId);
+        const keys = await KeyDao.findByKeyType(keyType.keyTypeId);
         if (keys && keys.length > 0) {
           return res
             .status(StatusCode.BAD_REQUEST)
@@ -140,7 +137,7 @@ export default class KeyTypeController extends Controller {
         }
 
         // If there are no keys assigned to the key type, allow deleting it.
-        await this.keyTypeDao.remove(keyType.keyTypeId);
+        await KeyTypeDao.remove(keyType.keyTypeId);
 
         return res
           .status(StatusCode.OK)
@@ -158,3 +155,5 @@ export default class KeyTypeController extends Controller {
     return this.router;
   }
 }
+
+export default new KeyTypeController();

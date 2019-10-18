@@ -1,20 +1,19 @@
 import { isRule, Rule } from "@alehuo/clubhouse-shared";
 import express from "express";
 import RuleDao from "../dao/RuleDao";
-import { logger } from "../index";
+import { logger } from "../logger";
 import { MessageFactory } from "../utils/MessageFactory";
 import { StatusCode } from "../utils/StatusCodes";
 import Controller from "./Controller";
 
-export default class RuleController extends Controller {
-  constructor(private ruleDao: RuleDao) {
+class RuleController extends Controller {
+  constructor() {
     super();
   }
-
   public routes(): express.Router {
     this.router.get("", async (req, res) => {
       try {
-        const rules = await this.ruleDao.findAll();
+        const rules = await RuleDao.findAll();
         if (!rules.every(isRule)) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -37,8 +36,8 @@ export default class RuleController extends Controller {
         try {
           const ruleId1 = Number(req.params.ruleId1);
           const ruleId2 = Number(req.params.ruleId2);
-          const rule1 = await this.ruleDao.findOne(ruleId1);
-          const rule2 = await this.ruleDao.findOne(ruleId2);
+          const rule1 = await RuleDao.findOne(ruleId1);
+          const rule2 = await RuleDao.findOne(ruleId2);
 
           if (!rule1 || !rule2) {
             return res
@@ -58,8 +57,8 @@ export default class RuleController extends Controller {
           rule1.order = ruleOrder2;
           rule2.order = ruleOrder1;
 
-          const saved1 = await this.ruleDao.save(rule1);
-          const saved2 = await this.ruleDao.save(rule2);
+          const saved1 = await RuleDao.save(rule1);
+          const saved2 = await RuleDao.save(rule2);
 
           if (saved1 && saved2) {
             return res
@@ -88,7 +87,7 @@ export default class RuleController extends Controller {
     this.router.get("/:ruleId(\\d+)", async (req, res) => {
       const ruleId = Number(req.params.ruleId);
       try {
-        const rule = await this.ruleDao.findOne(ruleId);
+        const rule = await RuleDao.findOne(ruleId);
         if (!isRule(rule)) {
           return res
             .status(StatusCode.INTERNAL_SERVER_ERROR)
@@ -113,3 +112,5 @@ export default class RuleController extends Controller {
     return this.router;
   }
 }
+
+export default new RuleController();

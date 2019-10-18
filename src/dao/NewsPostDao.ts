@@ -1,20 +1,18 @@
 import { Newspost } from "@alehuo/clubhouse-shared";
-import Knex from "knex";
 import moment from "moment";
+import knex from "../Database";
 import { dtFormat } from "../utils/DtFormat";
 import Dao from "./Dao";
 
 const TABLE_NAME = "newsposts";
 
-export default class NewsPostDao implements Dao<Newspost> {
-  constructor(private readonly knex: Knex) {}
-
+class NewsPostDao implements Dao<Newspost> {
   public findAll(): PromiseLike<Newspost[]> {
-    return Promise.resolve(this.knex(TABLE_NAME).select());
+    return Promise.resolve(knex(TABLE_NAME).select());
   }
   public findOne(postId: number): PromiseLike<Newspost> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ postId })
         .first()
@@ -22,7 +20,7 @@ export default class NewsPostDao implements Dao<Newspost> {
   }
   public findByAuthor(author: number): PromiseLike<Newspost[]> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ author })
     );
@@ -34,14 +32,16 @@ export default class NewsPostDao implements Dao<Newspost> {
     }
     newsPost.created_at = moment().format(dtFormat);
     newsPost.updated_at = moment().format(dtFormat);
-    return Promise.resolve(this.knex(TABLE_NAME).insert(newsPost));
+    return Promise.resolve(knex(TABLE_NAME).insert(newsPost));
   }
 
-  public remove(postId: number): PromiseLike<boolean> {
+  public remove(postId: number): PromiseLike<number> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .delete()
         .where({ postId })
     );
   }
 }
+
+export default new NewsPostDao();

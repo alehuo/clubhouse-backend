@@ -1,5 +1,5 @@
 import { Session } from "@alehuo/clubhouse-shared";
-import Knex from "knex";
+import knex from "../Database";
 import moment from "moment";
 import { dtFormat } from "../utils/DtFormat";
 import Dao from "./Dao";
@@ -9,22 +9,20 @@ const TABLE_NAME = "sessions";
 /**
  * DAO used to handle sessions.
  */
-export default class SessionDao implements Dao<Session> {
-  constructor(private readonly knex: Knex) {}
-
+class SessionDao implements Dao<Session> {
   public findAll(): PromiseLike<Session[]> {
-    return Promise.resolve(this.knex(TABLE_NAME).select());
+    return Promise.resolve(knex(TABLE_NAME).select());
   }
   public findAllOngoing(): PromiseLike<Session[]> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where("ended", "=", 0)
     );
   }
   public findOne(sessionId: number): PromiseLike<Session> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ sessionId })
         .first()
@@ -32,7 +30,7 @@ export default class SessionDao implements Dao<Session> {
   }
   public findOngoingByUser(userId: number): PromiseLike<Session[]> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ userId })
         .andWhere("ended", "=", 0)
@@ -40,7 +38,7 @@ export default class SessionDao implements Dao<Session> {
   }
   public findByUser(userId: number): PromiseLike<Session[]> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .select()
         .where({ userId })
     );
@@ -52,16 +50,16 @@ export default class SessionDao implements Dao<Session> {
     }
     session.created_at = moment().format(dtFormat);
     session.updated_at = moment().format(dtFormat);
-    return Promise.resolve(this.knex(TABLE_NAME).insert(session));
+    return Promise.resolve(knex(TABLE_NAME).insert(session));
   }
 
   public endSession(
     sessionId: number,
     endMessage: string
-  ): PromiseLike<Session> {
+  ): PromiseLike<number> {
     const currentTimestamp = moment().format(dtFormat);
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .update({
           endTime: currentTimestamp,
           endMessage,
@@ -72,11 +70,13 @@ export default class SessionDao implements Dao<Session> {
     );
   }
 
-  public remove(sessionId: number): PromiseLike<boolean> {
+  public remove(sessionId: number): PromiseLike<number> {
     return Promise.resolve(
-      this.knex(TABLE_NAME)
+      knex(TABLE_NAME)
         .delete()
         .where({ sessionId })
     );
   }
 }
+
+export default new SessionDao();
